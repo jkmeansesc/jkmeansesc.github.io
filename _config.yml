@@ -20,10 +20,10 @@ timezone: Asia/Shanghai
 
 title: 小文写字的地方 # the main title
 
-tagline: 禁止废话式知识库 # it will display as the sub-title
+tagline: 我的成精之路 # it will display as the sub-title
 
 description: >- # used by seo meta and the atom feed
-  禁止废话式知识库 A blog that you won't read.
+  禁止废话式知识库。
 
 # fill in the protocol & hostname for your site, e.g., 'https://username.github.io'
 url: "https://minicoderwen.github.io"
