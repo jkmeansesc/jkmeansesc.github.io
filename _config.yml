@@ -26,7 +26,7 @@ description: >- # used by seo meta and the atom feed
   禁止废话式知识库。
 
 # fill in the protocol & hostname for your site, e.g., 'https://username.github.io'
-url: "https://minicoderwen.github.io"
+url: "https://blog.techwen.cn"
 
 github:
   username: minicoderwen # change to your github username
@@ -133,8 +133,11 @@ jekyll_compose:
       math: false # default: false
       mermaid: false # diagrams generation tool
       pin: false
-      sitemap: false
+      sitemap: true
       published: false
+
+plugins:
+  - jekyll-sitemap
 
 # ------------ The following options are not recommended to be modified ------------------
 

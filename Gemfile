@@ -29,3 +29,4 @@ end
 
 # plugins
 gem 'jekyll-compose', group: [:jekyll_plugins]
+gem 'jekyll-sitemap'
