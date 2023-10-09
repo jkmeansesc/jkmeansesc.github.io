@@ -12,9 +12,17 @@ math: false
 mermaid: true
 pin: false
 sitemap: false
-published: false
+published: true
 ---
 
 ## Levels of Abstraction - 抽象层次
+
+flowchart LR
+    A(Application Software) --- B(Spreadsheets, databases, your own programs...)
+    C(Operating System) --- D(Supports processes, protection, networks...)
+    E(Instruction Set) --- F(Machine’s own programming language - using instructions implemented by the hardware)
+    G(Digital Circuts) --- H(Hardware - designed to be controlled by simple but fast binary machine-code instructions)
+
+
 
 
