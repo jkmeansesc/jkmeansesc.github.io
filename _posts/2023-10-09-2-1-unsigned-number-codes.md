@@ -1,9 +1,9 @@
 ---
 layout: post
-title: 2.1 Unsigned Number Codes
+title: Section 2: Binary Codes - 二进制编码
 date: 2023-10-09 22:12 +0800
 description: 
-image: 
+image: https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-09-1696863003.jpg
 category: 
 tags: 
 toc: true
@@ -14,3 +14,5 @@ pin: false
 sitemap: false
 published: false
 ---
+
+## 二进制编码
