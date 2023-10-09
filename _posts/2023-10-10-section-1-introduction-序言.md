@@ -17,12 +17,20 @@ published: true
 
 ## Levels of Abstraction - 抽象层次
 
+```mermaid
 flowchart LR
-    A(Application Software) --- B(Spreadsheets, databases, your own programs...)
-    C(Operating System) --- D(Supports processes, protection, networks...)
-    E(Instruction Set) --- F(Machine’s own programming language - using instructions implemented by the hardware)
-    G(Digital Circuts) --- H(Hardware - designed to be controlled by simple but fast binary machine-code instructions)
+    A(Application Software) --> B(Spreadsheets, databases, your own programs...)
+    C(Operating System) --> D(Supports processes, protection, networks...)
+    E(Instruction Set) --> F(Machine’s own programming language - using instructions implemented by the hardware)
+    G(Digital Circuts) --> H(Hardware - designed to be controlled by simple but fast binary machine-code instructions)
+```
 
+## Computers - 计算机
 
+A <font color=red>computer</font> is a machine that executes sequences of <font color=red>instructions</font> (programs) which direct it to operate on <font color=red>(process)</font> data.
 
-
+```mermaid
+flowchart LR
+    A((Data in)) --> B(Processor) --> D((Data out))
+    C((Program)) --> B --> C
+```
