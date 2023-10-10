@@ -241,3 +241,5 @@ code words. Examples:
   - E.g. 1001 may represent any one of a number (e.g. 9 in one code), a different number in another code (e.g. -7); a letter (e.g. “q”), a month (e.g. September), an instruction (e.g. MULTIPLY), or many other things.
   - Which one it is, is determined by the context.
   - This information must be supplied by the person who designed the hardware or the software, typically an engineer or a programmer.
+  
+{% include busuanzi.html %}
