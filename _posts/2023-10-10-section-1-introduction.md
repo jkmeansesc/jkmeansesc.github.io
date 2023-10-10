@@ -4,17 +4,14 @@ title: Section 1 - Introduction
 date: 2023-10-10 00:01 +0800
 description: 
 image: https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-09-1696867853.jpg
-category:
-- 逢考必过
-- Systems and Networks
-tags:
-- system
+category: [逢考必过, Systems and Networks]
+tags: [system]
 toc: true
 comments: true
 math: false
 mermaid: true
 pin: false
-sitemap: false
+sitemap: true
 published: true
 ---
 ## Levels of Abstraction
@@ -76,7 +73,7 @@ represent physical things.
   - E.g. measuring a length with a ruler is usually accurate to about .001m.
 - Results of labeling and measurements are data items. Data are just sequences of data items.
 - A set of data items under discussion at a given time forms a data set.
-- Some data sets are clearly finite (e.g the days of the week), others may look infinite at first sight but, in reality, are finite too (e.g. possible values for temperature of the room using a particular thermometer).
+- Some data sets are clearly finite (e.g. the days of the week), others may look infinite at first sight but, in reality, are finite too (e.g. possible values for temperature of the room using a particular thermometer).
 
 ## Representations
 
@@ -127,13 +124,13 @@ represent physical things.
 - Can represent any finite data set fully by using enough bits
 - Can even represent real numbers to any desired degree of accuracy (by
 using long enough code words).
-- If all the code words have same number of bits, code is fixed length.
+- If all the code words have the same number of bits, code is fixed length.
 
 ## Programs
 
 - Computers are general artificial data processing machines that can perform sequences of operations under the control of a pre-prepared program.
 - A program is a set of instructions detailing how input data should be processed to achieve a desired result (output data).
-- Instructions can be numbered so a program can also be numerically represented.
+- Instructions can be numbered: so a program can also be numerically represented.
 - Programs may themselves be treated as data by other programs (e.g. a compiler).
 - Programs can be represented in hardware in the same way as data.
 - Needs a machine able to interpret and execute the instructions in the program.
