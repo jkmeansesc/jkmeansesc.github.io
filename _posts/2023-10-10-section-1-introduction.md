@@ -12,7 +12,7 @@ math: false
 mermaid: true
 pin: false
 sitemap: true
-published: true
+published: false
 ---
 ## Levels of Abstraction
 
