@@ -2,7 +2,7 @@
 layout: post
 title: Section 1 - Introduction
 date: 2023-10-10 00:01 +0800
-description: 
+description:
 image: https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-09-1696867853.jpg
 category: [逢考必过, Systems and Networks]
 tags: [system]
@@ -14,6 +14,7 @@ pin: false
 sitemap: true
 published: false
 ---
+
 ## Levels of Abstraction
 
 ```mermaid
@@ -40,7 +41,7 @@ flowchart LR
 
 - Personal computer
   - Variety of formats to support users directly (usually just one user or one at a
-time): desktop, laptop, tablet, phone, “wearable”.
+    time): desktop, laptop, tablet, phone, “wearable”.
 - Server
   - Designed to run services handling requests from many networked clients simultaneously (e.g. web server, file server, email server, etc.)
 - Embedded computer
@@ -54,7 +55,7 @@ time): desktop, laptop, tablet, phone, “wearable”.
 
 - Humans model external reality using mental concepts.
 - These concepts are abstract mental entities not physical things, although they may
-represent physical things.
+  represent physical things.
 - Amongst the most useful of our concepts are numbers. Like all mathematical entities, numbers are abstract concepts: i.e. they do not represent physical things, the way more concrete concepts do (e.g. a computer, a desk etc.).
   - Numerals, symbols representing numbers, are concrete but not numbers themselves.
 - Numbers are especially useful because the mathematical operations which can be performed on them (addition, sorting etc.) help us model and manipulate reality.
@@ -110,7 +111,7 @@ represent physical things.
 - sometimes called low and high or false and true
 - The values are often labelled 0 and 1 and called bits (BInary digits).
 - Only need to be able to tell 2 values apart so superior resistance to noise errors.
-    ![图解](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-10-1696895908.png){: .right  w="300" h="200"}
+  ![图解](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-10-1696895908.png){: .right w="300" h="200"}
   - Only two values are valid and everything else the receiver sees is rounded to the nearest of these.
   - E.g. a low needs a substantial upward spike of noise to be seen as a high.
   - The further apart the low and high are the more resistance to noise is.
@@ -120,11 +121,11 @@ represent physical things.
 ## Binary Codes
 
 - A mapping from a data set to binary code words is called a binary code.
-![图解](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-10-1696896436.png){: w="400" h="300"}
+  ![图解](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-10-1696896436.png){: w="400" h="300"}
 - Many codes can be defined on the same data set.
 - Can represent any finite data set fully by using enough bits
 - Can even represent real numbers to any desired degree of accuracy (by
-using long enough code words).
+  using long enough code words).
 - If all the code words have the same number of bits, code is fixed length.
 
 ## Programs
@@ -156,7 +157,7 @@ Think of a bit storage circuit as a box that
 - contains one bit
 - can read out its contents
 - can store a new bit value
-  
+
 This hardware behaves much like a variable in a high-level language (HLL) like Java or C.
 
 ## Bytes
@@ -169,14 +170,14 @@ A byte is represented in the computer by 8 copies of the basic bit storage circu
 
 There are exactly 28 = 256 different values that can be represented in a byte (see right).
 
-|       |       |       |       |       |       |       |       |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-|   0   |   0   |   0   |   0   |   0   |   0   |   0   |   0   |
-|   0   |   0   |   0   |   0   |   0   |   0   |   0   |   1   |
-|   0   |   0   |   0   |   0   |   0   |   0   |   1   |   0   |
-|   0   |   0   |   0   |   0   |   0   |   0   |   1   |   1   |
-|  ...  |
-|   1   |   1   |   1   |   1   |   1   |   1   |   1   |   1   |
+|     |     |     |     |     |     |     |     |
+| :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+|  0  |  0  |  0  |  0  |  0  |  0  |  0  |  0  |
+|  0  |  0  |  0  |  0  |  0  |  0  |  0  |  1  |
+|  0  |  0  |  0  |  0  |  0  |  0  |  1  |  0  |
+|  0  |  0  |  0  |  0  |  0  |  0  |  1  |  1  |
+| ... |
+|  1  |  1  |  1  |  1  |  1  |  1  |  1  |  1  |
 
 Many different ways to utilise the information capacity of a byte.
 
@@ -218,16 +219,16 @@ instruction. Early machines used 8-bits; today the norm is 64-bits.
   - A bit must be kept steady on the wire for a minimum bit time to be properly detected be receiver.
   - bit time varies according to the technology.
 - To carry n-bits, can use one wire (serial transmission) taking n bit times, or n wires running
-in parallel (parallel transmission) taking 1 bit time. This arrangement is called an n-bit bus.
+  in parallel (parallel transmission) taking 1 bit time. This arrangement is called an n-bit bus.
 
 ## Basic Components
 
 - A 1-bit memory (build into n-bit registers to store binary code words)
-![图解](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-10-1696898790.png)
+  ![图解](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-10-1696898790.png)
 
 - Note: register is the hardware: byte/word is the content.
 - In addition to storage, we need physical devices to perform useful operations on bits and on
-code words. Examples:
+  code words. Examples:
   - Inverter (or NOT gate)
     - One wire in, one wire out, flips input bit (H → L, L →H)
   - n-bit adder (see later)
@@ -242,5 +243,5 @@ code words. Examples:
   - E.g. 1001 may represent any one of a number (e.g. 9 in one code), a different number in another code (e.g. -7); a letter (e.g. “q”), a month (e.g. September), an instruction (e.g. MULTIPLY), or many other things.
   - Which one it is, is determined by the context.
   - This information must be supplied by the person who designed the hardware or the software, typically an engineer or a programmer.
-  
+
 {% include busuanzi.html %}
