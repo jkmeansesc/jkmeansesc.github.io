@@ -33,21 +33,22 @@ flowchart LR
     A((Data in)) --> B(Processor) --> D((Data out))
     C((Program)) --> B --> C
 ```
+
 - Strength: generality. Program instructs hardware to process incoming data in any chosen way.
 
 ## Different Kinds of Computers
 
 - Personal computer
-    - Variety of formats to support users directly (usually just one user or one at a
+  - Variety of formats to support users directly (usually just one user or one at a
 time): desktop, laptop, tablet, phone, “wearable”.
 - Server
-    - Designed to run services handling requests from many networked clients simultaneously (e.g. web server, file server, email server, etc.)
+  - Designed to run services handling requests from many networked clients simultaneously (e.g. web server, file server, email server, etc.)
 - Embedded computer
-    - A component that adds functionality to a bigger machine.
-    - E.g. engine management unit in a car.
+  - A component that adds functionality to a bigger machine.
+  - E.g. engine management unit in a car.
 - High performance computer
-    - Use many processors that cooperate to solve large scale problems.
-    - May be a single machine with many processors (CPUs) or consist of many computers cooperating over a network.
+  - Use many processors that cooperate to solve large scale problems.
+  - May be a single machine with many processors (CPUs) or consist of many computers cooperating over a network.
 
 ## Numbers and Data
 
@@ -61,7 +62,7 @@ represent physical things.
 - Data (plural) arise from use of number in modelling reality. There are two mechanisms whereby this happens: labelling (which also implies counting) and measurement.
 - While operating on data (aka processing) is not a physical activity (data are ultimately numbers and numbers are not physical) it can become too onerous for human abilities when data volumes are large: this is the motivation for seeking assistance from data processing machines. One of the earliest examples of such a device was the abacus.
 
-## Data: Labelling and Measurement.
+## Data: Labelling and Measurement
 
 - Labelling. Take a set of items and map these onto whole numbers (0, 1, 2…etc) by assigning a different whole number to each one. If the elements have names, numbers can then be used interchangeably with the names.
   - E.g. Days of the week, with: Sunday = 0, Monday =1, …, Saturday = 6.
@@ -109,7 +110,7 @@ represent physical things.
 - sometimes called low and high or false and true
 - The values are often labelled 0 and 1 and called bits (BInary digits).
 - Only need to be able to tell 2 values apart so superior resistance to noise errors.
-    ![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-10-1696895908.png){: .right  w="300" h="200"}
+    ![图解](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-10-1696895908.png){: .right  w="300" h="200"}
   - Only two values are valid and everything else the receiver sees is rounded to the nearest of these.
   - E.g. a low needs a substantial upward spike of noise to be seen as a high.
   - The further apart the low and high are the more resistance to noise is.
@@ -119,7 +120,7 @@ represent physical things.
 ## Binary Codes
 
 - A mapping from a data set to binary code words is called a binary code.
-![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-10-1696896436.png){: w="400" h="300"}
+![图解](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-10-1696896436.png){: w="400" h="300"}
 - Many codes can be defined on the same data set.
 - Can represent any finite data set fully by using enough bits
 - Can even represent real numbers to any desired degree of accuracy (by
@@ -144,17 +145,17 @@ flowchart
   0
 ```
 
-  - Take a data bit and store it
-  - Remember the value indefinitely
-  - Read out the stored value
+- Take a data bit and store it
+- Remember the value indefinitely
+- Read out the stored value
 
 The computer’s memory consists of a large number of these basic circuits.
 
 Think of a bit storage circuit as a box that
 
-  - contains one bit
-  - can read out its contents
-  - can store a new bit value
+- contains one bit
+- can read out its contents
+- can store a new bit value
   
 This hardware behaves much like a variable in a high-level language (HLL) like Java or C.
 
@@ -183,7 +184,7 @@ Many different ways to utilise the information capacity of a byte.
 
 A word is a larger amount of information. One common convention:
 
-```
+```text
 Short word  16 bits  2 bytes
 Word       32 bits  4 bytes
 Long word  64 bits  8 bytes
@@ -210,9 +211,9 @@ instruction. Early machines used 8-bits; today the norm is 64-bits.
   - In electronic devices this is done by conducting wires.
   - Each wire can represent one bit at a time (as a high or low voltage between wire & ground).
 - A bit (H or L) is forced onto one end of wire by a line driver (output) in the sending component…
-  ![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-10-1696898464.png)
+  ![图解](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-10-1696898464.png)
 - …and detected by a line receiver (input) in the receiving component
-- ![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-10-1696898507.png)
+- ![图解](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-10-1696898507.png)
 - Multiple bits can be sent in sequence over the same wire, but one at a time:
   - A bit must be kept steady on the wire for a minimum bit time to be properly detected be receiver.
   - bit time varies according to the technology.
@@ -222,7 +223,7 @@ in parallel (parallel transmission) taking 1 bit time. This arrangement is calle
 ## Basic Components
 
 - A 1-bit memory (build into n-bit registers to store binary code words)
-![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-10-1696898790.png)
+![图解](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-10-1696898790.png)
 
 - Note: register is the hardware: byte/word is the content.
 - In addition to storage, we need physical devices to perform useful operations on bits and on
@@ -232,7 +233,7 @@ code words. Examples:
   - n-bit adder (see later)
     - E.g. n = 4. Takes in two 4-bit codewords, treating them as numbers and generates 4- bit codeword of the sum.
     - Say, “adding” 2 + 5
-    - ![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-10-1696898879.png)
+    - ![图解](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-10-1696898879.png)
 
 ## A Final Note on Codewords
 
