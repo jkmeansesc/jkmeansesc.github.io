@@ -1,6 +1,6 @@
 ---
 layout: post
-title: java array
+title: Java 数组
 date: 2023-10-11 22:21 +0800
 description:
 image: https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-11-1697034566.jpg
