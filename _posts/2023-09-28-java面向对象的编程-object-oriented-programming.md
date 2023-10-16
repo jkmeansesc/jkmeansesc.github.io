@@ -60,7 +60,7 @@ published: true
 
 用图形描述我们的概念：
 
-![用图形描述概念](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-09-28-1695871650.png)
+![图解](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-09-28-1695871650.png)
 
 以上描述的是类的属性，也就是状态信息，接下来，再做进一步的细化。
 
