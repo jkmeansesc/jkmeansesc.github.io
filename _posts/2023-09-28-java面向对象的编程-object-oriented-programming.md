@@ -60,19 +60,11 @@ published: true
 
 用图形描述我们的概念：
 
-<<<<<<< HEAD
-![图解](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-09-28-1695871650.png)
-
-以上描述的是类的属性，也就是状态信息，接下来，再做进一步的细化。
-
-![进一步细化](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-09-28-1695870918.png)
-=======
 ![image](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-09-28-1695871650.png)
 
 以上描述的是类的属性，也就是状态信息，接下来，再做进一步的细化。
 
 ![image](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-09-28-1695870918.png)
->>>>>>> DEV_chirpy
 
 通过以上分析，可以得出：
 
@@ -210,12 +202,7 @@ class Student {
         Student zhangsan = new Student(1001, "张三", true, "北京", 20);
 ```
 
-<<<<<<< HEAD
 {: .prompt-info }
-=======
-> 手动建立的构造方法，将会把默认的构造方法覆盖掉。
-> {: .prompt-info }
->>>>>>> DEV_chirpy
 
 > 手动建立的构造方法，将会把默认的构造方法覆盖掉。
 
@@ -223,11 +210,7 @@ class Student {
 
 ### Java 内存的主要划分
 
-<<<<<<< HEAD
-![图解](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-09-30-1696032746.png)
-=======
 ![image](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-09-30-1696032746.png)
->>>>>>> DEV_chirpy
 
 #### 栈 Stack
 
@@ -258,11 +241,7 @@ class Student {
 Student zhangsan = new Student();
 ```
 
-<<<<<<< HEAD
-![图解](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-09-30-1696034218.png)
-=======
 ![image](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-09-30-1696034218.png)
->>>>>>> DEV_chirpy
 
 - 第二步，对 student 赋值。
 
@@ -274,11 +253,7 @@ zhangsan.address = "北京";
 zhangsan.age = 20;
 ```
 
-<<<<<<< HEAD
-![图解](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-09-30-1696034938.png)
-=======
 ![image](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-09-30-1696034938.png)
->>>>>>> DEV_chirpy
 
 #### 对象没有更多的引用指向，则变成垃圾
 
@@ -309,11 +284,7 @@ public class test{
     }
 ```
 
-<<<<<<< HEAD
-![图解](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-09-30-1696037710.png)
-=======
 ![image](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-09-30-1696037710.png)
->>>>>>> DEV_chirpy
 
 以上代码执行过程，首先在栈中创建 main 方法栈帧，初始化 i 的值为 10，将此栈帧压入栈，接着调用 method()方法，通常是在栈区创建新的栈帧，并赋值 temp 为 1，压入栈中，两栈帧都是独立的，他们之间的值是不能互访的。然后 method()方法栈帧弹出，接下来执行输出 i 值的语句，因为传递的是值，所以不会改变 i 的值，输出结果 i 的值仍然为 10，最后将 main 方法栈帧弹出，main 方法执行完毕。
 
@@ -379,16 +350,10 @@ this 关键字可以使用在：
 - 当局部变量和成员变量重名的时候可以使用 this 指定调用成员变量。
 - 通过 this 调用另一个构造方法。
 
-<<<<<<< HEAD
 {: .prompt-info }
 
 > this 只能用在构造函数和成员方法内部，还可以应用在成员变量的声明上，static 标识的方法里是不能使用 this 的。
 
-=======
-> this 只能用在构造函数和成员方法内部，还可以应用在成员变量的声明上，static 标识的方法里是不能使用 this 的。
-> {: .prompt-info }
-
->>>>>>> DEV_chirpy
 ### 当局部变量和成员变量重名的时候可以使用 this 指定调用成员变量
 
 ```java
@@ -560,16 +525,10 @@ public class Test {
     }
 }
 ```
-<<<<<<< HEAD
 
 {: .prompt-info }
 
 > static 声明的变量或 static 语句块在类加载时就会初始化，而且只初始化一次。
-=======
-
-> static 声明的变量或 static 语句块在类加载时就会初始化，而且只初始化一次。
-> {: .prompt-info }
->>>>>>> DEV_chirpy
 
 ### 解释 main 方法
 
@@ -819,11 +778,7 @@ class Employee extends Person {
 }
 ```
 
-<<<<<<< HEAD
-![图解](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-09-30-1696102002.png)
-=======
 ![image](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-09-30-1696102002.png)
->>>>>>> DEV_chirpy
 
 #### 继承并覆盖父类中的方法
 
@@ -856,11 +811,7 @@ class Employee extends Person {
 }
 ```
 
-<<<<<<< HEAD
-![图解](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-09-30-1696102653.png)
-=======
 ![image](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-09-30-1696102653.png)
->>>>>>> DEV_chirpy
 
 以上子类对父类的方法进行了覆盖，改变了父类的行为，当我们 new 子类的时候，它不会再调用父类的方法了，而直接调用子类的方法，所以我们就完成了对父类行为的扩展。
 
@@ -932,11 +883,7 @@ class Employee extends Person {
 }
 ```
 
-<<<<<<< HEAD
-![图解](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-09-30-1696106033.png)
-=======
 ![image](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-09-30-1696106033.png)
->>>>>>> DEV_chirpy
 
 结论：
 
@@ -955,16 +902,10 @@ super 关键字的作用：
 - 调用父类的构造方法
 - 调用父类的成员方法
 
-<<<<<<< HEAD
-> super 只能应用在成员方法和构造方法中，不能应用在静态方法中(和 this 是一样的)，如果在构造方法中使用必须放在第一行。
-> {: .prompt-info}
-
-=======
 {: .prompt-info}
 
 > super 只能应用在成员方法和构造方法中，不能应用在静态方法中(和 this 是一样的)，如果在构造方法中使用必须放在第一行。
 
->>>>>>> DEV_chirpy
 为什么会有 super 关键字?
 
 - 因为子类必须要调用父类的构造方法，先把父类构造完成，因为子类依赖于父类，没有父，也就没有子。
@@ -974,12 +915,7 @@ super 关键字的作用：
 
 - 因为子类中我们没有显示的调用构造方法，那么他会默认调用父类的无参构造方法，此种情况下如果父类中没有无参构造方法，那么编译时将会失败。
 
-<<<<<<< HEAD
-> 构造方法不存在覆盖的概念，构造方法可以重载
-> {: .prompt-info}
-=======
 {: .prompt-info}
->>>>>>> DEV_chirpy
 
 > 构造方法不存在覆盖的概念，构造方法可以重载
 
@@ -996,12 +932,7 @@ class Student extends Person {
 }
 ```
 
-<<<<<<< HEAD
-> 必须将 super 放到构造函数的第一语句，必须先创建父类，才能创建子类。
-> {: .prompt-info}
-=======
 {: .prompt-info}
->>>>>>> DEV_chirpy
 
 > 必须将 super 放到构造函数的第一语句，必须先创建父类，才能创建子类。
 
@@ -1137,11 +1068,7 @@ class Person {
 }
 ```
 
-<<<<<<< HEAD
-![图解](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-01-1696118453.png)
-=======
 ![image](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-01-1696118453.png)
->>>>>>> DEV_chirpy
 
 - 构造方法不能被 final 修饰
 - **会影响 JAVA 类的初始化：final 定义的静态常量调用时不会执行 java 的类初始化方法，也就是说不会执行 static 代码块等相关语句，这是由 java 虚拟机规定的。我们不需要了解的很深，有个概念就可以了。**
@@ -1158,11 +1085,7 @@ class Person {
 - 抽象类不能被 final 修饰
 - 抽象方法不能被 final 修饰，因为抽象方法就是被子类实现的。抽象类中可以包含方法实现，可以将一些公共的代码放到抽象类中，另外在抽象类中可以定义一些抽象的方法，这样就会存在一个约束，而子类必须实现我们定义的方法，如：teacher 必须实现 printInfo()方法，Student 也必须实现 printInfo()方法，方法名称不能修改，必须为 printInfo()，这样就能实现多态的机制，有了多态的机制，我们在运行期就可以动态的调用子类的方法。所以在运行期可以灵活的互换实现。
 
-<<<<<<< HEAD
-![图解](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-01-1696119266.png)
-=======
 ![image](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-01-1696119266.png)
->>>>>>> DEV_chirpy
 
 ### 采用 abstract 声明抽象类
 
@@ -1207,12 +1130,7 @@ class Student extends Person {
 }
 ```
 
-<<<<<<< HEAD
-> 抽象类中可以没有抽象方法
-> {: .prompt-info}
-=======
 {: .prompt-info}
->>>>>>> DEV_chirpy
 
 > 抽象类中可以没有抽象方法
 
@@ -1502,15 +1420,9 @@ interface Inter3 {
 示例：完成学生信息的增删改操作，系统要求适用于多个数据库，如：适用于 MySQL 和 Oracle
 
 - 第一种方案，不使用接口，每个数据库实现一个类：
-<<<<<<< HEAD
-  ![图解](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-01-1696123484.png)
-
-Oracle 的实现
-=======
   ![image](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-01-1696123484.png)
 
 #### Oracle 的实现
->>>>>>> DEV_chirpy
 
 ```java
 public class StudentOracleImpl {
@@ -1571,11 +1483,7 @@ public class StudentManager {
 以上代码不能灵活的适应需求，当需求发生改变需要改动的代码量太大，这样可能会导致代码的冗余，另外可能会导致项目的失败，为什么会导致这个问题，在开发中没有考虑到程序的扩展性，就是一味的实现，这样做程序是不行的，所以大的项目比较追求程序扩展性，有了扩展性才可以更好的适应需求。
 
 - 第二种方案，使用接口
-<<<<<<< HEAD
-  ![图解](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-01-1696124242.png)
-=======
   ![image](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-01-1696124242.png)
->>>>>>> DEV_chirpy
 
 ```java
 public class Student4OracleImpl implements IStudent {
@@ -1732,15 +1640,6 @@ System.out.println(student);
 
 ```java
 class Person {
-<<<<<<< HEAD
- String name;
- int age;
-
- Person(String name, int age) {
-  this.name = name;
-  this.age = age;
- }
-=======
     String name;
     int age;
 
@@ -1748,48 +1647,17 @@ class Person {
     this.name = name;
     this.age = age;
     }
->>>>>>> DEV_chirpy
 
  // 重写toString方法
  // 根据项目的需求而定
  // 需求规定，显示格式：Person[name=刘德华，age=50]
  public String toString() {
-<<<<<<< HEAD
-  return "Person[name=" + name + ",age=" + age + "]";
- }
-=======
     return "Person[name=" + name + ",age=" + age + "]";
     }
->>>>>>> DEV_chirpy
 }
 
 public class Test {
 
-<<<<<<< HEAD
- // 入口
- public static void main(String[] args) {
-  // 创建一个Object类型的对象
-  Object o1 = new Object();
-
-  // 调用toString方法
-  String oStr = o1.toString();
-  System.out.println(oStr);
-
-  // 创建一个Person类型的对象
-  Person p1 = new Person("刘德华", 50);
-
-  // 调用toString方法
-  String pStr = p1.toString();
-  System.out.println(pStr);
-
-  Person p2 = new Person("巩俐", 50);
-  System.out.println(p2.toString());
-
-  // print方法后面括号中如果是一个引用类型，会默认调用引用类型的toString方法
-  System.out.println(p2);
-
- }
-=======
     // 入口
     public static void main(String[] args) {
     // 创建一个Object类型的对象
@@ -1812,7 +1680,6 @@ public class Test {
     // print方法后面括号中如果是一个引用类型，会默认调用引用类型的toString方法
     System.out.println(p2);
     }
->>>>>>> DEV_chirpy
 }
 ```
 
