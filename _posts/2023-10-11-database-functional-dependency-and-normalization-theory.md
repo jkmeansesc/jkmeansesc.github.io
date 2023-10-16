@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Week 3 Functional Dependency Theory & Normalization - 函数依赖理论和规范化
+title: 关系型数据库之函数依赖与规范化理论
 date: 2023-10-11 21:20 +0800
 description:
 image:
@@ -14,4 +14,3 @@ pin: false
 sitemap: true
 published: false
 ---
-

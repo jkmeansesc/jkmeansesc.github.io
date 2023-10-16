@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Java面向对象的编程 - Object Oriented Programming
+title: Java 面向对象的编程
 date: 2023-09-28 07:51 +0800
 description:
 image: https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-09-28-1695871211.jpg

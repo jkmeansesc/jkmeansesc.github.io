@@ -1,14 +1,14 @@
 ---
 layout: post
-title: Java异常处理 - Exception
+title: Java 异常处理
 date: 2023-10-11 05:32 +0800
 description:
 image: https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-10-1696973814.jpg
 category:
-- 编程语言
-- JAVA
+  - 编程语言
+  - JAVA
 tags:
-- java
+  - java
 toc: true
 comments: true
 math: false
@@ -17,6 +17,7 @@ pin: false
 sitemap: true
 published: true
 ---
+
 ## 异常的基本概念
 
 - 异常模拟的是现实世界中“不正常”的事件。

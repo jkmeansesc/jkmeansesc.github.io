@@ -1,14 +1,14 @@
 ---
 layout: post
-title: Java语言基础 - Basics
+title: Java 语言基础
 date: 2023-09-26 04:33 +0800
 description:
 image: https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-09-28-1695871254.jpg
 category:
-- 编程语言
-- JAVA
+  - 编程语言
+  - JAVA
 tags:
-- java
+  - java
 toc: true
 comments: true
 math: false
