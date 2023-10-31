@@ -14,7 +14,7 @@ comments: true
 math: false
 mermaid: false
 pin: false
-sitemap: false
+sitemap: true
 published: true
 ---
 
