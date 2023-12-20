@@ -23,7 +23,7 @@ lang: zh-CN
 
 ### 初始化一个bare git repo
 
-```shell
+```bash
 git init --bare $HOME/github/dotfiles
 
 ```
@@ -32,7 +32,7 @@ git init --bare $HOME/github/dotfiles
 
 ### 添加alias到.zshrc (或.bashrc，取决与你的shell）
 
-```shell
+```bash
 alias config='$(which git) --git-dir=$HOME/github/dotfiles/ --work-tree=$HOME'
 ```
 
@@ -44,13 +44,13 @@ alias config='$(which git) --git-dir=$HOME/github/dotfiles/ --work-tree=$HOME'
 这样，当键入 'config status' 和其他命令时，我们不感兴趣跟踪的文件将不会显示为
 `untracked`
 
-```shell
+```bash
 config config --local status.showUntrackedFiles no
 ```
 
 ### 开始利用git追踪文件
 
-```shell
+```bash
 config add .zshrc
 config status
 config commit -m "add .zshrc"
@@ -58,19 +58,19 @@ config commit -m "add .zshrc"
 
 创建一个空的github repo，并配置origin
 
-```shell
+```bash
 config remote add git@github.com:minicoderwen/dotfiles.git
 ```
 
 push到远程分支
 
-```shell
+```bash
 config push -u origin main
 ```
 
 ## 恢复dotfiles到新系统
 
-```shell
+```bash
 alias config='/usr/bin/git --git-dir=$HOME/github/dotfiles --work-tree=$HOME' # 添加到.zshrc
 source .zshrc # 使alias生效
 echo "github/dotfiles" >> .gitignore # 添加dotfile目录到gitignore
@@ -81,7 +81,7 @@ config checkout
 
 如果出现类似如下错误，表明本地目录已经有文件存在了
 
-```shell
+```bash
 error: The following untracked working tree files would be overwritten by checkout:
     .bashrc
     .gitignore
@@ -91,7 +91,7 @@ Aborting
 
 可以使用如下脚本备份本地已经存在的配置文件到 `.config-backup`
 
-```shell
+```bash
 git clone --bare https://bitbucket.org/durdn/cfg.git $HOME/.cfg
 function config {
    /usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME $@
