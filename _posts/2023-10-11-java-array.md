@@ -16,6 +16,7 @@ mermaid: true
 pin: false
 sitemap: true
 published: true
+lang: zh-CN
 ---
 
 ## 什么是数组？

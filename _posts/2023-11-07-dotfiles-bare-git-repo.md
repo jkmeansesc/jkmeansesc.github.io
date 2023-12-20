@@ -16,6 +16,7 @@ mermaid: false
 pin: false
 sitemap: true
 published: true
+lang: zh-CN
 ---
 
 ## 如何使用git bare仓库管理dotfiles？

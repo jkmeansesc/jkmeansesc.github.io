@@ -16,11 +16,12 @@ mermaid: false
 pin: false
 sitemap: true
 published: true
+lang: zh-CN
 ---
 
 ## Java 的发展历程
 
-Java 来自于 sun，aka 斯坦福大学网络。
+Java 来自sun，aka斯坦福大学网络。
 
 |     时间     | 描述                                                                                                          |
 | :----------: | :------------------------------------------------------------------------------------------------------------ |
@@ -33,7 +34,7 @@ Java 来自于 sun，aka 斯坦福大学网络。
 |     2000     | J2SE1.3                                                                                                       |
 |     2002     | J2SE1.4                                                                                                       |
 |     2004     | 此时不再叫 J2SE1.5,叫 5.0                                                                                     |
-|     2005     | 2005 Java 10 周年，将 J2SE 改为 JAVA SE、 将 J2EE 改为 JAVAEE、将 J2ME 改为 JAVA                              |
+|     2005     | 2005 Java 10 周年，将 J2SE 改为 JAVASE、 将 J2EE 改为 JAVAEE、将 J2ME 改为 JAVA                              |
 |     2006     | JDK6                                                                                                          |
 |     2009     | Oracle 收购 SUN 公司，BEA 公司（JavaEE 服务器 Weblogic）。                                                    |
 |     2011     | JDK7 发布，提供新的 G1 收集器、加强对非 Java 语言的调用支持、可并行的类加载架构等。                           |

@@ -123,11 +123,6 @@ jekyll_compose:
       image:
       category:
       tags:
-    posts:
-      description:
-      image:
-      category:
-      tags:
       toc: true #default: true
       comments: true
       math: false # default: false
@@ -135,6 +130,20 @@ jekyll_compose:
       pin: false
       sitemap: true
       published: false
+      lang: zh-CN
+    posts:
+      description:
+      image:
+      category:
+      tags:
+      toc: true
+      comments: true
+      math: false
+      mermaid: false
+      pin: false
+      sitemap: true
+      published: false
+      lang: zh-CN
 
 plugins:
   - jekyll-sitemap

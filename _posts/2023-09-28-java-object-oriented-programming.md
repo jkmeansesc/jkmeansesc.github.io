@@ -16,6 +16,7 @@ mermaid: false
 pin: false
 sitemap: true
 published: true
+lang: zh-CN
 ---
 
 ## 面向过程与面向对象的区别

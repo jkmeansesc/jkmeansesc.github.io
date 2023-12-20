@@ -16,6 +16,7 @@ mermaid: false
 pin: false
 sitemap: true
 published: true
+lang: zh-CN
 ---
 
 ## 异常的基本概念
