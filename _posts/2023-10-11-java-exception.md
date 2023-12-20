@@ -147,7 +147,7 @@ public class ExceptionTest06 {
 
 ## finally 关键字
 
-- finally 在任何情况下都会执行，通常在 finally 里关闭资源（只有在执行 finnaly 语句块之前退出了 JVM，则 finally 语句块不会执行）。
+- finally 在任何情况下都会执行，通常在 finally 里关闭资源（只有在执行 finally 语句块之前退出了 JVM，则 finally 语句块不会执行）。
 
 - finally 语句块可以直接和 try 语句块连用 try...finally...
 

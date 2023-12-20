@@ -21,7 +21,7 @@ lang: zh-CN
 
 ## Java 的发展历程
 
-Java 来自sun，aka斯坦福大学网络。
+Java 来自 sun，aka 斯坦福大学网络。
 
 |     时间     | 描述                                                                                                          |
 | :----------: | :------------------------------------------------------------------------------------------------------------ |
@@ -34,7 +34,7 @@ Java 来自sun，aka斯坦福大学网络。
 |     2000     | J2SE1.3                                                                                                       |
 |     2002     | J2SE1.4                                                                                                       |
 |     2004     | 此时不再叫 J2SE1.5,叫 5.0                                                                                     |
-|     2005     | 2005 Java 10 周年，将 J2SE 改为 JAVASE、 将 J2EE 改为 JAVAEE、将 J2ME 改为 JAVA                              |
+|     2005     | 2005 Java 10 周年，将 J2SE 改为 JAVASE、 将 J2EE 改为 JAVAEE、将 J2ME 改为 JAVA                               |
 |     2006     | JDK6                                                                                                          |
 |     2009     | Oracle 收购 SUN 公司，BEA 公司（JavaEE 服务器 Weblogic）。                                                    |
 |     2011     | JDK7 发布，提供新的 G1 收集器、加强对非 Java 语言的调用支持、可并行的类加载架构等。                           |
@@ -67,7 +67,7 @@ Java 来自sun，aka斯坦福大学网络。
 |  public1   |    public    |
 | HelloWord  | Hello World  |
 
-### CamelCase - 驼峰命名法
+### Camel Case - 驼峰命名法
 
 - 类名称的第一个字符大写，接下来遇到新词首字母大写
 - 方法名称首字母小写，接下来遇到新词首字母大写
@@ -106,11 +106,11 @@ Java 来自sun，aka斯坦福大学网络。
 
 在计算机内部，所有信息都采用二进制表示，每个二进制由 0 和 1 两种状态，一个字节有 8 位，也就是由 8 个 0 或 1 构成。
 
-short 类型的 6 在计算机中是如何存储的？short 是两个字节，那么 short 6 的二进制为: 00000000 00000110
+`short` 类型的 6 在计算机中是如何存储的？short 是两个字节，那么 short 6 的二进制为: 00000000 00000110
 
-int 类型的 6 在计算机中存储为 32 位: 00000000 00000000 00000000 00000110
+`int` 类型的 6 在计算机中存储为 32 位: 00000000 00000000 00000000 00000110
 
-char 类型可以存放一个汉字，java 中的 char 使用 utf-16 编码。
+`char` 类型可以存放一个汉字，java 中的 char 使用 utf-16 编码。
 
 ```java
         char c = '中';
@@ -233,11 +233,11 @@ char 类型可以存放一个汉字，java 中的 char 使用 utf-16 编码。
   char l = 'a';
   System. out.println(l);
 
-  //输出结果为 97，也就是a的 ascii 值
+  //输出结果为 97，也就是a的 ASCII 值
   System.out.println((byte)l);
 
   int m = l + 100;
-  //输出结构为197,取得a的ascii码值，让后与100进行相加运算
+  //输出结构为197,取得a的ASCII码值，让后与100进行相加运算
   System.out.println(m);
 ```
 
@@ -254,7 +254,7 @@ char 类型可以存放一个汉字，java 中的 char 使用 utf-16 编码。
 |    %    | 取模运算，两数字相除取余数 |
 | ++，- - |        自增自减运算        |
 
-i++ : 先赋值再运算
+`i++` : 先赋值再运算
 
 ```java
   int a = 1;
@@ -265,7 +265,7 @@ i++ : 先赋值再运算
   System.out.println("b=" + b); // 1
 ```
 
-++i : 先运算再赋值
+`++i` : 先运算再赋值
 
 ```java
   int a = 1;
@@ -486,7 +486,7 @@ public class test {
 
   可选，方法的修饰符可以包括:
 
-  public protected private abstract static final synchronized
+  `public` `protected` `private` `abstract` `static` `final` `synchronized`
 
   其中 public protected private 不能同时存在。
 
@@ -503,7 +503,7 @@ public class test {
 
 - 方法参数列表 - Parameters/Arguments
 
-  参数列表可以多个，如 method1(int a, int b)
+  参数列表可以多个，如 method(int a, int b)
 
 ```java
     public static void main(String[] args) {

@@ -41,7 +41,7 @@ alias config='$(which git) --git-dir=$HOME/github/dotfiles/ --work-tree=$HOME'
 ### 设置flag隐藏不需要追踪的文件
 
 设置一个flag --local 以隐藏尚未明确跟踪的文件。
-这样，当键入 'config status' 和其他命令时，我们不感兴趣跟踪的文件将不会显示为
+这样，当键入 `config status` 和其他命令时，我们不感兴趣跟踪的文件将不会显示为
 `untracked`
 
 ```bash
@@ -62,7 +62,7 @@ config commit -m "add .zshrc"
 config remote add git@github.com:minicoderwen/dotfiles.git
 ```
 
-push到远程分支
+`push`到远程分支
 
 ```bash
 config push -u origin main
