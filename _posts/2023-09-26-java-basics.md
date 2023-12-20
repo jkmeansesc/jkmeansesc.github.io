@@ -168,77 +168,77 @@ char 类型可以存放一个汉字，java 中的 char 使用 utf-16 编码。
     - 在多种类型混合运算过程中，首先先将所有数据转换成容量最大的那种，再运算
 
 ```java
-//出现错误，1000超出了byte的范围
-byte a = 1000;
+  //出现错误，1000超出了byte的范围
+  byte a = 1000;
 
-//正确，因为20没有超出byte范围
-byte a = 20;
+  //正确，因为20没有超出byte范围
+  byte a = 20;
 
-//正确，因为数值1000没有超出short类型的范围
-short b = 1000;
+  //正确，因为数值1000没有超出short类型的范围
+  short b = 1000;
 
-//正确，因为默认就是int，并且没有超出int范围
-int c = 1000;
+  //正确，因为默认就是int，并且没有超出int范围
+  int c = 1000;
 
-//正确，可以自动转换
-long d = c;
+  //正确，可以自动转换
+  long d = c;
 
-//错误，出现精度丢失问题，大类型-->>小类型会出现问题
-int e = d;
+  //错误，出现精度丢失问题，大类型-->>小类型会出现问题
+  int e = d;
 
-//将long强制转换成int类型
-//因为值1000，没有超出int范围，所以转换是正确的
-int e = (int)d;
+  //将long强制转换成int类型
+  //因为值1000，没有超出int范围，所以转换是正确的
+  int e = (int)d;
 
-//因为java中的运算会会转成最大类型
-//而10和3默认为int,所以运算后的最大类型也是int
-int f = 10/3;
+  //因为java中的运算会会转成最大类型
+  //而10和3默认为int,所以运算后的最大类型也是int
+  int f = 10/3;
 
-//声明10为long类型
-long g = 10;
+  //声明10为long类型
+  long g = 10;
 
-//出现错误，多个数值在运算过程中，会转换成容量最大的类型
-//以下示例最大的类型为double，而h为int，所以就会出现大类型(long)到小类型(int)的转换，将会出现精度丢失问题
-int h = g/3;
+  //出现错误，多个数值在运算过程中，会转换成容量最大的类型
+  //以下示例最大的类型为double，而h为int，所以就会出现大类型(long)到小类型(int)的转换，将会出现精度丢失问题
+  int h = g/3;
 
-//可以强制转换,因为运算结果没有超出int范围
-int h = (int)g/3;
+  //可以强制转换,因为运算结果没有超出int范围
+  int h = (int)g/3;
 
-//可以采用long类型来接收运算结果
-long h = g/3;
+  //可以采用long类型来接收运算结果
+  long h = g/3;
 
-//出现精度损失问题，以下问题主要是优先级的问题
-//将g转换成int，然后又将int类型的g转换成byte,最后byte类型的g和3运算，那么它的运算结果类型就是int，所以int赋值给byte就出现了精度损失问题
-byte h = (byte)(int)g/3;
-//正确
-byte h = (byte)(int)(g/3);
-//不能转换,还有因为优先级的问题
-byte h = (byte)g/3;
-//可以转换，因为运算结果没有超出byte范围
-byte h = (byte)(g/3);
-//可以转换，因为运算结果没有超出short范围
-short h = (short)(g/3);
+  //出现精度损失问题，以下问题主要是优先级的问题
+  //将g转换成int，然后又将int类型的g转换成byte,最后byte类型的g和3运算，那么它的运算结果类型就是int，所以int赋值给byte就出现了精度损失问题
+  byte h = (byte)(int)g/3;
+  //正确
+  byte h = (byte)(int)(g/3);
+  //不能转换,还有因为优先级的问题
+  byte h = (byte)g/3;
+  //可以转换，因为运算结果没有超出byte范围
+  byte h = (byte)(g/3);
+  //可以转换，因为运算结果没有超出short范围
+  short h = (short)(g/3);
 
-short i = 10; byte j = 5;
-//错误，short和byte运算，首先会转换成int再运算
-//所以运算结果为int，int赋值给short就会出现精度丢失问题
-short k = i + j;
+  short i = 10; byte j = 5;
+  //错误，short和byte运算，首先会转换成int再运算
+  //所以运算结果为int，int赋值给short就会出现精度丢失问题
+  short k = i + j;
 
-//可以将运算结果强制转换成short
-short k = (short)(i + j);
+  //可以将运算结果强制转换成short
+  short k = (short)(i + j);
 
-//因为运算结果为int，所以可以采用int类型接收
-int k =i + j;
+  //因为运算结果为int，所以可以采用int类型接收
+  int k =i + j;
 
-char l = 'a';
-System. out.println(l);
+  char l = 'a';
+  System. out.println(l);
 
-//输出结果为 97，也就是a的 ascii 值
-System.out.println((byte)l);
+  //输出结果为 97，也就是a的 ascii 值
+  System.out.println((byte)l);
 
-int m = l + 100;
-//输出结构为197,取得a的ascii码值，让后与100进行相加运算
-System.out.println(m);
+  int m = l + 100;
+  //输出结构为197,取得a的ascii码值，让后与100进行相加运算
+  System.out.println(m);
 ```
 
 ## Operator - 运算符
@@ -257,24 +257,23 @@ System.out.println(m);
 i++ : 先赋值再运算
 
 ```java
-int a = 1;
-int b = a++;
+  int a = 1;
+  int b = a++;
 
-// ++在变量的后面，先把值赋值给b，然后a再加(也就是先赋值再自加)，所以就输出了a=2 b=1
-System.out.println("a=" + a); // 2
-System.out.println("b=" + b); // 1
+  // ++在变量的后面，先把值赋值给b，然后a再加(也就是先赋值再自加)，所以就输出了a=2 b=1
+  System.out.println("a=" + a); // 2
+  System.out.println("b=" + b); // 1
 ```
 
 ++i : 先运算再赋值
 
 ```java
-int a = 1;
-int b = ++a;
+  int a = 1;
+  int b = ++a;
 
-// 输出结果为a=2 b=2，如果++在变量的前面，是先自加在赋值
-System.out.println("a=" + a); // 2
-System.out.println("b=" + b); // 2
-
+  // 输出结果为a=2 b=2，如果++在变量的前面，是先自加在赋值
+  System.out.println("a=" + a); // 2
+  System.out.println("b=" + b); // 2
 ```
 
 ### 比较运算符
@@ -317,11 +316,11 @@ System.out.println("b=" + b); // 2
 | x?a:b  | 判断 x，x 为真，表达式值为 a，x 为假，表达式值为 b |
 
 ```java
-int a = 11;
-int b = a > 0 ? 1 : -1;
-System.out.println(b); // 1
-boolean c = a % 2 == 0 ? true : false;
-System.out.println(c); // false
+  int a = 11;
+  int b = a > 0 ? 1 : -1;
+  System.out.println(b); // 1
+  boolean c = a % 2 == 0 ? true : false;
+  System.out.println(c); // false
 ```
 
 ## Java 的加载与运行
