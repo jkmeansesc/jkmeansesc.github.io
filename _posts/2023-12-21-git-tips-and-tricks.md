@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Git 用过的招和踩过的坑
+title: git tips and tricks
 description:
 image: https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-05-1696543005.jpg
 category:
@@ -15,7 +15,7 @@ pin: false
 sitemap: true
 published: true
 lang: zh-CN
-date: 2023-12-21 10:33 +0800
+date: 2023-12-21 10:35 +0800
 ---
 > 随缘更新
 
