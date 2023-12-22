@@ -1,12 +1,12 @@
 ---
 layout: post
-title: git tips and tricks
+title: git用过的招和踩过的坑
 description:
 image: https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-05-1696543005.jpg
 category:
-- 不学无术
+  - 不学无术
 tags:
-- git
+  - git
 toc: true
 comments: true
 math: false
@@ -17,6 +17,7 @@ published: true
 lang: zh-CN
 date: 2023-12-21 10:35 +0800
 ---
+
 > 随缘更新
 
 ## 用过的招
@@ -70,9 +71,8 @@ https://github.com/minicoderwen/minicoderwen.github.io.git
 
 ```bash
 git remote set-url <这里填仓库ssh的地址>
+git push
 ```
-
-再 git push 就行了。
 
 [参考链接：https://www.zhihu.com/question/55865892](https://www.zhihu.com/question/55865892)
 
