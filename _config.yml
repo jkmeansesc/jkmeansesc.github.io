@@ -20,10 +20,9 @@ timezone: Asia/Shanghai
 
 title: 小文写字的地方 # the main title
 
-tagline: 我的成精之路 # it will display as the sub-title
+tagline: I'm prettly lovely this time of year # it will display as the sub-title
 
-description: >- # used by seo meta and the atom feed
-  禁止废话式知识库。
+description: A blog that you won't read # used by seo meta and the atom feed
 
 # fill in the protocol & hostname for your site, e.g., 'https://username.github.io'
 url: "https://blog.techwen.cn"
