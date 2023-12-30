@@ -81,5 +81,3 @@ git push
 ```bash
 git config --global core.quotepath off
 ```
-
-{% include busuanzi.html %}

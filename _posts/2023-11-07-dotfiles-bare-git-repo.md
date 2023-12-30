@@ -6,7 +6,6 @@ description: 如何利用bare git repo （裸仓库）管理配置文件
 image: https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202311062309166.jpg
 category:
   - 不学无术
-  - git
 tags:
   - git
 toc: true

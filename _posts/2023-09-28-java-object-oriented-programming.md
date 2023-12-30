@@ -6,7 +6,6 @@ description:
 image: https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-09-28-1695871211.jpg
 category:
   - 编程语言
-  - JAVA
 tags:
   - java
 toc: true
@@ -2018,5 +2017,3 @@ class CustomerServiceImpl implements CustomerService {
     }// 使用匿名内部类就不需要再写这个类了
 }
 ```
-
-{% include busuanzi.html %}

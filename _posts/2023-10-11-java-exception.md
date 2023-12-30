@@ -6,7 +6,6 @@ description:
 image: https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-10-1696973814.jpg
 category:
   - 编程语言
-  - JAVA
 tags:
   - java
 toc: true
@@ -505,5 +504,3 @@ class PasswordFailureException extends Exception {
 class MyException extends UserNotFoundException {
 }
 ```
-
-{% include busuanzi.html %}

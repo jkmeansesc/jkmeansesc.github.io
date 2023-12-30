@@ -6,7 +6,6 @@ description:
 image: https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-09-28-1695871254.jpg
 category:
   - 编程语言
-  - JAVA
 tags:
   - java
 toc: true
@@ -590,5 +589,3 @@ public class test {
         }
     }
 ```
-
-{% include busuanzi.html %}
