@@ -420,3 +420,36 @@ git merge --no-ff new_branch
 此时执行`git log`，`new_branch`上的分支已经被合并到`master`了。
 
 如果要回退，只需要`git reset --hard HEAD~1`（不需要数`new_branch`的`commit`数量）。此时`new_branch`上的分支也会被从`master`上回退。
+
+## 什么是Git Rebase
+
+![git rebase](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401101948187.png)
+
+如图所示，`git rebase`可以将`feature`分支中的`f.1`和`f.2`这两个`commit`添加到已经新增了`m.3`这个`commit`的`master`分支上。这个属于`fast-forward merge`。
+
+原理解析：
+
+![git rebase](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401101954375.png)
+
+- "m.3"变成`feature`分支的`base`。
+- `master`分支`rebase`到`feature`分支。
+- 合并`feature`分支到`master`分支。
+
+> `rebase`并不会移动`commit`，而是创建新的`commit`。所以不要`rebase`到不是你的分支上。
+
+```bash
+git checkout feature
+git rebase master
+git checkout master
+git merge feature
+```
+
+### 什么时候使用rebase？
+
+- 当`feature`分支还没合入`master`但`master`已经有了新的`commits`。
+
+> 注意：`rebase`会更改代码的历史，因为`rebase`后`commit id`变了。
+
+## 如何处理冲突？
+
+查看这篇博文。
