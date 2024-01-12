@@ -4,9 +4,9 @@ title: Neovim 处理 Git 冲突
 description: This blog shows how to resolve git conflict in neovim using vim-fugitive.
 image: https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202312201913798.jpg
 category:
-  - 不学无术
+- 不学无术
 tags:
-  - git
+- git
 toc: true
 comments: true
 math: false
@@ -15,8 +15,8 @@ pin: false
 sitemap: true
 published: true
 lang: zh-CN
+date: 2024-01-13 04:27 +0800
 ---
-
 ### 在neovim中使用vim-fugitive插件解决git冲突
 
 > 插件地址: [vim-fugitive](https://github.com/tpope/vim-fugitive)
