@@ -23,16 +23,16 @@ lang: zh-CN
 
 | 初始化一个新的`repository` |
 | -------------------------- |
-| `git init`                 |
+| git init                   |
 
-| 添加文件到`repository`    |
-| ------------------------- |
-| `git add .`               |
-| `git commit -m "message"` |
+| 添加文件到`repository`  |
+| ----------------------- |
+| git add .               |
+| git commit -m "message" |
 
 | 获取`commit`历史 |
 | ---------------- |
-| `git log`        |
+| git log          |
 
 返回结果如下：
 
@@ -46,34 +46,34 @@ Date:   Fri Dec 22 00:28:11 2023 +0000
 
 然后就可以用获取到的`commit id`来
 
-| 切换到某个`commit`                                      |
-| ------------------------------------------------------- |
-| `git checkout 9f1944464c12e9ff09a9b1f32245bfc705e8732d` |
+| 切换到某个`commit`                                    |
+| ----------------------------------------------------- |
+| git checkout 9f1944464c12e9ff09a9b1f32245bfc705e8732d |
 
 ### Branch 分支
 
 | 查看所有`branch` |
 | ---------------- |
-| `git branch`     |
+| git branch       |
 
-| 创建`branch`的几种方式       |
-| ---------------------------- |
-| `git branch new_branch`      |
-| `git checkout new_branch`    |
-| `git checkout -b new_branch` |
-| `git switch -c new_branch`   |
+| 创建`branch`的几种方式     |
+| -------------------------- |
+| git branch new_branch      |
+| git checkout new_branch    |
+| git checkout -b new_branch |
+| git switch -c new_branch   |
 
-| 合并`branch`           |
-| ---------------------- |
-| `git merge new_branch` |
+| 合并`branch`         |
+| -------------------- |
+| git merge new_branch |
 
-| 切换`branch`                 |
-| ---------------------------- |
-| `git switch existing_branch` |
+| 切换`branch`               |
+| -------------------------- |
+| git switch existing_branch |
 
 | 查看`staging area`中的所有文件 |
 | ------------------------------ |
-| `git ls-files`                 |
+| git ls-files                   |
 
 ### Git Undo 撤销
 
@@ -83,8 +83,8 @@ Date:   Fri Dec 22 00:28:11 2023 +0000
 
 | 告诉git我们要删除这个文件 |
 | ------------------------- |
-| `git rm some-file`        |
-| `git add .`               |
+| git rm some-file          |
+| git add .                 |
 
 这两条命令实现同样的效果，那就是告诉git不要再追踪这个文件了。
 
@@ -94,16 +94,16 @@ Date:   Fri Dec 22 00:28:11 2023 +0000
 
 那么如何撤销对所有文件的修改呢？
 
-| 撤销所有修改     |
-| ---------------- |
-| `git checkout .` |
+| 撤销所有修改   |
+| -------------- |
+| git checkout . |
 
 这条命令表示回退当前分支下所有被追踪的文件到上一个`commit`的状态。`checkout`是git常用撤销修改的命令。但是git提供了一个更明确的指令，叫作`restore`，能实现同样的效果。
 
-| 撤销修改                |
-| ----------------------- |
-| `git restore some-file` |
-| `git restore .`         |
+| 撤销修改              |
+| --------------------- |
+| git restore some-file |
+| git restore .         |
 
 #### 如何删除 `untracked` 的文件？
 
@@ -113,37 +113,37 @@ Date:   Fri Dec 22 00:28:11 2023 +0000
 - `-f`表示强制删除
 - `-n`表示列举出要删除的文件，但是不真的删除
 
-| 删除untracked文件和目录     |
-| --------------------------- |
-| `git clean -d -f some-file` |
+| 删除untracked文件和目录   |
+| ------------------------- |
+| git clean -d -f some-file |
 
 | 列举出untracked的文件和目录 |
 | --------------------------- |
-| `git clean -d -n`           |
+| git clean -d -n             |
 
 #### 如何撤销对 `staged` 文件的修改？
 
 `git checkout`对已经`staged`的文件不生效了。
 
-| 旧方法                |
-| --------------------- |
-| `git reset some-file` |
+| 旧方法              |
+| ------------------- |
+| git reset some-file |
 
 `git reset`会把`some-file`最新一次`commit`的内容覆盖到`staging area`，这个命令可以撤销对`staged`文件的修改，但是这个命令会把`staged`的文件变成`unstaged`的文件。如果我们不想要这个副作用，我们可以用`git restore`命令。
 
-| 新方法                           |
-| -------------------------------- |
-| `git restore --staged some-file` |
+| 新方法                         |
+| ------------------------------ |
+| git restore --staged some-file |
 
 #### 如何删除本地的 `commit`？
 
-| 回退1个commit      |
-| ------------------ |
-| `get reset HEAD~1` |
+| 回退1个commit    |
+| ---------------- |
+| get reset HEAD~1 |
 
-| 回退2个commit      |
-| ------------------ |
-| `git reset HEAD~2` |
+| 回退2个commit    |
+| ---------------- |
+| git reset HEAD~2 |
 
 - 使用 `--soft`
   - --soft 表示回退到某个`commit`，但是保留所有修改在`staging area`，只有commit被回退了，可以直接再次`git commit`。
@@ -154,13 +154,13 @@ Date:   Fri Dec 22 00:28:11 2023 +0000
 
 #### 如何删除 `branch`
 
-| 使用 -d 删除branch          |
-| --------------------------- |
-| `git branch -d some_branch` |
+| 使用 -d 删除branch        |
+| ------------------------- |
+| git branch -d some_branch |
 
-| 使用 -D 删除branch          |
-| --------------------------- |
-| `git branch -D some_branch` |
+| 使用 -D 删除branch        |
+| ------------------------- |
+| git branch -D some_branch |
 
 - `-d` 表示删除一个已经`merge`的`branch`，如果`branch`没有被`merge`，则会报错。
 - `-D` 表示强制删除一个`branch`，不管`branch`有没有被`merge`。
@@ -452,4 +452,98 @@ git merge feature
 
 ## 如何处理冲突？
 
-查看这篇博文。
+[参考这篇博文](https://blog.techwen.cn/posts/resolve-git-conflict-in-neovim/)
+
+`git merge --abort` 终止合并。
+
+`git log --merge` 查看合并历史。
+
+`git diff` 查看冲突。
+
+解决冲突后正常`commit`就可以了。
+
+## 什么是 Cherry-Pick
+
+假设我们在`feature`分支有3个新的`commit`，我们想要把某一个特定的`commit`合并到`master`分支。
+
+```bash
+git log # 获取这个commit的id
+git checkout master
+git cherry-pick 3d6ff634564a0d17a0f3cd83d2f8e5c4acf86ff5
+```
+
+> 注意：`cherry-pick`会创建一个新的`commit`，所以`commit id`会变化。
+
+## 运用Tag管理版本
+
+当某一个`commit`具有一定的意义，比如`v1.0`，我们可以给那个`commit`打上Tag。
+
+```bash
+git tag # 获取所有的`tag`。
+git tag v1.0 3d6ff634564a0d17a0f3cd83d2f8e5c4acf86ff5 # 给这个分支打上标签
+git show v1.0 # 查看这个tag的信息
+git checkout v1.0 # 切换到这个tag所在的分支，注意是detached-HEAD模式
+git tag -d v1.0 # 删除这个tag
+git tag -a v2.0 -m "some message" # 创建一个annotated tag
+git show v2.0 # 查看这个tag的信息，会显示"some message"
+```
+
+## Github 101
+
+首先在Github上创建一个新的仓库，然后
+
+> 仓库名注意和本地的仓库名保持一致。
+
+| 连接本地仓库至Github远程仓库   |
+| ------------------------------ |
+| git init                       |
+| git add .                      |
+| git commit -m "Initial commit" |
+| git branch -M master           |
+| git remote add origin \<url\>  |
+| git push -u origin master      |
+
+`origin` 是远程仓库的别名，可以自定义。
+
+### 一些概念
+
+![remote branch](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401142057014.png)
+
+当我们执行`git push origin master`，Git会将`master`的内容创建一个新的分支叫作Remote Tracking Branch (READ-ONLY)，好让Git知道这个本地仓库要推送到一个别名叫作`origin`的仓库的`master`分支上。
+
+同样，当我们执行`git pull`的时候，Git会先将远程仓库的内容`fetch`到Remote Tracking Branch分支上，然后再`merge`回本地分支。
+
+所以，本地的`master`分支和远程的`master`分支并没有直接的关联，而是要通过Remote Tracking Branch。
+
+> 我们同样可以`git push origin feature`来在远程仓库创建一个新的feature分支，道理是一样的。
+
+假设我们在远程仓库上创建了一个新的分支`remote-feature`，此时在本地`git branch -a`是看不到的，我们可以使用`get fetch origin`将远程仓库的内容`fetch`到本地作为Remote Tracking Branch，此时`git branch -a`就能看到了。
+
+### Remote && Local Tracking Branch
+
+| 命令                                      | 作用                                     |
+| ----------------------------------------- | ---------------------------------------- |
+| git remote                                | 查看远程仓库                             |
+| git branch -a                             | 查看本地和远程所有分支                   |
+| git branch -r                             | 查看远程分支                             |
+| git remote show origin                    | 查看远程仓库的详细信息                   |
+| git branch -vv                            | 查看Local Tracking Branch 和他们的Remote |
+| git branch --track feature origin/feature | 创建一个Local Tracking Branch            |
+
+当我们`git branch -c new_branch`的时候，`git branch -a`会显示远程仓库是没有`track`这个分支的。
+
+我们可以使用`git push origin new_branch`在远程创建这个分支。
+
+如果远程仓库已经存在，我们可以`git branch --track new_branch origin/new_branch`来创建一个Local Tracking Branch。
+
+此时`git branch -vv`会显示`new_branch`和`origin/new_branch`的关联。
+
+### 如何clone一个远程仓库
+
+`git clone <url>`
+
+### 了解Upstream
+
+当我们`git push origin new_branch`的时候，会发现本地和远程仓库是没有被互相`track`的。我们需要手动去创建Remote && Local Tracking Branch来创建分支之间的联系。
+
+所以我们可以`git push -u origin new_branch`，这样Git会自动创建Remote && Local Tracking Branch。
