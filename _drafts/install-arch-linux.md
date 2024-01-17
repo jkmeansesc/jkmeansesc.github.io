@@ -130,31 +130,26 @@ cd rime-auto-deploy
 ### 安装杂七杂八
 
 ```bash
-sudo pacman -S firefox
+sudo pacman -S firefox # firefox
 # 几款我喜欢的nerd font
 sudo pacman -S ttf-firecode-nerd-font
 sudo pacman -S ttf-hack-nerd
 sudo pacman -S ttf-meslo-nerd
-# 我用的v.10.0 的nightly版本的neovim
-yay -S neovim-nightly-bin
-# 或者用官方的stable版本
-sudo pacman -S neovim
-# 御用Terminal
-sudo pacman -S alacritty
-# nodejs
-sudo pacman -S nodejs npm
-# eza
-sudo pacman -S eza
+yay -S neovim-nightly-bin # 我用的v.10.0 的nightly版本的neovim
+sudo pacman -S neovim # 或者用官方的stable版本
+sudo pacman -S alacritty # 御用Terminal
+sudo pacman -S nodejs npm # nodejs
+sudo pacman -S eza # eza
 # 配置eza的alias至.zshrc
 alias l="eza -la --icons=always"
 alias ls="eza -a --icons=always"
-# tmux
-sudo pacman -S tmux
+sudo pacman -S tmux # tmux
 # 配置tmux的alias至.zshrc
 alias tn="tmux new -s"
 alias tl="tmux ls"
 alias ta="tmux attach -t"
 alias td="tmux detach"
+sudo pacman -S neofetch # neofetch
 ```
 
 ### 开始折腾zsh
@@ -226,3 +221,15 @@ gem 'json'
 ```
 
 再`bundle install`，搞定。
+
+### 试水Hyprland
+
+```bash
+yay -S hyprland-git
+```
+
+```bash
+yay -S network-manager-applet
+
+yay -S waybar
+```

@@ -30,3 +30,6 @@ end
 # plugins
 gem 'jekyll-compose', group: [:jekyll_plugins]
 gem 'jekyll-sitemap'
+
+# HACK: fix bundle exec jekyll s throwing "can't load json" error on arch linux.
+gem 'json'
