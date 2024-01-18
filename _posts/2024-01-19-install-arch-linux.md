@@ -1,12 +1,12 @@
 ---
 layout: post
-title: 记一次折腾Arch Linux
+title: 记一次（被）折腾Arch Linux
 description: 记录一次折腾Arch Linux的过程，包括安装、配置、美化等。
 image: https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401161203859.jpg
 category:
-  - 不学无术
+- 不学无术
 tags:
-  - arch
+- arch
 toc: true
 comments: true
 math: false
@@ -15,8 +15,8 @@ pin: false
 sitemap: true
 published: true
 lang: zh-CN
+date: 2024-01-19 01:09 +0800
 ---
-
 > 生命不息，折腾不止。
 
 为了折腾Arch Linux，特地在闲鱼淘了一台联想小新13pro，2020款。托人从国内带了过来，不得不说找人带比转运美妙万倍。
@@ -33,6 +33,7 @@ lang: zh-CN
 首先参考了 [这篇博文](https://itsfoss.com/install-arch-linux/)
 
 > 一定得开广告拦截器，不然这玩意儿没法看。
+> 下一次，试试[archfi](https://github.com/MatMoul/archfi)，参考[这篇博文](https://niekvanleeuwen.nl/2020/08/making-arch-linux-i3-wm-usable/)
 
 先去[官网](https://archlinux.org/download/?ref=itsfoss.com)下载最新的Arch Linux镜像制作启动U盘，我是用的[balenaEtcher](https://etcher.balena.io/)。
 
@@ -113,6 +114,8 @@ sudo pacman -S noto-fonts noto-fonts-cjk
 ```
 
 ### 安装RIME输入法
+
+> 因为后来试了一下Hyprland，但是Hyprland对ibus-rime，也就是中州韵官方的版本支持等于不存在，所以不得不换到Fcitx5-rime。参考后文。
 
 我用的[雾凇拼音](https://github.com/iDvel/rime-ice)。
 懒得自己配置，所以用了作者提供的一个脚本，参考[rime-auto-deploy](https://github.com/Mark24Code/rime-auto-deploy)。
@@ -222,14 +225,40 @@ gem 'json'
 
 再`bundle install`，搞定。
 
-### 试水Hyprland
+## 后话
+
+### 关于wifi
+
+因为我用的是[NetworkManager](https://wiki.archlinux.org/title/NetworkManager)，这个工具自带了一个命令行工具`nmtui`，用这个工具先连上wifi。然后NetworkManager的wiki里面推荐了[network-manager-applet](https://archlinux.org/packages/?name=network-manager-applet)，这是一个system tray applet，也就是在状态栏提供一个托盘工具。
+
+`yay -S network-manager-applet`，然后执行`nm-applet --indicator`，桌面右上角会有一个wifi托盘可以用来设置网络连接。
+
+还有一种方式是用`nmcli`[命令](https://developer-old.gnome.org/NetworkManager/stable/nmcli.html)连接wifi，也是NetworkManager自带的。先执行`nmcli device wifi`搜索可用的wifi，然后`nmcli device wifi connect <wifi名> password <密码>`连接。
+
+### 安装Fcitx5和Rime输入法
 
 ```bash
-yay -S hyprland-git
+yay -S fcitx5-im fcitx5-rime
+git clone --depth=1 https://github.com/Mark24Code/rime-auto-deploy.git --branch latest
+cd rime-auto-deploy
+./installer.rb # 按指示选
+vim ~/.config/hyprland/hyprland.conf # 修改hyprland配置文件
+exec-once = fcitx5 -d # 加在配置文件里
+vim ~/.zshrc # 修改.zshrc配置加入如下
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS=@im=fcitx
 ```
 
-```bash
-yay -S network-manager-applet
+第一次运行要取消勾选Input Method页的Only show current language，然后找到RIME ，设置为默认键盘然后删掉默认键盘。
 
-yay -S waybar
-```
+设置输入框的DPI:
+
+fcitx5-configtool->Addons -> Classic User Interface -> ✅ Use Per Screen DPI
+
+fcitx5-configtool->Addons -> Classic User Interface -> Force Font DPI on Wayland 144
+
+### 后续计划：
+
+- 重装一次，用archfi。
+- 试试i3wm。
