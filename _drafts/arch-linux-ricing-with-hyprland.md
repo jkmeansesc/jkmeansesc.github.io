@@ -55,6 +55,60 @@ cd /path/to/your/choice/Scripts
 之所以选择这个脚本，主要是它包含了我日常所需的一切。比如rofi启动器，蓝牙，网络，音频模块。我懒得很，不想自己弄。
 不好的一点是我的终端是用的Alacritty，而这个脚本用的Kitty。
 
-### Capslock与Ctrl互换
+### 配置Hyprland
 
-这是个人习惯。
+设置`hyprland.conf`，这里只覆盖我需要的一些配置。
+
+**Capslock与Ctrl互换**
+
+```bash
+input {
+    ...
+    kb_options = ctrl:swapcaps
+    ...
+}
+```
+
+**Key Repeat**
+
+```bash
+input {
+    ...
+    repeat_delay = 300
+    repeat_rate = 50
+    ...
+}
+```
+
+`kb_options`可以参考`/usr/share/X11/xkb/rules/base.lst`。里面有很多有用的选项。
+
+### Firefox CSS
+
+我用的这个，[cascade](https://github.com/andreasgrafen/cascade)。将这个repo拉下来。
+
+在Firefox进入`about:config`，搜索 `toolkit.legacyUserProfileCustomizations.stylesheets`，设为true。进入`about:support`，里面找到对应的profile folder，将chrome文件夹拷进去。然后进去设置就行了。
+
+### 安装Fcitx5和Rime输入法
+
+```bash
+yay -S fcitx5-im fcitx5-rime
+git clone --depth=1 https://github.com/Mark24Code/rime-auto-deploy.git --branch latest
+cd rime-auto-deploy
+./installer.rb # 按指示选
+vim ~/.config/hyprland/hyprland.conf # 修改hyprland配置文件
+exec-once = fcitx5 -d # 加在配置文件里
+```
+
+然后登出再登入
+
+**安装Fcitx5输入法主题**
+
+我用的[catppuccin](https://github.com/catppuccin/fcitx5)。
+
+```bash
+git clone https://github.com/catppuccin/fcitx5.git
+mkdir -p ~/.local/share/fcitx5/themes/
+cp -r ./fcitx5/src/* ~/.local/share/fcitx5/themes
+```
+
+然后在输入法的GUI设置选择主题就好了。

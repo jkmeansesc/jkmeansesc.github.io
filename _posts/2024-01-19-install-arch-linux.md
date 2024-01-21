@@ -236,29 +236,6 @@ gem 'json'
 
 还有一种方式是用`nmcli`[命令](https://developer-old.gnome.org/NetworkManager/stable/nmcli.html)连接wifi，也是NetworkManager自带的。先执行`nmcli device wifi`搜索可用的wifi，然后`nmcli device wifi connect <wifi名> password <密码>`连接。
 
-### 安装Fcitx5和Rime输入法
-
-```bash
-yay -S fcitx5-im fcitx5-rime
-git clone --depth=1 https://github.com/Mark24Code/rime-auto-deploy.git --branch latest
-cd rime-auto-deploy
-./installer.rb # 按指示选
-vim ~/.config/hyprland/hyprland.conf # 修改hyprland配置文件
-exec-once = fcitx5 -d # 加在配置文件里
-vim ~/.zshrc # 修改.zshrc配置加入如下
-export GTK_IM_MODULE=fcitx
-export QT_IM_MODULE=fcitx
-export XMODIFIERS=@im=fcitx
-```
-
-第一次运行要取消勾选Input Method页的Only show current language，然后找到RIME ，设置为默认键盘然后删掉默认键盘。
-
-设置输入框的DPI:
-
-fcitx5-configtool->Addons -> Classic User Interface -> ✅ Use Per Screen DPI
-
-fcitx5-configtool->Addons -> Classic User Interface -> Force Font DPI on Wayland 144
-
 ### 后续计划：
 
 - 重装一次，用archfi。
