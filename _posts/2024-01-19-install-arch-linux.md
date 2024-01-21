@@ -4,9 +4,9 @@ title: 记一次（被）折腾Arch Linux
 description: 记录一次折腾Arch Linux的过程，包括安装、配置、美化等。
 image: https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401161203859.jpg
 category:
-- 不学无术
+  - 不学无术
 tags:
-- arch
+  - arch
 toc: true
 comments: true
 math: false
@@ -17,6 +17,7 @@ published: true
 lang: zh-CN
 date: 2024-01-19 01:09 +0800
 ---
+
 > 生命不息，折腾不止。
 
 为了折腾Arch Linux，特地在闲鱼淘了一台联想小新13pro，2020款。托人从国内带了过来，不得不说找人带比转运美妙万倍。
@@ -135,7 +136,7 @@ cd rime-auto-deploy
 ```bash
 sudo pacman -S firefox # firefox
 # 几款我喜欢的nerd font
-sudo pacman -S ttf-firecode-nerd-font
+sudo pacman -S ttf-firacode-nerd
 sudo pacman -S ttf-hack-nerd
 sudo pacman -S ttf-meslo-nerd
 yay -S neovim-nightly-bin # 我用的v.10.0 的nightly版本的neovim
