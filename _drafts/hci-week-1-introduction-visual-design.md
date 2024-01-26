@@ -4,9 +4,9 @@ title: HCI - Week 1 - Introduction & Visual Design
 description: Course notes for Human Computer Interaction, week 1.
 image:
 category:
-- 课程笔记
+  - 课程笔记
 tags:
-- hci
+  - hci
 toc: true
 comments: true
 math: false
@@ -16,11 +16,13 @@ sitemap: true
 published: true
 ---
 
+## Week 1 - Introduction & Visual Design
 
 ### History of HCI
 
 - Tied to history of computing
 - Initial computers in research labs, took up full rooms
+
   - Only ever operated on by specialists/engineers/the people who built them
 
 - As technology progressed, got smaller/more affordable, started appearing in workplaces and homes
@@ -46,6 +48,7 @@ published: true
   - Emergence of the Graphical User Interface
 
 ### Broadening of HCI Topics
+
 - ~1980s: early research often looking at efficiency
   - e.g. measure speed and accuracy
   - Lab-based studies
@@ -59,6 +62,7 @@ published: true
   - "Older" forms of research haven't gone away
 
 ### Broadening Methods
+
 - Technology pushed progress here too
   - Eye-tracking studies, EEG...
   - Large-scale studies, users' own devices
@@ -72,7 +76,6 @@ published: true
 - Third Wave: Social and Ubiquitous
 - Fourth Wave?
 
-
 ## HCIDE(M) Topics
 
 - Visual usability
@@ -83,3 +86,8 @@ published: true
 - Survey and mixed methods
 - User-centred design
 
+## Week 3 -
+
+### Heuristic Evaluation
+
+### 10 Rules of Heuristic Optimization

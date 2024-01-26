@@ -4,9 +4,9 @@ title: Advanced Programming Course Notes
 description: Course note for Advanced Programming
 image: https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401091711194.jpg
 category:
-  - 课程笔记
+- 课程笔记
 tags:
-  - java
+- java
 toc: true
 comments: true
 math: false
@@ -14,8 +14,8 @@ mermaid: false
 pin: false
 sitemap: true
 published: true
+date: 2024-01-27 01:55 +0800
 ---
-
 ## Topic 1 - Course Intro & Java Basics
 
 ### Understand How Methods Work
