@@ -4,18 +4,19 @@ title: Advanced Programming Course Notes
 description: Course note for Advanced Programming
 image: https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401091711194.jpg
 category:
-- 课程笔记
+  - 课程笔记
 tags:
-- java
+  - java
 toc: true
 comments: true
 math: false
-mermaid: false
+mermaid: true
 pin: false
 sitemap: true
 published: true
 date: 2024-01-27 01:55 +0800
 ---
+
 ## Topic 1 - Course Intro & Java Basics
 
 ### Understand How Methods Work
@@ -1154,4 +1155,490 @@ public class ObserverTest {
     s.setData(d);
   }
 }
+```
+
+## Topic 4 - Containers
+
+### Overview
+
+**Aim**
+
+- Explore some of the rich libraries provided by Java Collections Framework
+- Give examples of use for you to try yourself (e.g. during lab session)
+
+**Contents**
+
+- Collection
+- Iterator
+- List – ArrayList, LinkedList
+- Set – HashSet, TreeSet
+- Map – HashMap, TreeMap
+
+### Collections
+
+A collection is a container object that holds a group of objects. The Java Collections Framework supports three types of collections
+
+- lists
+- sets
+- queues
+
+![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401301506590.png)
+
+#### The Collection Interface
+
+A common interface for manipulating a collection of objects.
+
+![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401301459440.png)
+
+> see [Collection](https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html)
+
+#### Iterator Objects
+
+Provide a uniform way for traversing elements in a container.
+
+![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401301507492.png)
+
+> see [Iterable](https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html)
+
+```java
+import java.util.*;
+
+public class TestIterator {
+    public static void main(String[] args) {
+        Collection<String> collection = new ArrayList<>();
+        collection.add("New York");
+        collection.add("Atlanta");
+        collection.add("Dallas");
+        collection.add("Madison");
+
+        Iterator<String> iterator = collection.iterator();
+        while (iterator.hasNext()) {
+            System.out.print("-> ");
+            System.out.print(iterator.next().toUpperCase());
+        }
+        System.out.println();
+    }
+}
+```
+
+Output:
+
+```console
+-> NEW YORK-> ATLANTA-> DALLAS-> MADISON
+```
+
+### List
+
+Stores elements in a sequential order. The user can access the elements by using their index. The user can also specify where to store an element. It is simple to use for linear storage. You would want to linearly iterate through the container in situations such as these. Searching has a time complexity of O(n), meaning the time it takes to search is directly proportional to the size of the list. This can be improved by sorting the list, reducing the time complexity to O(log n). However, sorting becomes less effective when dealing with inputs that can grow dynamically, such as data being read from a stream (file, network, etc.).
+
+#### The List Interface
+
+![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401301509600.png)
+
+> see [List](https://docs.oracle.com/javase/8/docs/api/java/util/List.html)
+
+#### The List Iterator
+
+Additional means of traversing list containers.
+
+![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401301510414.png)
+
+#### ArrayList and LinkedList
+
+Implementations of the List interface come with two main options: ArrayList and LinkedList. Both can grow or shrink dynamically. The ideal one to use depends on your specific needs.
+
+`ArrayList` is an option if you need to support random access through an index without inserting or removing elements from any place other than the end. For example, **_if reads are far more frequent than writes_**.
+
+![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401301515608.png)
+
+`LinkedList` is a better choice if you require the insertion or deletion of elements from any position in the list. In contrast, **_if writes are more frequent than reads_**.
+
+![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401301516111.png)
+
+Array is an alternative if you **_do not require the insertion or deletion of elements_**.
+
+```java
+import java.util.*;
+
+public class TestArrayAndLinkedList {
+    public static void main(String[] args) {
+        List<Integer> arrayList = new ArrayList<>();
+        arrayList.add(1); // 1 is autoboxed to an Integer object
+        arrayList.add(2);
+        arrayList.add(3);
+        arrayList.add(1);
+        arrayList.add(4);
+        arrayList.add(0, 10);
+        arrayList.add(3, 30);
+
+        System.out.print("A list of integers in the array list: ");
+        System.out.println(arrayList);
+
+        LinkedList<Object> linkedList = new LinkedList<>(arrayList);
+        linkedList.add(1, "red");
+        linkedList.removeLast();
+        linkedList.addFirst("green");
+
+        System.out.print("Display the linked list forward: ");
+        ListIterator<Object> listIterator = linkedList.listIterator();
+        while (listIterator.hasNext()) {
+            System.out.print(listIterator.next() + " ");
+        }
+        System.out.println();
+
+        System.out.print("Display the linked list backward: ");
+        listIterator = linkedList.listIterator(linkedList.size());
+        while (listIterator.hasPrevious()) {
+            System.out.print(listIterator.previous() + " ");
+        }
+        System.out.println();
+    }
+}
+```
+
+Output:
+
+```console
+A list of integers in the array list: [10, 1, 2, 30, 3, 1, 4]
+Display the linked list forward: green 10 red 1 2 30 3 1
+Display the linked list backward: 1 3 30 2 1 red 10 green
+```
+
+### Set
+
+#### The Set Interface
+
+> Important: anything that implements Set cannot have `duplicate` elements.
+
+![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401301530381.png)
+
+Useful in situations where you wish to store `distinct` elements. For example, checking if an element x is prime involves a simple lookup into an existing set of primes. Sets come equipped with built-in efficient search mechanisms for identifying duplicates. There are two primary implementations:
+
+- `Hash Sets`: An unordered collection that does not maintain the order in which elements are inserted. Instead, a hash function is used to check for the existence of an element.
+
+  - only needs the equality check for which often a byte-by-byte comparison would suffice
+  - you must override equals() and hashCode()
+  - not thread-safe – if multiple threads try to modify a HashSet at the same time, then the final outcome is not-deterministic
+
+> Hash function: A deterministic, one-way mathematical function that generates a value from a given input.
+
+```java
+import java.util.*;
+
+public class TestHashSet {
+    public static void main(String[] args) {
+        // Create a hash set
+        Set<String> set = new HashSet<>();
+
+        // Add strings to the set
+        set.add("Monday");
+        set.add("Tuesday");
+        set.add("Wednesday");
+        set.add("Friday");
+        set.add("Friday");
+
+        System.out.println(set);
+
+        // Display the elements in the hash set
+        for (String s : set) {
+            System.out.print(s.toUpperCase() + " ");
+        }
+        System.out.println();
+
+        // Process the elements using a forEach method
+        set.forEach(e -> System.out.print(e.toLowerCase() + " "));
+        System.out.println();
+    }
+}
+```
+
+Output:
+
+```console
+[Monday, Friday, Wednesday, Tuesday]
+MONDAY FRIDAY WEDNESDAY TUESDAY
+monday friday wednesday tuesday
+```
+
+Another example:
+
+```java
+import java.util.*;
+import java.io.*;
+
+public class CountKeywords {
+  public static void main(String[] args) throws Exception {
+    Scanner input = new Scanner(System.in);
+    System.out.print("Enter a Java source file: ");
+    String filename = input.nextLine();
+
+    File file = new File(filename);
+    if (file.exists()) {
+      System.out.println("The number of keywords is " + countKeywords(file));
+    } else {
+      System.out.println("File " + filename + " does not exist!");
+    }
+  }
+
+  public static int countKeywords(File file) throws Exception {
+    // Array of all Java keywords + true, false and null
+    String[] keywordString = {"abstract", "assert", "boolean",
+        "break", "byte", "case", "catch", "char", "class", "const",
+        "continue", "default", "do", "double", "else", "enum",
+        "extends", "for", "final", "finally", "float", "goto",
+        "if", "implements", "import", "instanceof", "int",
+        "interface", "long", "native", "new", "package", "private",
+        "protected", "public", "return", "short", "static",
+        "strictfp", "super", "switch", "synchronized", "this",
+        "throw", "throws", "transient", "try", "void", "volatile",
+        "while", "true", "false", "null"};
+
+    Set<String> keywordSet = new HashSet<>(Arrays.asList(keywordString));
+    int count = 0;
+    Scanner input = new Scanner(file);
+    while (input.hasNext()) {
+      String word = input.next();
+      if (keywordSet.contains(word))
+        count++;
+    }
+    return count;
+  }
+}
+```
+
+- `TreeSet`:
+
+Implements the `SortedSet` interface: Elements are arranged in a tree. Searching for an element can be performed in logarithmic time, i.e., O(log n). Member instances must implement the Comparable interface: The container should be able to determine if a is less than or equal to b (a <= b) or if b is greater than a (b > a), enabling proper arrangement of elements in the tree.
+
+```java
+import java.util.*;
+
+public class TestTreeSet {
+    public static void main(String[] args) {
+        // Create a hash set
+        Set<String> set = new HashSet<>();
+
+        // Add strings to the set
+        set.add("London");
+        set.add("Paris");
+        set.add("New York");
+        set.add("San Francisco");
+        set.add("Beijing");
+        set.add("New York");
+
+        TreeSet<String> treeSet = new TreeSet<>(set);
+        System.out.println("Sorted tree set: " + treeSet);
+
+        // Use the methods in SortedSet interface
+        System.out.println("first(): " + treeSet.first());
+        System.out.println("last(): " + treeSet.last());
+        System.out.println("headSet(\"New York\"): " +
+                treeSet.headSet("New York"));
+        System.out.println("tailSet(\"New York\"): " +
+                treeSet.tailSet("New York"));
+
+        // Use the methods in NavigableSet interface
+        System.out.println("lower(\"P\"): " + treeSet.lower("P"));
+        System.out.println("higher(\"P\"): " + treeSet.higher("P"));
+        System.out.println("floor(\"P\"): " + treeSet.floor("P"));
+        System.out.println("ceiling(\"P\"): " + treeSet.ceiling("P"));
+        System.out.println("pollFirst(): " + treeSet.pollFirst());
+        System.out.println("pollLast(): " + treeSet.pollLast());
+        System.out.println("New tree set: " + treeSet);
+    }
+}
+```
+
+Output:
+
+```console
+Sorted tree set: [Beijing, London, New York, Paris, San Francisco]
+first(): Beijing
+last(): San Francisco
+headSet("New York"): [Beijing, London]
+tailSet("New York"): [New York, Paris, San Francisco]
+lower("P"): New York
+higher("P"): Paris
+floor("P"): New York
+ceiling("P"): Paris
+pollFirst(): Beijing
+pollLast(): San Francisco
+New tree set: [London, New York, Paris]
+```
+
+> see [NavigableSet](https://docs.oracle.com/javase/8/docs/api/java/util/NavigableSet.html)
+
+### Comparing the Collection Concrete Classes
+
+```java
+import java.util.*;
+
+public class SetListPerformanceTest {
+  static final int N = 5000;
+
+  public static void main(String[] args) {
+    // Add numbers 0, 1, 2, ..., N - 1 to the array list
+    List<Integer> list = new ArrayList<>();
+    for (int i = 0; i < N; i++)
+      list.add(i);
+    Collections.shuffle(list); // Shuffle the array list
+
+    // Create a hash set, and test its performance
+    Collection<Integer> set1 = new HashSet<>(list);
+    System.out.println("Member test time for hash set is " +
+      getTestTime(set1) + " milliseconds");
+    System.out.println("Remove element time for hash set is " +
+      getRemoveTime(set1) + " milliseconds");
+
+    // Create a linked hash set, and test its performance
+    Collection<Integer> set2 = new LinkedHashSet<>(list);
+    System.out.println("Member test time for linked hash set is " +
+      getTestTime(set2) + " milliseconds");
+    System.out.println("Remove element time for linked hash set is "
+      + getRemoveTime(set2) + " milliseconds");
+
+    // Create a tree set, and test its performance
+    Collection<Integer> set3 = new TreeSet<>(list);
+    System.out.println("Member test time for tree set is " +
+      getTestTime(set3) + " milliseconds");
+    System.out.println("Remove element time for tree set is " +
+      getRemoveTime(set3) + " milliseconds");
+
+    // Create an array list, and test its performance
+    Collection<Integer> list1 = new ArrayList<>(list);
+    System.out.println("Member test time for array list is " +
+      getTestTime(list1) + " milliseconds");
+    System.out.println("Remove element time for array list is " +
+      getRemoveTime(list1) + " milliseconds");
+
+    // Create a linked list, and test its performance
+    Collection<Integer> list2 = new LinkedList<>(list);
+    System.out.println("Member test time for linked list is " +
+      getTestTime(list2) + " milliseconds");
+    System.out.println("Remove element time for linked list is " +
+      getRemoveTime(list2) + " milliseconds");
+  }
+
+  public static long getTestTime(Collection<Integer> c) {
+    long startTime = System.currentTimeMillis();
+    // Test if a number is in the collection
+    for (int i = 0; i < N; i++)
+      c.contains((int)(Math.random() * 2 * N));
+    return System.currentTimeMillis() - startTime;
+  }
+
+  public static long getRemoveTime(Collection<Integer> c) {
+    long startTime = System.currentTimeMillis();
+    for (int i = 0; i < N; i++)
+      c.remove(i);
+    return System.currentTimeMillis() - startTime;
+  }
+}
+```
+
+Output:
+
+```console
+Member test time for hash set is 1 milliseconds
+Remove element time for hash set is 4 milliseconds
+Member test time for linked hash set is 1 milliseconds
+Remove element time for linked hash set is 0 milliseconds
+Member test time for tree set is 1 milliseconds
+Remove element time for tree set is 2 milliseconds
+Member test time for array list is 30 milliseconds
+Remove element time for array list is 9 milliseconds
+Member test time for linked list is 39 milliseconds
+Remove element time for linked list is 15 milliseconds
+```
+
+### Map
+
+![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401301847182.png)
+
+![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401301848932.png)
+
+#### Map Concrete Classes
+
+- `HashMap`: efficient for locating a value, inserting a mapping, and deleting a mapping
+- `TreeMap`: (implementing SortedMap) efficient for traversing keys in a sorted order
+- `LinkedHashMap`: extends HashMap with a linked list implementation that supports an ordering of the entries in the map
+
+```java
+import java.util.*;
+
+public class TestMap {
+    public static void main(String[] args) {
+        // Create a HashMap
+        Map<String, Integer> hashMap = new HashMap<>();
+        hashMap.put("Smith", 30);
+        hashMap.put("Anderson", 31);
+        hashMap.put("Lewis", 29);
+        hashMap.put("Cook", 29);
+
+        System.out.println("Display entries in HashMap");
+        System.out.println(hashMap + "\n");
+
+        // Create a TreeMap from the preceding HashMap
+        Map<String, Integer> treeMap = new TreeMap<>(hashMap);
+        System.out.println("Display entries in ascending order of key");
+        System.out.println(treeMap);
+    }
+}
+```
+
+Output:
+
+```console
+Display entries in HashMap
+{Lewis=29, Smith=30, Cook=29, Anderson=31}
+
+Display entries in ascending order of key
+{Anderson=31, Cook=29, Lewis=29, Smith=30}
+```
+
+Another example:
+
+```java
+import java.util.*;
+
+public class CountOccurrenceOfWords {
+    public static void main(String[] args) {
+        // Set text in a string
+        String text = "Good morning. Have a good class. " +
+                "Have a good visit. Have fun!";
+
+        // Create a TreeMap to hold words as key and count as value
+        Map<String, Integer> map = new TreeMap<>();
+
+        String[] words = text.split("[\\s+\\p{P}]");
+        for (int i = 0; i < words.length; i++) {
+            String key = words[i].toLowerCase();
+
+            if (key.length() > 0) {
+                if (!map.containsKey(key)) {
+                    map.put(key, 1);
+                } else {
+                    int value = map.get(key);
+                    value++;
+                    map.put(key, value);
+                }
+            }
+        }
+
+        // Display key and value for each entry
+        map.forEach((k, v) -> System.out.println(k + "\t" + v));
+    }
+}
+```
+
+Output:
+
+```console
+a	2
+class	1
+fun	1
+good	3
+have	3
+morning	1
+visit	1
 ```
