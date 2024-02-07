@@ -1,7 +1,7 @@
 ---
 layout: post
-title: Algorithms and Data Structures
-description: Course notes for week 1 of Algorithms and Data Structures
+title: Algorithms and Data Structures Course Notes
+description: Course notes for Algorithms and Data Structures
 image: https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401111658932.jpg
 category:
   - 课程笔记
@@ -61,3 +61,16 @@ A `recursive algorithm` is an algorithm in which at least one step that calls it
 ### Array Data Structure
 
 ### Properties
+
+## Week 4 - Linked Lists
+
+### Overview
+
+- Linked-lists: singly-linked-lists, doubly-linked-lists
+- Insertion
+- Deletion
+- Searching
+
+### Linked-lists
+
+A **linked-list** consists of a `header` together with a sequence of `nodes` connected by links. Each node (except the last) has a `next node`. Each node (except the first) has a `predecessor node`. Each node contains a single element (value or object), plus links to its next and/or predecessor.
