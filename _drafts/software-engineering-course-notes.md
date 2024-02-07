@@ -44,6 +44,20 @@ Example:
 
 ## Week 3 - Advanced OOP: Controlling Coupling/Cohesion
 
+### When to use Abstract Classes vs Interfaces
+
+`abstract class`:
+
+- when defining shared functionality among related classes.
+  - e.g. default implementations of methods.
+- when need to define data members in the class.
+- when don't need to support multiple inheritance.
+
+`interface`:
+
+- Only need methods with no default implementation.
+- Need to support multiple inheritance.
+
 ## Week 4 - UML
 
 UML stands for Unified Modeling Language.
