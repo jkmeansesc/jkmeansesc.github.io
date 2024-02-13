@@ -1644,3 +1644,331 @@ visit	1
 ```
 
 ## Topic 5 - Distributed Programming
+
+### Overview
+
+**Aim**
+
+- Introduce the concept of distributed computing and explain one way of building a distributed system in Java
+
+**Contents**
+
+- Definition
+- Challenges
+- Styles of Middleware
+- Java RMI
+
+### What is a distributed system?
+
+"a collection of independent computers that appears to its users as a
+single coherent system" - Tanenbaum and van Steen
+
+"one in which hardware or software components located at networked
+computers communicate and coordinate their actions only by passing
+messages" - Coulouris, Dollimore and Kindberg
+
+"one that stops you getting work done when a machine you’ve never
+even heard of crashes" - Lamport
+
+### Why do we need distributed systems?
+
+Because the world is distributed.
+
+- You want to book a hotel in Prague, but you are in Glasgow
+- You want to retrieve money from any ATM, but your bank is in London
+- An airplane has 1 cockpit, 2 wings, 4 engines, 10k sensors, etc. Similarly railway networks, and other distributed transport systems.
+
+Because **problems** rarely hit two different places at the same time.
+
+- As a company having only one database server is a bad idea
+- Having two in the same room is better, but still risky
+
+Because **joining** forces increases performance, availability, etc.
+
+- High Performance Computing, replicated web servers, etc.
+
+**Some Examples**:
+
+Financial trading
+
+- Support execution of trading transactions
+- Dissemination and processing of events
+
+Web search
+
+- The web consists of 50+ billion web pages with an average lifetime of ~2 months
+- Modern web engines serve 10+ billion queries/month
+
+Massively multiplayer online games
+
+- Online games (e.g. Fortnite, Among Us) support large numbers of users viewing and changing a common world
+- Need for very low latency coordination to support gameplay
+
+### Ok, it’s important. But is it easy?
+
+A bank asks you to program their new ATM software. Central bank computer (server) stores account information. Remote ATMs authenticate customers and deliver money
+
+A first version of the program
+
+- ATM: (ignoring authentication and security issues)
+
+1. Ask customer how much money they want
+2. Send message with <customer ID, withdraw, amount> to bank server
+3. Wait for bank server answer: <OK> or <refused>
+4. If <OK> give money to customer, else display error message
+
+- Central Server:
+
+1. Wait for messages from ATM: <customer ID, withdraw, amount>
+2. Check if enough money to withdraw: send <OK>, else send <refused>
+
+### See, easy!
+
+![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202402131115871.png)
+
+But ...
+
+- What if the bank server crashes just after 2 and before 3?
+- What if the <OK> message gets lost? Takes too long to arrive?
+- What if the ATM crashes after 1, but before 4?
+
+### Fallacies of Distributed Computing
+
+Asserted by Peter Deutsch (Sun Microsystems)
+
+1. The network is reliable
+2. Latency is zero
+3. Bandwidth is infinite
+4. The network is secure
+5. There is one administrator
+6. Transport cost is zero
+7. The network is homogeneous
+8. Topology doesn't change
+
+### Distributed Development
+
+**Challenging**
+
+- Developing good software is difficult
+- Developing good distributed software is even harder
+
+To do this you need help!
+
+- Very hard to build such systems on bare-bones devices
+- Strong need for software platforms
+
+**Middleware**
+
+- Provides a high-level programming abstraction
+- Hide the complexity associated with distributed systems (including the underlying forms of heterogeneity)
+
+### Middleware
+
+- **Client-server** platforms; e.g. DCE (Distributed Computing Environment)
+- **Remote Procedure Call (RPC)** middleware; e.g. XML-RPC, JSON-RPC, SOAP
+- **Distributed object** technology; e.g. CORBA, Java RMI
+- **Component-based** programming; e.g. Fractal, Enterprise Java Beans, OpenCOM
+- **Microservice** architecture: Loosely coupled, testable services using CI/CD
+- **Other styles**
+  - Resource discovery platforms; e.g. Jini
+  - Group communication services; e.g. JGroups
+  - Publish-subscribe systems; e.g. JMS
+  - Distributed file systems, distributed transaction services, distributed document-based systems, agent-based systems, message-oriented middleware, P2P technologies, etc.
+
+### RMI
+
+**Remote Method Invocation**: An distributed object middleware solution offering.
+
+- Reference to remote objects (and their data and method members)
+- Pass objects across the network
+- Request-Reply protocol (synchronous) and associated semantics
+- Location transparency
+
+**Aim**: to make distributed programming as easy as standard Java programming
+
+![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202402131117032.png)
+
+**Example**:
+
+![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202402131117056.png)
+![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202402131118719.png)
+
+#### RPC Middleware / DOM
+
+- Interaction between objects is done through defined interfaces
+- Abstraction, where client software does not need to know the details of the implementation
+- Platform and language independence
+- Evolution of software
+
+![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202402131118122.png)
+
+### Implementing RMI
+
+![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202402131119639.png)
+
+- Proxies, stubs, dispatchers are auto-generated by the IDL compiler
+- Client = service consumer; Server = service provider
+
+#### Key Components – Client side
+
+![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202402131120919.png)
+
+**Proxies**
+
+- Masquerades as a local version of the remote interface
+- Redirects calls to client stubs
+
+**Client stubs**
+
+- One stub is created per interface method
+- Carries out marshalling of a call into a request message sent to remote end
+- Marshalling is the process of transforming the memory representation of an object to a data format suitable for storage or transmission (flattening)
+- Also unmarshals returning replies
+
+#### Key Components – Server side
+
+![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202402131120782.png)
+
+**Dispatcher**
+
+- Receives incoming messages and directs them to an appropriate server stub
+
+**Server stubs (skeletons)**
+
+- Unmarshals message and then invokes appropriate code body
+- Also marshals reply values and initiates transmission back to the client
+
+#### Key Components - Registry
+
+To implement the key components of a Registry in RMI (Remote Method Invocation), you will typically follow these steps:
+
+1. Start the RMI Registry on a designated port (default is 1099):
+
+```
+start rmiregistry
+```
+
+2. Register (bind) server objects with the RMI Registry:
+
+```java
+LocateRegistry.createRegistry(port); // If the registry is not already running on the specified port
+MyRemoteInterface obj = new MyRemoteObject();
+Naming.rebind("rmi://<hostname>:<port>/<ServiceName>", obj);
+```
+
+3. Lookup the remote object in client programs:
+
+```java
+MyRemoteInterface obj = (MyRemoteInterface) Naming.lookup("rmi://<hostname>:<port>/<ServiceName>");
+```
+
+The format of the registry names is as follows:
+
+```
+rmi://<hostname>:<port>/<ServiceName>
+```
+
+Where:
+
+- `<hostname>` is the IP address or hostname where the RMI Registry is running.
+- `<port>` is the port number on which the RMI Registry is listening (default is 1099).
+- `<ServiceName>` is the name under which the remote object is bound in the RMI Registry.
+
+Examples:
+
+- `rmi://localhost/CalculatorService`
+- `rmi://194.80.36.30:1099/ChatService`
+- `rmi://www.google.com/MapService`
+
+![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202402131121202.png)
+
+#### Disadvantages of DOM
+
+- **Synchronous interaction**: client blocks while a method is invoked remotely
+- **Distributed garbage collection**: efficiency vs bloat
+- **Generated structures are static**: cannot be changed at runtime
+- **Generated structures are heavyweight**: high cost for simple transactions, e.g. embedded devices
+
+### RMI How To
+
+**Step 1** Define interface(s)
+
+- Extends the Remote interface: identifies interfaces whose methods may be invoked from non-local JVMs
+- Each method throws RemoteException: a ‘catch-all’ for communication-related exceptions
+
+```java
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+public interface PasswordGenerator extends Remote {
+    // returns a randomly-generated password
+    public String genPassword(int ID) throws RemoteException;
+    // returns null if the password is incorrect / does not exist
+    public byte[] downloadSource(int ID, String password) throws RemoteException;
+}
+```
+
+**Step 2** Implement the interface (aka the server)
+
+- Extends UnicastRemoteObject i.e. it can be called remotely, therefore, the compiler needs to generate a stub for it
+- RemoteException
+
+```java
+import java.rmi.Naming;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
+public class PasswordServer extends UnicastRemoteObject implements PasswordGenerator {
+    public String genPassword(int ID) throws RemoteException {
+        //implementation
+        return null;
+    }
+    public byte[] downloadSource(int ID, String password) throws RemoteException {
+        //implementation
+        return null;
+    }
+}
+```
+
+**Step 3** Start the server and announce it
+
+- Create an instance of the server class
+- Register (bind) the instance to the RMI registry under a given name
+
+```java
+public static void main(String[] args) {
+    try {
+        PasswordServer s = new PasswordServer();
+        Naming.bind("//stlinux02.dcs.gla.ac.uk/UnsecurePasswordServer", s);
+        System.err.println("Password server is ready");
+    } catch (Exception e) {
+        System.err.println("Server exception: " + e.toString());
+        e.printStackTrace();
+    }
+}
+```
+
+**Step 4** Develop the client
+
+- Create a stub by looking up the server
+- Use the instance as if it is a local instance of the server class
+
+```java
+import java.rmi.Naming;
+
+public class PasswordClient {
+    private static String host = "rmi://stlinux02.dcs.gla.ac.uk/";
+    private static String serviceName = "UnsecurePasswordServer";
+
+    public static void main(String[] args) {
+        try {
+            PasswordGenerator stub = (PasswordGenerator) Naming.lookup(host + serviceName);
+            String returnWord = stub.genPassword(123456789);
+            System.out.println(returnWord);
+        } catch (Exception e) {
+            System.err.println("Client exception: " + e.toString());
+            e.printStackTrace();
+        }
+    }
+}
+```

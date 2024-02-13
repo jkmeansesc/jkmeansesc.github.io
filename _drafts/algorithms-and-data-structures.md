@@ -37,13 +37,13 @@ Depends on:
 
 We want the algorithm that grows slowly in time taken to execute.
 
-- How much space (memory) does it requie?
+- How much space (memory) does it requrie?
 - Is it feasible or efficient enough?
 
 How should we measure time?
 
 Example: Smart Power Algorithm
-Idea: $b^{1000} = b^{500} \times  b^{500}$. If we know b500, we can compute b1000 with only 1 more multiplication!
+Idea: $b^{1000} = b^{500} \times  b^{500}$. If we know $b&{500}$, we can compute $b^{1000}$ with only 1 more multiplication!
 Smart power algorithm:
 To compute bn: 1. Set p to 1, set q to b, and set m to n.2. While m > 0, repeat: 2.1. If m is odd, multiply p by q. 2.2. Halve m (discarding any remainder).  2.3. Multiply q by itself.3. Terminate yielding p.
 
