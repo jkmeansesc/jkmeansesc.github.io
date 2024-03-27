@@ -1972,3 +1972,480 @@ public class PasswordClient {
     }
 }
 ```
+
+## Topic 6 - Concurrency
+
+### What is Concurrency?
+
+Concurrency happens when multiple parts of the program running simultaneously.
+
+**why?**
+
+- utilization – Make use of multi-core processors
+- performance – Efficient integration with slow devices, e.g. disks
+- user-friendliness – Responsive applications
+
+### Concurrency in Java
+
+We build concurrent Java programs using **_Thread_**. A Java thread is an object. Like all other objects, they have attributes and methods. Unlike other objects, each has its own **_point of execution_**, and runs by itself.
+
+A thread is an object whose code runs in parallel with the rest of the program.
+
+There are two ways to create a thread:
+
+- extend the Thread class and implement the `run` method
+
+```java
+private static class PrinterThread extends Thread {
+    private String message;
+    private int n;
+
+    public PrinterThread(String message, int n) {
+        this.message = message;
+        this.n = n;
+    }
+
+    public void run() {
+        for (int i = 0; i < n; i++) {
+            System.out.println(i + "/" + n + " " + message);
+        }
+    }
+}
+
+public static void main(String[] args) {
+    PrinterThread p = new PrinterThread("Hello", 10);
+    p.start();
+}
+```
+
+> It is the easiest approach, but it is not recommended because it does not allow you to extend any other class.
+
+- implement the `Runnable` interface, then create a `Thread` object passing an instance of your class.
+
+Either way, you must override the `run` method.
+
+To start the thread, call `Thread.start()`, **not** `run ()`.
+
+**Implementing Runnable**
+
+```java
+public class PrinterRunnable implements Runnable {
+    private String message;
+    private int n;
+
+    public PrinterRunnable(String message, int n) {
+        this.message = message;
+        this.n = n;
+    }
+
+    public void run() {
+        for(int i = 0; i < n; i++) {
+            System.out.println(i + "/" + n + " " + message);
+        }
+    }
+}
+```
+
+To use this class, we must create an instance and then **pass it to an instance of the `Thread` class**.
+
+```java
+public class RunnableSingleThread {
+    public static void main(String[] args) {
+        PrinterRunnable p = new PrinterRunnable("Hello", 10);
+        Thread t = new Thread(p);
+        t.start(); // starts the thread by invoking the run() method of PrinterThread
+    }
+}
+```
+
+### Creating Multiple Threads
+
+We can create many Threads via an **array** of Thread objects.
+
+```java
+public class RunnableMultipleThreads {
+    public static void main(String[] args) {
+        int numThreads = 2;
+        Thread[] threads = new Thread[numThreads];
+
+        for (int i = 0; i < numThreads; i++) {
+            threads[i] = new Thread(new PrinterRunnable("I'm thread " + i, 5));
+            threads[i].start();
+        }
+    }
+}
+```
+
+Output:
+
+```console
+0/5 I'm thread 0
+0/5 I'm thread 1
+1/5 I'm thread 0
+1/5 I'm thread 1
+2/5 I'm thread 0
+2/5 I'm thread 1
+3/5 I'm thread 0
+3/5 I'm thread 1
+4/5 I'm thread 0
+4/5 I'm thread 1
+```
+
+Both Threads are running at the same time. There are \*_no guarantees_ about the order of their execution, hence the need for concurrent programming 'good practices'.
+
+### Mapping to Hardware
+
+CPU (processor) has many cores (4–16 typical), each can run one thread at a time. If fewer threads than cores, all threads truly run in parallel. If more threads than cores, Java / OS does time-slicing. That is, run the 1st thread for a while, then the 2nd, then the 1st, etc. We cannot predict when switches occur!
+
+### Thread Priorities
+
+Each Thread has a priority which can be read using `getPriority()`
+
+- MIN PRIORITY = 1
+- NORM PRIORITY = 5 (default)
+- MAX PRIORITY = 10
+
+Priority can be changed using `setPriority(int)`
+
+- value between 1 and 10
+
+Threads inherit priority of their creator, if not specified.
+
+### Thread Control
+
+![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202402131257683.png)
+
+### Thread Interruption
+
+Blocking methods are those that rely on something outside themselves for termination
+
+- waiting for a timer to elapse, another Thread to end, etc.
+
+Waiting on other systems might take forever, or at least the user might get bored, hence, Threads can be interrupted by other Threads calling
+`someThread.interrupt()`
+
+Two possible outcomes:
+
+- if it is running an `interruptable` method (e.g. sleep), the method unblocks and throws the `InterruptedException`
+- otherwise, its interrupted status is set to TRUE.
+
+Methods for reading interrupted status:
+
+- `isInterrupted()` – read only
+- `interrupted()` – read and clear (i.e. reset)
+
+### Thread Control
+
+`sleep(long milliseconds)` puts the Thread to sleep.
+
+```java
+Thread.sleep(1000); // sleep for 1 second
+```
+
+> `sleep()` may throw an `InterruptedException` if `interrupt()` is called.
+
+`yield()` temporarily releases time for other Threads, if any.
+
+```java
+Thread.yield();
+```
+
+`join()` pauses the current Thread till another one ends. Here `someThread.join()` pauses `main` till `someThread` ends.
+
+```java
+public static void main(String[] args) {
+    MyThread t = new MyThread();
+    t.start();
+    t.join();
+    System.out.print("thread t completed");
+}
+```
+
+Here we wait until all five threads have finished.
+
+```java
+MyThread[] m = new MyThread[5];
+
+for(int i = 0; i < 5; i++) {
+    m[i] = new MyThread();
+    m[i].start();
+}
+
+for(int i = 0; i < 5; i++) {
+    m[i].join();
+}
+
+System.out.print("all threads completed");
+```
+
+This doesn't work! Why?
+
+```java
+MyThread[] m = new MyThread[5];
+
+for (int i = 0; i < 5; i++) {
+    m[i] = new MyThread();
+    m[i].start();
+    m[i].join();
+}
+
+System.out.print("all threads completed");
+```
+
+The code provided will not work as intended because calling `m[i].join()` immediately after `m[i].start()` within the same loop will cause the main thread to wait for each thread to complete before proceeding to start the next thread. This defeats the purpose of multithreading, where you typically want threads to run concurrently rather than sequentially. As a result, your program will behave as if you are running the threads sequentially, rather than concurrently.
+
+To allow all threads to run concurrently and then wait for all of them to complete before printing "all threads completed," you should call `join()` after starting all the threads in the second loop.
+
+### Thread Names
+
+Threads can be optionally given names through their constructor
+
+```java
+Thread t = new Thread(aRunnableThing,"cool name");
+Thread t = new Thread("cool name");
+```
+
+We can also use `setName(String)` and `getName()`, within a class that extends Runnable, you have to obtain the relevant Thread object first:
+
+```java
+Thread.currentThread().getName()
+```
+
+### Benefits of Multithreading
+
+Sorting the values in a large array can be made parallel:
+
+1. split the array into N smaller arrays
+2. sort the smaller arrays
+3. merge the results together
+
+```java
+public class ThreadSort implements Runnable {
+	private Double[] subArray;
+	private int arrayLength;
+	public ThreadSort(Double[] subArray) {
+		arrayLength = subArray.length;
+		this.subArray = new Double[arrayLength];
+		for(int i=0;i<arrayLength;i++) {
+			this.subArray[i] = subArray[i];
+		}
+	}
+	public void run() {
+		// Do a slow bubble sort
+		int n_changes = 1;
+		while(n_changes > 0) {
+			n_changes = 0;
+			for(int i=0;i<arrayLength-1;i++) {
+				if(subArray[i+1] < subArray[i]) {
+					Double temp = subArray[i];
+					subArray[i] = subArray[i+1];
+					subArray[i+1] = temp;
+					n_changes += 1;
+				}
+			}
+		}
+	}
+	public Double[] getArray() {
+		return subArray;
+	}
+}
+
+public class MergeSort {
+  public static void main(String[] args) {
+    // Make some random values
+    int n_values = 1000;
+    Double[] values = new Double[n_values];
+    for (int i = 0; i < n_values; i++) {
+      values[i] = Math.random();
+    }
+
+    int n_threads = 10;
+    int n_vals_per_thread = n_values / n_threads;
+    ThreadSort[] sorters = new ThreadSort[n_threads];
+    Thread[] threads = new Thread[n_threads];
+
+    // Copy subsets of the array.
+    // Note we could have used Arrays.copy instead of the loop
+    int pos = 0;
+    for (int i = 0; i < n_threads; i++) {
+      Double[] temp = new Double[n_vals_per_thread];
+      for (int j = 0; j < n_vals_per_thread; j++) {
+        temp[j] = values[j + pos];
+      }
+      pos += n_vals_per_thread;
+      // Make a new ThreadSort object (it implements Runnable)
+      sorters[i] = new ThreadSort(temp);
+      // Put it in a thread
+      threads[i] = new Thread(sorters[i]);
+      // Start the thread
+      threads[i].start();
+    }
+
+    // Collect all of the results
+    Double[][] subArrays = new Double[n_threads][n_vals_per_thread];
+    for (int i = 0; i < n_threads; i++) {
+      try {
+        threads[i].join();
+      } catch (InterruptedException e) {
+      }
+      subArrays[i] = sorters[i].getArray();
+    }
+
+    // Do the merge
+    // pointers holds where we are in each list
+    int[] pointers = new int[n_threads];
+    Double[] sorted = new Double[n_values];
+    for (int i = 0; i < n_values; i++) {
+      // find the lowest
+      Double lowest = 1.0;
+      int lowPos = -1;
+      for (int j = 0; j < n_threads; j++) {
+        if (pointers[j] < n_vals_per_thread) {
+          if (subArrays[j][pointers[j]] < lowest) {
+            lowest = subArrays[j][pointers[j]];
+            lowPos = j;
+          }
+        }
+      }
+      pointers[lowPos] += 1;
+      sorted[i] = lowest;
+    }
+    for (int i = 0; i < n_values; i++) {
+      System.out.println(sorted[i]);
+    }
+  }
+}
+```
+
+Output:
+
+```console
+.0012076865998164044
+0.0012235151763752006
+0.0025076197028002234
+0.003598420406430325
+0.005685167260666257
+0.0075192342487062636
+0.009427614994794387
+0.0098650299919113
+0.010721266034570909
+0.012219669675103018
+0.014512260733102522
+0.015127019135716124
+0.016290676527065062
+0.017156458884038717
+0.01889342074445166
+...
+0.9932076758140784
+0.9949651919516266
+0.9956700125477551
+0.9958731298460722
+0.9971765613680127
+0.9984018191029964
+0.9995128056561186
+```
+
+How much speed-up will this give?
+
+### Data Parallelism
+
+All threads ‘see’ the same Java objects in memory. If we have a large array, each thread can perform a calculation on some part of it. Write the results to disjoint regions of a pre-allocated output array. It's efficient since it makes good use of multi-core CPUs.
+
+```java
+public class ParallelMath {
+  static class RunOnSubarray implements Runnable {
+    double[] inputArray, outputArray;
+    int firstIndex, count;
+
+    public RunOnSubarray(double[] inputArray, double[] outputArray, int firstIndex, int count) {
+      this.inputArray = inputArray;
+      this.outputArray = outputArray;
+      this.firstIndex = firstIndex;
+      this.count = count;
+    }
+
+    public void run() {
+      for (int index = firstIndex; index < firstIndex + count; ++index) {
+        final double input = inputArray[index];
+        outputArray[index] = calculateExpSlowly(input);
+      }
+    }
+
+    static double calculateExpSlowly(final double x) {
+      // This calculates exp(x) using a Taylor series. The maths is not important. What matters is
+      // that
+      // it's a slooow calculation. In real life you would use Math.exp(x)
+      double result = 1.;
+      double factorial = 1.;
+      for (int n = 1; n < 1000; ++n) {
+        factorial *= n;
+        result += Math.pow(x, n) / factorial;
+      }
+      return result;
+    }
+  }
+
+  public static void main(String[] args) throws InterruptedException {
+    final int numInputs = 1000000;
+    double[] inputs = new double[numInputs];
+    double[] outputs = new double[numInputs];
+    for (int index = 0; index < numInputs; ++index) {
+      inputs[index] = Math.random();
+    }
+    final int numThreads = 4;
+    final int countPerThread = numInputs / numThreads;
+    assert numInputs % numThreads
+        == 0; // the number of threads must exactly divide the number of inputs
+    final Thread[] threads = new Thread[numThreads];
+    for (int threadIndex = 0; threadIndex < numThreads; ++threadIndex) {
+      final int firstIndex = threadIndex * countPerThread;
+      threads[threadIndex] =
+          new Thread(new RunOnSubarray(inputs, outputs, firstIndex, countPerThread));
+      threads[threadIndex].start();
+    }
+    for (int threadIndex = 0; threadIndex < numThreads; ++threadIndex) {
+      threads[threadIndex].join();
+    }
+  }
+}
+```
+
+## Executors
+
+Thread creation is (relatively) expensive. It unnecessarily ties together concepts of creating threads and running tasks on them. It's difficult to control how many threads running in a complex application.
+
+Executors are a higher-level interface for creating threads. Executor object manages thread creation. Runnable tasks are submitted to the executor to run on some thread.
+
+```java
+public interface Executor {
+  void execute(Runnable command);
+}
+```
+
+#### Tread Pools
+
+Simplest Executor implementation: fixed thread pool.
+
+- create with `ExecutorService.newFixedThreadPool(nThreads)`
+
+This will start a pool containing a maximum of `nThreads` threads.
+
+```java
+ExecutorService pool = Executors.newFixedThreadPool(8);
+Runnable r1 = new MyRunnable(); // runnable that performs some task
+Runnable r2 = new OtherRunnable();
+pool.execute(r1);
+pool.execute(r2);
+```
+
+`ExecutorService.shutdown` is similar to `Thread.join`, wait for all tasks to finish, then terminate all the threads.
+
+`ExecutorService.awaitTermination` waits for shutdown to complete
+
+`ExecutorService.shutdownNow` interrupts all threads
+
+### Additional Reading
+
+[https://www.geeksforgeeks.org/multithreading-in-java/](https://www.geeksforgeeks.org/multithreading-in-java/)
+
+[https://docs.oracle.com/javase/tutorial/essential/concurrency/index.html](https://docs.oracle.com/javase/tutorial/essential/concurrency/index.html)

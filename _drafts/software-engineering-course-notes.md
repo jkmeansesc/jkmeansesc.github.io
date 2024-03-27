@@ -304,7 +304,224 @@ classDiagram
 
 ## Week 5 - Testing
 
+> Only stuff that is new to me are written down.
+
+This week's lecture talks about how to test code, some general testing idea were introduced.
+
+Such as:
+
+- Levels of Testing
+  - unit testing
+  - integration testing
+  - acceptance testing
+- Different Levels of Rigour
+- Test Cases
+  - Given-When-Then
+- Mock
+- Test Coverage: a metric to (try to) determine “how well tested code is”, out of all lines-of-code, what percentage does the unit tests cover.
+
+```java
+int doSomething(int x) {
+    if (x == 42) {
+        println("Hidden feature");
+        return 0;
+    }
+    println("Normal Path");
+    return 1;
+}
+```
+
+To test doSomething():
+
+```java
+void testDoSomething() {
+    assert doSomething(1) == 1;
+}
+
+```
+
+The above covers 3 of 5 statements, 60% coverage.
+
+```java
+void testDoSomething() {
+    assert doSomething(1) == 1;
+    assert doSomething(42) == 0;
+}
+```
+
+The above covers 5 of 5 statements, 100% coverage.
+
+> Caveat: 100% coverage does not mean **no errors** or definitely **meets specification**.
+
+### Test Driven Development (TDD)
+
+Testing is so fundamental it is the core of some methodologies
+
+- Particularly in Agile: Spec Changes =⇒ Test Changes
+- Means you need well designed tests
+
+**TDD Loop**:
+
+- Write a failing test (means you have to define the calling interface to use)
+- Write the simplest code that makes the test pass
+- Refactor the code to improve design
+- Also known as “red-green-refactor”
+
+#### TDD Example
+
+**Step 1**: write a failing test
+
+```java
+public void testEmptyPasswordIsNotStrong() {
+    String pass = "";
+    PasswordVerifier v = new PasswordVerifier();
+    assert !v.isStrong(pass);
+}
+```
+
+`PasswordVerifier` doesn't exist yet, so this will fail.
+
+**Step 2**: define a minimal working implementation.
+
+```java
+public class PasswordVerifier {
+    public boolean isStrong(String pass) {
+        return false;
+    }
+}
+```
+
+Test now compiles. It also is successful (green). No refactoring needed since it’s so simple.
+
+So we write another test.
+
+```java
+public void testPasswordMoreThan8CharactersIStrong() {
+    String pass = "12345689";
+    PasswordVerifier v = new PasswordVerifier();
+    assert v.isStrong(pass);
+}
+```
+
+Fails, so we need to fix the code so it passes.
+
+**Step 3**: Refactor
+
+```java
+public class PasswordVerifier {
+    public boolean isStrong(String pass) {
+        if (pass.length() >= 8) {
+            return true;
+        }
+        return false;
+    }
+}
+```
+
+Passes, so we write another test.
+
+**Step 4**: Repeat
+
+Continue with the red-green-refactor until you are happy there’s enough tests to show specification is (likely) met.
+
 ## Week 6 - Error handling, Safe Classes, and Packages
+
+### Overview
+
+- What to do when things go wrong
+  - Dealing with errors
+  - Exceptions
+- How to design classes with errors/specifications in mind
+  - Testing great at catching errors; but even better if we stop them at source
+  - What invariants classes have
+- Java packages
+  - How can we build larger cohesive units from classes
+
+### Handling Errors
+
+Assume we have an API like:
+
+```java
+public String readDataFromFile(String filepath)
+```
+
+There’s no way to read from a file that doesn't exist, This is an error condition. How can we handle this?
+
+We can add our own calling conversions:
+
+1. Return something sensible
+
+```java
+/**
+ * readDataFromFile attempts to read all data from file as a string.
+ * Returns empty string if filepath could not be read
+ */
+public String readDataFromFile(String filepath) {
+    // implementation code here
+}
+```
+
+Returns a sane default, e.g. what we would expect if the file was empty
+
+Issue: No one flags that `filepath` was a problem. Is this too transparent?
+
+2. Return an error value to check
+
+```java
+/**
+ * readDataFromFile attempts to read all data from file as a string.
+ *
+ * Returns string "error" if filepath could not be read
+ */
+public String readDataFromFile(String filepath) {
+    // implementation code here
+}
+```
+
+This approach is common in languages like C and Unix systems, functions return 0 if okay, -1 if error.
+
+Issue: can't force return value to be checked, might pass the string "error" into business logic.
+
+3. Return a result type
+
+Currently popular: return a special Optional/Maybe type.
+
+```java
+  public Optional<String> readDataFromFile(String filepath)
+```
+
+`Optional` represents a value that is either present, or not. You have to explicitly `get()` the value to use it.
+
+```java
+Optional<String> s = readDataFromFile(path);
+if (!s.isPresent()) {
+    requestNewFile();
+} else {
+    String n = s.get();
+}
+```
+
+Benefits:
+
+- API explicitly shows something can go wrong (not just a comment)
+- Forces the user to check the value
+
+### Erroneous Values
+
+It’s usually much better to fail, than proceed based on bad assumptions/data. If you fail at least you know something went wrong. If you produce a result based on bad assumptions, can you trust the result? Lots of Machine Learning algorithms suffer from this lack of trust.
+
+Sometimes you can’t afford to fail: life support controller, reactor safety software etc.
+
+### Handling Errors: Exceptions
+
+Language constructs that allow control flow to be changed on an error.
+
+**Idea:**
+
+- Erroneous code `throws` an Exception when it doesn’t know how to continue
+- Program control flow stops
+- The closest `exception handler` (for that error) is found
+- Exception handler `catches` the exception by executing code
 
 ## Week 7 - Live Code Refactoring Example
 
