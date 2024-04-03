@@ -22,18 +22,18 @@ lang: zh-CN
 
 - 异常模拟的是现实世界中“不正常”的事件。
 - Java 中采用“类”去模拟异常。
-- 类是可以创建对象的.
+- 类是可以创建对象的。
   - `NullPointerException e = 0x1234l;`
   - `e`是引用类型，`e`中保存的内存地址指向堆中的“对象”。
   - 这个对象一定是`NullPointerException`类型。
   - 这个对象就表示真实存在的异常事件。
   - `NullPointerException`是一类异常。
-  - “抢劫”就是一类异常--->类.
-  - ”张三被抢劫”就是一个异常事件--->对象.
+  - “抢劫”就是一类异常--->类。
+  - ”张三被抢劫”就是一个异常事件--->对象。
 
 ## 异常机制的作用
 
-程序发生异常事件之后，为我们输出详细的信息。我们可以把这个信息，再进行处理以下告诉用户.
+程序发生异常事件之后，为我们输出详细的信息。我们可以把这个信息，再进行处理以下告诉用户。
 
 ```java
 public class Test {
@@ -41,19 +41,19 @@ public class Test {
         int a = 10;
         int b = 0;
         int c = a / b; // `ArithmeticException e = 0x1234;`
-        // 上面的代码出现了异常， “没有处理”，下面的代码不会执行，直接退出了JVM
+        // 上面的代码出现了异常， “没有处理”，下面的代码不会执行，直接退出了 JVM
         System.out.println("Hello World");
     }
 }
 ```
 
 - 以上程序编译通过了，但是运行时出现了异常，表示发生了某个异常事件。
-- JVM 向控制台输入如下的信息:
+- JVM 向控制台输入如下的信息：
   - Exception in thread "main" java.lang.ArithmeticException: / by zero
     at com.demo.ExceptionTest01.main(ExceptionTest01.java:24)
-- 本质:程序执行过程中发生了算数异常这个事件，JVM 为我们创建了一个 ArithmeticException 类型的对象，并且这个对象中包含了详细的异常信息，并且 JVM 将这个对象中的信息输出到控制台。
+- 本质：程序执行过程中发生了算数异常这个事件，JVM 为我们创建了一个 ArithmeticException 类型的对象，并且这个对象中包含了详细的异常信息，并且 JVM 将这个对象中的信息输出到控制台。
 
-异常处理机制使程序更加健壮.
+异常处理机制使程序更加健壮。
 
 ```java
 public class Test {
@@ -64,7 +64,7 @@ public class Test {
             int c = a / b;
             System.out.println(a + "/" + b + "=" + c);
         } else {
-            System.out.println("除数不能为0");
+            System.out.println("除数不能为 0");
         }
     }
 }
@@ -81,12 +81,12 @@ public class Test {
 绿色为未检查异常 (Unchecked Exceptions):
 
 - 未检查异常是指不太可能被恢复的异常，例如空指针、除零等。
-- 这些异常通常不需要被显式捕获或声明，因为它们通常表示程序中出现了严重的错误，而不是正常的异常情况.
+- 这些异常通常不需要被显式捕获或声明，因为它们通常表示程序中出现了严重的错误，而不是正常的异常情况。
   ![未检查异常](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/2023-10-10-1696958646.png)
 
 ## try、catch 和 finally 捕捉处理异常
 
-具体格式如下:
+具体格式如下：
 
 ```java
 try {
@@ -118,11 +118,11 @@ public class ExceptionTest06 {
     public static void main(String[] args) {
         FileInputStream file = null;
         try {
-            //程序执行到此处发生了FileNotFoundException类型的异常
-            //JVM会自动创建一个FileNotFoundException类型的对象，将该对象的内存地址赋值给catch语句块中的e变量
+            //程序执行到此处发生了 FileNotFoundException 类型的异常
+            //JVM 会自动创建一个 FileNotFoundException 类型的对象，将该对象的内存地址赋值给 catch 语句块中的 e 变量
             file = new FileInputStream("abc");
 
-            //上面的代码出现了异常，try语句块的代码不再继续执行，直接进入catch语句块中执行
+            //上面的代码出现了异常，try 语句块的代码不再继续执行，直接进入 catch 语句块中执行
             System.out.println("TTTTT");
         } catch (FileNotFoundException e) {
             System.out.println("读取的文件不存在！");
@@ -130,7 +130,7 @@ public class ExceptionTest06 {
         try {
             file.read();
         } catch (IOException e) {
-            System.out.println("其他IO异常");
+            System.out.println("其他 IO 异常");
         }
         System.out.println("ABC");
     }
@@ -139,10 +139,10 @@ public class ExceptionTest06 {
 
 ## getMessage 和 printStackTrace()
 
-如何取得异常对象的具体信息，常用的方法主要有两种:
+如何取得异常对象的具体信息，常用的方法主要有两种：
 
-- 取得异常描述信息: getMessage()
-- 取得异常的堆栈信息(比较适合于程序调试阶段): printStackTrace();
+- 取得异常描述信息：getMessage()
+- 取得异常的堆栈信息（比较适合于程序调试阶段）: printStackTrace();
 
 ## finally 关键字
 
@@ -163,7 +163,7 @@ public class ExceptionTest07 {
             // 在此位置关闭存在问题，当出现异常
             // 那么会执行到 catch 语句，以下 fis.close 永远不会执行
             // 这样个对象永远不会得到释放，所以必须提供一种机制
-            // 当出现任何问题，都会释放相应的资源(恢复到最初状态)
+            // 当出现任何问题，都会释放相应的资源（恢复到最初状态）
             // 那么就要使用 finally 语句块
             fis.close();
             System.out.println("-------after fis.close--------");
@@ -252,7 +252,7 @@ public class ExceptionTest10 {
 public class ExceptionTest11 {
     public static void main(String[] args) {
         int r = method1();
-        // 输出为: 10
+        // 输出为：10
         System.out.println(r);
     }
 
@@ -271,7 +271,7 @@ public class ExceptionTest11 {
 public class ExceptionTest12 {
     public static void main(String[] args) {
         int r = method1();
-        // 输出为: 100
+        // 输出为：100
         System.out.println(r);
     }
 
@@ -386,7 +386,7 @@ public class ExceptionTest04 {
     }
 
     public static void m3() throws FileNotFoundException {
-        new FileInputStream("c:/ab.txt"); //FIleInputStream构造方法声明位置上使用throws（向上抛）
+        new FileInputStream("c:/ab.txt"); //FIleInputStream 构造方法声明位置上使用 throws（向上抛）
     }
 }
 ```
@@ -430,7 +430,7 @@ public class ExceptionTest19 {
         try {
             method1(10, 0);
         } catch (MyException e) {
-            // 必须拦截,拦截后必须给出处理，如果不给出处理，就属于吃掉了该异常
+            // 必须拦截，拦截后必须给出处理，如果不给出处理，就属于吃掉了该异常
             // 系统将不给出任何提示，使程序的调试非常困难
             System.out.println(e.getMessage());
         }

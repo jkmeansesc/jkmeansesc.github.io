@@ -17,9 +17,9 @@ published: true
 date: 2024-01-27 01:55 +0800
 ---
 
-## Topic 1 - Course Intro & Java Basics
+## Topic 1: course intro & java basics
 
-### Understand How Methods Work
+### Methods
 
 **Examples**
 
@@ -68,7 +68,7 @@ Write a program to out put the following patterns
     }
 ```
 
-### Understand Passing by Value/Reference
+### Passing by value/reference
 
 **Pass by value**
 
@@ -168,17 +168,17 @@ class Employee {
 
 In summary:
 
-Both primitive types and objects are **passed by value**, not the variable/object itself.
+Java pass both primitive types and objects **by value**, not the variable/object itself.
 
 This means:
 
 - a method can use but not modify a parameter of a primitive type.
-- a method cannot modify the reference of an object.
-  - e.g. make it refer to a new object
+- a method can't modify the reference of an object.
+  - for example: make it refer to a new object
 - a method CAN modify the state of an object.
-  - e.g. change the value of an instance variable
+  - for example: change the value of an instance variable
 
-### Understand What is a Class
+### Class
 
 A class:
 
@@ -186,12 +186,12 @@ A class:
 - allows generalizing the types of variables
 - models data types:
 
-  - basic types, e.g. int, double, etc.
+  - basic types, for example: int, double, etc.
   - abstract data types, hence multiple levels of abstraction
 
 Usage
 
-- Definition: defines the building blocks of the class (type)
+- Definition: defines the building blocks of the class
 - Instantiation: creates a physical instance in memory of the abstract data type
 
 ```java
@@ -229,14 +229,14 @@ class Vec2d {
 ### Inheritance
 
 - Models “is a” relations between types
-  - e.g. a Square is a Rectangle
+  - for example: a Square is a Rectangle
   - Square = derived/inherited/subclass; Rectangle = base/super class
 - Useful to reuse functionalities already implemented in the base class
-  - e.g. area() method of Square can reuse that of Rectangle
-- Base classes can be used to implement generic functions common to all subtypes
-  - Code to compute perimeter of a 4 sided polygon can be implemented inside a class Quadrilateral
-  - No repetition of the functionality inside each individual quadrilateral type, like rhombus, rectangle, parallelogram, etc.
-  - More specialized functions, such as area computation, can be performed by each special quadrilateral type
+  - for example: area() method of Square can reuse that of Rectangle
+- Base classes can implement generic functions common to all subtypes
+  - code to compute perimeter of a 4 sided polygon inside a class Quadrilateral
+  - no repetition of the capability inside each individual quadrilateral type, like rhombus, rectangle, parallelogram, etc.
+  - each special quadrilateral type can perform more specialized functions, such as area computation.
 
 ```java
 public class Quadrilateral {
@@ -271,9 +271,7 @@ class Rectangle extends Parallelogram {
 
 - Defines a contract that every class that follows should adhere to
   - ≅ a template of methods that every subclass should implement
-- e.g. If an application wants to enforce that each Quadrilateral object
-  must involve a strict type check (say, check that the 4 points are
-  distinct), this could be specified as an interface
+- for example: if an app needs to enforce that each Quadrilateral object undergoes a strict type verification, say, verifying that the four points are distinct, you can specify this requirement in an interface.
 
 ```java
 interface ConstrainedPolygon {
@@ -297,15 +295,15 @@ class Rectangle extends Parallelogram {
 }
 ```
 
-### Abstract Classes
+### Abstract classes
 
-- An abstract class cannot be instantiated; only extended
+- An abstract class can't be instantiated; only extended
 - They define types/concepts that are abstract
   - do not have enough information to be realized in a stand-alone manner
-    - e.g. a Shape is too abstract to exist on its own
-  - they sit at the roots of class hierarchies (hence, they have to be public)
-- Used to group together classes that should have common functions of different implementations (i.e. abstract methods)
-  - e.g. checkIfInside for the Shape abstract class -- checking if a given point is within the shape once it is actually defined
+    - for example: a Shape is too abstract to exist on its own
+  - they sit at the roots of class hierarchies, hence, they have to be public
+- Used to group together classes that should have common functions of different implementations: abstract methods
+  - for example: `checkIfInside` for the Shape abstract class -- checking if a given point is within the shape once it's actually defined
 - They can also contain normal methods and variables
 
 ```java
@@ -316,21 +314,21 @@ public abstract class Shape {
 }
 ```
 
-### Interfaces vs. Abstract Classes
+### Interfaces compares to abstract classes
 
-- Both cannot be instantiated
+- Both can't be instantiated
 - Both can inherit/extend others of their own type
 - Both contain abstract methods
   - Interfaces only contain abstract methods
   - hence no need for the abstract keyword
 - Abstract classes define a common type, a concept
-  - contains (implemented / non-implemented) logic and variables
-  - this will be inherited, creating a hierarchy of types
+  - contains implemented / non-implemented logic and variables
+  - inherited, creating a hierarchy of types
 - Interfaces define expected behaviour
   - notionally a finer type of contract
   - a class can implement more than one interface
 
-## Topic 2 - Object Oriented Programming
+## Topic 2: object oriented programming
 
 ### Overview
 
@@ -344,25 +342,25 @@ Explain the main concepts of Object Oriented Programming.
 - Key Characteristics of Objects
 - Constructors
 - Accessor and Mutator Methods
-- The final (key)word
+- The final keyword
 
-### What is OOP?
+### OOP?
 
 Object-oriented programming (OOP) is a programming paradigm that focuses on objects. As the name suggests, in OOP programs, data is stored as objects. It not only defines how to store data but also specifies the logic, or methods, that can be applied to the data.
 
 Object-oriented programming (OOP) is older than Java. Other object-oriented programming languages include Simula, Smalltalk, C++, Objective-C, Ruby, and JavaScript. It replaced procedural programming languages such as Fortran, Pascal, C, and others. In procedural programming, the focus is on procedures and algorithms, with data coming second, it means that it treats data and procedures as interconnected and inseparable entities.
 
-### Procedural vs OOP
+### Procedural compares to OOP
 
 Procedural approaches work effectively for small-scale issues, such as renaming a collection of files or performing simple mathematical calculations.
 
-Object-oriented programming (OOP) is more suitable for larger problems, such as developing a web browser. For instance, a web browser involves several thousand procedures, each manipulating a set of global data. In such complex scenarios, it is more tractable to define classes (e.g., the address bar, page contents, etc.). Subsequently, defining methods per class (approximately 20) becomes easier. This approach facilitates easier development, debugging, and code management.
+Object-oriented programming (OOP) is more suitable for larger problems, such as developing a web browser. For instance, a web browser involves several thousand procedures, each manipulating a set of global data. In such complex scenarios, it's more tractable to define classes, for example:, the address bar, page contents, etc. Subsequently, defining methods per class approximately 20 becomes easier. This approach facilitates easier development, debugging, and code management.
 
-With the object-oriented (OOP) approach, each object holds specific data and functions. In other words, an object comprises both data and related methods. The implementation of the functionality is concealed, but the means to trigger it are exposed. A class defines how objects are created; it serves as a template, with classes being likened to cookie cutters, and objects or instances being the resulting cookies.
+With the OOP approach, each object holds specific data and functions. In other words, an object comprises both data and related methods. The implementation of the capabilities is concealed, but the means to trigger it are exposed. A class defines how objects are created, it serves as a template, with classes being likened to cookie cutters, and objects or instances being the resulting cookies.
 
 **Example - Loan**
 
-All data properties and methods are tied to a specific instance. The class is built around the data. It has an implementation, hidden from external use. There is a no-argument constructor. A constructor with no arguments is also available. Getters and setters are included (not shown).
+All data properties and methods are tied to a specific instance. The class is built around the data. It has an implementation, hidden from external use. There is a no-argument constructor. A constructor with no arguments is also available. Getters and setters are included .
 
 ```java
 public class Loan {
@@ -471,21 +469,19 @@ public class LoanTestClass {
 }
 ```
 
-### Main Object Oriented Principles
+### Main object oriented principles
 
 #### Inheritance
 
-Creating relationships between data types (classes) is achieved through inheritance. A subclass inherits all the properties and methods of its superclass, enabling code reuse, reducing redundancy and inconsistent logic, and allowing for a hierarchy of types. More general classes (super classes or abstract classes) are positioned at the top of the hierarchy, while more specific classes reside lower down. Implicitly, all Java classes inherit from the "cosmic superclass" Object.
+Creating relationships between data types is achieved through inheritance. A subclass inherits all the properties and methods of its superclass, enabling code reuse, reducing redundancy and inconsistent logic, and allowing for a hierarchy of types. More general classes, super classes or abstract classes, are positioned at the top of the hierarchy, while more specific classes reside lower down. Implicitly, all Java classes inherit from the "cosmic superclass" Object.
 
 #### Encapsulation
 
-Encapsulation refers to the result of combining data and behavior in a single unit, which is a class. By retaining the state and implementation of classes, we protect the data (encapsulate it) within the class. The state can only change through method calls, making public methods the gatekeepers. Methods never directly access instance fields in a class other than their own.
+Encapsulation involves combining data and behavior within a single unit, known as a class. This process protects the data by retaining the state and implementation details inside the class. The state can only change through method calls, positioning public methods as the gatekeepers. Methods avoid directly accessing instance fields in a class other than their own.
 
-Define what data is made accessible: Control how data is manipulated – an object is considered a "black box".
+Define what data is made accessible: control how data is manipulated, an object is considered a "black box."
 
 Prevent data corruption and ensure reliability.
-
-> I only need to know how to trigger it; understanding how it works is not my problem.
 
 #### Abstraction
 
@@ -522,30 +518,30 @@ Objects can assume more than one form depending on the context. Methods can have
 
 Two forms of polymorphism exist:
 
-1. Overloading (compile-time or static polymorphism): writing methods with similar signatures but distinct parameters.
-2. Overriding (runtime or dynamic polymorphism): replacing existing methods with identical signatures.
+1. Overloading: writing methods with similar signatures but distinct parameters.
+2. Overriding: replacing existing methods with identical signatures.
 
-### Object Characteristics
+### Object characteristics
 
 An object is an entity with 3 key characteristics
 
-- `Behaviour` – what can you do with it? What methods can you apply to it?
-- `State` – how does it react when you apply methods?
-- `Identity` – how is it different from others like it?
+- `Behaviour`: what can you do with it? What methods can you apply to it?
+- `State`: how does it react when you apply methods?
+- `Identity`: how's it different from others like it?
 
 How these characteristics differ
 
-- `Behaviour` – same for all objects of the same class (same methods)
-- `State` – usually different between objects of the same class, only changes through method calls (encapsulation)
-- `Identity` – always different between objects even if their state is the same, e.g. 2 identical orders on Amazon are still distinct
+- `Behaviour`: same for all objects of the same class.
+- `State`: usually different between objects of the same class, only changes through method calls, this is encapsulation.
+- `Identity`: always different between objects even if their state is the same, for example: 2 identical orders on Amazon are still distinct
 
 ### Constructors
 
-Constructors are special methods used to create new objects in Java. They are always called using the new keyword. The name of a constructor is always the same as that of the class. A constructor has no return value and can have zero or more parameters. The constructor of the superclass (if any) must be called first using the `super()` keyword. A class can have multiple constructors, each with a unique signature. Java does not support destructors since it automatically performs garbage collection.
+Constructors are special methods used to create new objects in Java. They're always called using the new keyword. The name of a constructor is always the same as that of the class. A constructor has no return value and can have zero or more parameters. The constructor of the superclass, if any, must be called first using the `super()` keyword. A class can have multiple constructors, each with a unique signature. Java doesn't support destructors since it automatically performs garbage collection.
 
-### Accessor and Mutator Methods
+### Accessor and Mutator methods
 
-An accessor (getter) method retrieves the value of a class variable. A mutator (setter) method modifies the value or reference of a class variable. In their simplest form, they serve these distinct purposes. However, in reality, they offer additional functionalities:
+An Accessor, getter, method retrieves the value of a class variable. A Mutator, setter, method modifies the value or reference of a class variable. In their simplest form, they serve these distinct purposes. However, in reality, they offer additional functionalities:
 
 1. Access control: controlling who can read and modify variables
 2. Validation: ensuring data consistency and integrity
@@ -557,7 +553,7 @@ The benefits are significant:
 1. Encapsulation: hiding the internal representation, allowing the interface to remain constant
 2. Alternative: directly exposing class variables with no control
 
-#### Visibility General Rules
+#### Visibility general rules
 
 Constructors: by default, package-visible but commonly marked as public
 
@@ -565,9 +561,9 @@ Data fields: recommended to be private
 
 Methods: can vary in visibility
 
-- Public: if they are part of a class's interface
+- Public: if they're part of a class's interface
   - Expected to keep the method available regardless of version changes
-- Private/protected: mainly for internal use (helper methods)
+- Private/protected: mainly for internal use as helper methods
   - Easier to change or even discontinue
 
 #### Method Overloading
@@ -623,7 +619,7 @@ public class Pet {
 }
 ```
 
-#### Method Overriding
+#### Method overriding
 
 Method overriding occurs when a method in a child class has the `same name`, `identical parameters`, and the `same return type` as a method in the parent class. This distinction is determined at runtime based on the object's type that invokes the method.
 
@@ -662,7 +658,7 @@ class Manager extends Employee {
 }
 ```
 
-### Polymorphic Object Variables
+### Polymorphic object variables
 
 A variable of type X can refer to an object of class X or its subclasses.
 
@@ -679,19 +675,19 @@ The variables `staff[0]` and boss refer to the same object, but `staff[0]` is co
   staff[0].setBonus(10000); // Error
 ```
 
-`setBonus` is not a method of the Employee class. The opposite is not possible. You cannot assign a superclass reference to a subclass variable.
+`setBonus` isn't a method of the Employee class. The opposite isn't possible. You can't assign a superclass reference to a subclass variable.
 
-### The final Keyword
+### The final keyword
 
-Use the final keyword in a class definition to indicate that it cannot be extended (overridden).
+Use the final keyword in a class definition to indicate that it can't be overridden.
 
 ```java
   public final class Executive extends Manager {}
 ```
 
-One good reason to use the "final" keyword is that it can be used with methods and classes, preventing overriding in subclasses. This ensures that the semantics of the class or method cannot be changed in a subclass. As the superclass developer, you take full responsibility for the implementation, and no subclass should be allowed to modify it.
+One good reason to use the "final" keyword is that it can be used with methods and classes, preventing overriding in subclasses. This ensures that the semantics of the class or method can't be changed in a subclass. As the superclass developer, you take full responsibility for the implementation, and no subclass should be allowed to modify it.
 
-## Topic 3 - Design Patterns
+## Topic 3 - design patterns
 
 ### Overview
 
@@ -708,32 +704,40 @@ flexible designs that are easy to maintain and can cope with change
   - Decorator
   - Observer
 
-### Design Principles
+### Design principles
 
-1. As your architectural design grows, (1) relationships will multiply, (2) relationships will be more complicated , (3) classes will diversify with more corner cases, (4) code will evolve.
+As your architectural design grows:
 
-2. OO principles (inheritance, polymorphism, etc.) will not suffice, (1) code reuse will be more challenging, (2) code will be duplicated with minimal differences, (3) changes could be difficult to manage.
+- relationships multiply
+- relationships becomes more complicated
+- classes diversify with more corner cases
+- code evolves.
 
-3. Code maintenance deteriorates as design grows / changes which will inevitably happen.
+Therefore, OO principles like inheritance, polymorphism, etc. no longer suffice:
 
-### Design Principles – Class Design
+- code reuse becomes more challenging
+- code can be duplicated with minimal differences
+- changes could be difficult to manage.
+
+Code maintenance deteriorates as design grows / changes which inevitably happen.
+
+#### Class design
 
 Once you have an initial OO design, you should aim to achieve:
 
-- `Cohesion` – a class describes a single concept and its methods logically fit to support a coherent purpose or high-level responsibility.
-- `Clarity` – easy-to-explain classes, methods, and variables.
-- `Consistency` – naming convention, informative naming, overload methods of
-  similar operations, follow standard practice (e.g. define a no-arg constructor).
-- `Access` – use encapsulation and getters+setters where suitable.
-- `Appropriate member declaration` – dependent on specific instance, or shared by all instances (static).
-- `Inheritance` – “is a” relationship (as opposed to “has a”).
+- `Cohesion`: a class describes a single concept and its methods logically fit to support a coherent purpose or high-level responsibility.
+- `Clarity`: easy-to-explain classes, methods, and variables.
+- `Consistency`: naming convention, informative naming, overload methods of similar operations, follow standard practice, for example: define a no-arg constructor.
+- `Access`: use encapsulation and Getters and Setters where suitable.
+- `Appropriate member declaration`: dependent on specific instance, or shared by all static instances.
+- `Inheritance`: “is a” relationship, as opposed to “has a”.
 
-### Design Principles – Aggregation
+#### Aggregation
 
-The aggregation (sometimes composition) design principle
+The aggregation, sometimes composition, design principle
 
-- separate the parts that **vary** from those that do not / definitely will not
-- define contracts (APIs)
+- separate the parts that **vary** from those that don't / definitely won't
+- define contracts
 - develop code to use contracts to integrate the variable parts
 
 Result
@@ -744,7 +748,7 @@ Result
 - implementation is independent from design
 - maximising code reuse and separation of concerns
 
-#### Example
+**Example**:
 
 A web server can compress images in different ways, having one compression method is restricting. Instead, create the interface
 
@@ -754,7 +758,7 @@ public interface CompressAlgorithm {
 }
 ```
 
-that is implemented by classes such as:
+That's implemented by classes such as:
 
 ```java
 public class ZlibCompression impletements CompressAlgorithm {
@@ -764,31 +768,30 @@ public class ZlibCompression impletements CompressAlgorithm {
 }
 ```
 
-and instantiate from this or other classes that implement the
-`CompressAlgorithm` interface (“has a relationship”). This way, you are changing behaviour at runtime rather than inheriting only one behaviour at design time.
+And instantiate from this or other classes that implement the `CompressAlgorithm` interface “has a relationship”. This way, you are changing behaviour at runtime rather than inheriting only one behaviour at design time.
 
-### Design Patterns
+### Design patterns
 
-#### The Composite Pattern
+#### The composite pattern
 
-In some applications we might need to perform the same operation on objects or groups of objects such as collections of objects to store state: array, hash table, etc. The composite pattern allows you to compose objects into hierarchies, and treat individual objects or compositions of them in a uniform manner.
+In some applications there's a need to perform the same operation on objects or groups of objects such as collections of objects to store state: array, hash table, etc. The composite pattern allows you to compose objects into hierarchies, and treat individual objects or compositions of them in a uniform manner.
 
 For example:
 
-- online store – applying discount rates on individual or multi-pack items
-- e-commerce – aggregating nested inventories from providers using different systems
-- file system – computing the size of files and folders
-- GUI – all components from the top-level down perform the same operation, e.g. click
+- online store: applying discount rates on individual or multi-pack items
+- e-commerce: aggregating nested inventories from providers using different systems
+- file system: computing the size of files and folders
+- GUI: all components from the top-level down perform the same operation, for example: click
 
 **Main elements:**
 
 - `Component`
 
-Component is the highest level of abstraction, typically an interface. It defines all methods we want to be able to invoke on objects / groups of objects.
+Component is the highest level of abstraction, typically an interface. It defines all methods that are able to be invoked on objects / groups of objects.
 
-- doOperation() – key logic
-- add(), remove() – group management
-- getChildren(), getParent() – hierarchy traversa
+- doOperation: key logic
+- add, remove: group management
+- getChildren, getParent: hierarchy traverse
 
 ```java
 public interface ShopComponent {
@@ -881,9 +884,9 @@ public class ShopComposite implements ShopComponent {
 }
 ```
 
-#### The Decorator Pattern
+#### The decorator pattern
 
-The Decorator Pattern adjusts the behavior of an object without modifying its code. It composes complex behaviors without changing the interface or sub classes. It is indeed more like encapsulation.
+The Decorator Pattern adjusts the behavior of an object without modifying its code. It composes complex behaviors without changing the interface or sub classes. It's indeed more like encapsulation.
 
 **Main elements:**
 
@@ -1021,7 +1024,7 @@ public class Whip extends CondimentDecorator {
 }
 ```
 
-Finally, we can test it:
+Finally, test it:
 
 ```java
 
@@ -1050,15 +1053,15 @@ public class StarbuzzCoffee {
 }
 ```
 
-#### The Observer Pattern
+#### The observer pattern
 
-The Observer Pattern helps keep your objects up-to-date about information they care about. It is useful when your program has a class (the Subject) containing some kind of state that might be required by various other classes. The observer ensures that they are all updated whenever the subject is updated using a publish-subscribe approach.
+The Observer Pattern helps keep your objects up-to-date about information they care about. It's useful when your program has a class, the Subject, containing some kind of state that might be required by various other classes. The observer ensures that they're all updated whenever the subject is updated using a publish-subscribe approach.
 
-The Observer Pattern is used on pretty much any event-based system, such as GUIs, social networks, e-commerce transactions, etc.
+The Observer Pattern is used on pretty much any event-based system, such as GUI, social networks, e-commerce transactions, etc.
 
 **Main elements:**
 
-- `The Subject` – the class that contains (and publishes) the state
+- `The Subject`: the class that contains, and publishes, the state
 
 ```java
 import java.util.ArrayList;
@@ -1088,7 +1091,7 @@ public class Subject {
 }
 ```
 
-- `The Observer` – an abstract class for objects that can subscribe to state updates
+- `The Observer`: an abstract class for objects that can subscribe to state updates
 
 ```java
 public abstract class Observer {
@@ -1098,7 +1101,7 @@ public abstract class Observer {
 }
 ```
 
-- `Concrete Observers` – any class that extends the Observer in order to be able to subscribe and unsubscribe to state updates
+- `Concrete Observers`: any class that extends the Observer to be able to subscribe and unsubscribe to state updates
 
 ```java
 public class ListDataObserver extends Observer {
@@ -1157,22 +1160,22 @@ public class ObserverTest {
 }
 ```
 
-## Topic 4 - Containers
+## Topic 4: Containers
 
 ### Overview
 
 **Aim**
 
 - Explore some of the rich libraries provided by Java Collections Framework
-- Give examples of use for you to try yourself (e.g. during lab session)
+- Give examples of use for you to try yourself
 
 **Contents**
 
 - Collection
 - Iterator
-- List – ArrayList, LinkedList
-- Set – HashSet, TreeSet
-- Map – HashMap, TreeMap
+- List: ArrayList, LinkedList
+- Set: HashSet, TreeSet
+- Map: HashMap, TreeMap
 
 ### Collections
 
@@ -1184,7 +1187,7 @@ A collection is a container object that holds a group of objects. The Java Colle
 
 ![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401301506590.png)
 
-#### The Collection Interface
+#### The collection interface
 
 A common interface for manipulating a collection of objects.
 
@@ -1192,7 +1195,7 @@ A common interface for manipulating a collection of objects.
 
 > see [Collection](https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html)
 
-#### Iterator Objects
+#### Iterator objects
 
 Provide a uniform way for traversing elements in a container.
 
@@ -1229,23 +1232,21 @@ Output:
 
 ### List
 
-Stores elements in a sequential order. The user can access the elements by using their index. The user can also specify where to store an element. It is simple to use for linear storage. You would want to linearly iterate through the container in situations such as these. Searching has a time complexity of O(n), meaning the time it takes to search is directly proportional to the size of the list. This can be improved by sorting the list, reducing the time complexity to O(log n). However, sorting becomes less effective when dealing with inputs that can grow dynamically, such as data being read from a stream (file, network, etc.).
+Stores elements in a sequential order. The user can access the elements by using their index. The user can also specify where to store an element. It's simple to use for linear storage. You would want to linearly iterate through the container in situations such as these. Searching has a time complexity of `O(n)`, meaning the time it takes to search is directly proportional to the size of the list. This can be improved by sorting the list, reducing the time complexity to `O(log n)`. However, sorting becomes less effective when dealing with inputs that can grow dynamically, such as data being read from a stream, file, network, etc.
 
-#### The List Interface
+#### The list interface
 
 ![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401301509600.png)
 
 > see [List](https://docs.oracle.com/javase/8/docs/api/java/util/List.html)
 
-#### The List Iterator
+#### The list iterator
 
 Additional means of traversing list containers.
 
 ![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401301510414.png)
 
-#### ArrayList and LinkedList
-
-Implementations of the List interface come with two main options: ArrayList and LinkedList. Both can grow or shrink dynamically. The ideal one to use depends on your specific needs.
+#### `ArrayList` and `LinkedList`
 
 `ArrayList` is an option if you need to support random access through an index without inserting or removing elements from any place other than the end. For example, **_if reads are far more frequent than writes_**.
 
@@ -1255,7 +1256,7 @@ Implementations of the List interface come with two main options: ArrayList and 
 
 ![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401301516111.png)
 
-Array is an alternative if you **_do not require the insertion or deletion of elements_**.
+Array is an alternative if you **_don't require the insertion or deletion of elements_**.
 
 ```java
 import java.util.*;
@@ -1306,19 +1307,19 @@ Display the linked list backward: 1 3 30 2 1 red 10 green
 
 ### Set
 
-#### The Set Interface
+#### Set interface
 
-> Important: anything that implements Set cannot have `duplicate` elements.
+> Important: anything that implements Set can't have `duplicate` elements.
 
 ![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401301530381.png)
 
 Useful in situations where you wish to store `distinct` elements. For example, checking if an element x is prime involves a simple lookup into an existing set of primes. Sets come equipped with built-in efficient search mechanisms for identifying duplicates. There are two primary implementations:
 
-- `Hash Sets`: An unordered collection that does not maintain the order in which elements are inserted. Instead, a hash function is used to check for the existence of an element.
+- `Hash Sets`: An unordered collection that doesn't maintain the order in which elements are inserted. Instead, a hash function is used to determine the existence of an element.
 
-  - only needs the equality check for which often a byte-by-byte comparison would suffice
-  - you must override equals() and hashCode()
-  - not thread-safe – if multiple threads try to modify a HashSet at the same time, then the final outcome is not-deterministic
+  - only needs the equality check, for which often a byte-by-byte comparison would suffice
+  - you must override `equals()` and `hashCode()`
+  - not thread-safe: if multiple threads try to modify a HashSet at the same time, then the final outcome isn't deterministic
 
 > Hash function: A deterministic, one-way mathematical function that generates a value from a given input.
 
@@ -1376,7 +1377,7 @@ public class CountKeywords {
     if (file.exists()) {
       System.out.println("The number of keywords is " + countKeywords(file));
     } else {
-      System.out.println("File " + filename + " does not exist!");
+      System.out.println("File " + filename + " doesn't exist!");
     }
   }
 
@@ -1408,7 +1409,7 @@ public class CountKeywords {
 
 - `TreeSet`:
 
-Implements the `SortedSet` interface: Elements are arranged in a tree. Searching for an element can be performed in logarithmic time, i.e., O(log n). Member instances must implement the Comparable interface: The container should be able to determine if a is less than or equal to b (a <= b) or if b is greater than a (b > a), enabling proper arrangement of elements in the tree.
+Implements the `SortedSet` interface: elements are arranged in a tree. Searching for an element can be performed in logarithmic time `O(log n)`. Member instances must implement the Comparable interface. The container should be able to determine if a is less than or equal to b or if b is greater than a, enabling proper arrangement of elements in the tree.
 
 ```java
 import java.util.*;
@@ -1560,7 +1561,7 @@ Remove element time for linked list is 15 milliseconds
 #### Map Concrete Classes
 
 - `HashMap`: efficient for locating a value, inserting a mapping, and deleting a mapping
-- `TreeMap`: (implementing SortedMap) efficient for traversing keys in a sorted order
+- `TreeMap`: which implements SortedMap, efficient for traversing keys in a sorted order
 - `LinkedHashMap`: extends HashMap with a linked list implementation that supports an ordering of the entries in the map
 
 ```java
@@ -1658,7 +1659,7 @@ visit	1
 - Styles of Middleware
 - Java RMI
 
-### What is a distributed system?
+### What's a distributed system?
 
 "a collection of independent computers that appears to its users as a
 single coherent system" - Tanenbaum and van Steen
@@ -1670,7 +1671,7 @@ messages" - Coulouris, Dollimore and Kindberg
 "one that stops you getting work done when a machine you’ve never
 even heard of crashes" - Lamport
 
-### Why do we need distributed systems?
+### Why distributed systems?
 
 Because the world is distributed.
 
@@ -1701,16 +1702,16 @@ Web search
 
 Massively multiplayer online games
 
-- Online games (e.g. Fortnite, Among Us) support large numbers of users viewing and changing a common world
-- Need for very low latency coordination to support gameplay
+- Online games for example: Fortnite, Among Us, support large numbers of users viewing and changing a common world
+- Need for low latency coordination to support gameplay
 
 ### Ok, it’s important. But is it easy?
 
-A bank asks you to program their new ATM software. Central bank computer (server) stores account information. Remote ATMs authenticate customers and deliver money
+A bank asks you to program their new ATM software. Central bank server stores account information. Remote ATM authenticate customers and deliver money
 
 A first version of the program
 
-- ATM: (ignoring authentication and security issues)
+- ATM: ignoring authentication and security issues
 
 1. Ask customer how much money they want
 2. Send message with <customer ID, withdraw, amount> to bank server
@@ -1722,11 +1723,11 @@ A first version of the program
 1. Wait for messages from ATM: <customer ID, withdraw, amount>
 2. Check if enough money to withdraw: send <OK>, else send <refused>
 
-### See, easy!
+### See, easy
 
 ![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202402131115871.png)
 
-But ...
+However
 
 - What if the bank server crashes just after 2 and before 3?
 - What if the <OK> message gets lost? Takes too long to arrive?
@@ -1734,7 +1735,7 @@ But ...
 
 ### Fallacies of Distributed Computing
 
-Asserted by Peter Deutsch (Sun Microsystems)
+Asserted by Peter Deutsch, Sun Microsystems
 
 1. The network is reliable
 2. Latency is zero
@@ -1752,36 +1753,36 @@ Asserted by Peter Deutsch (Sun Microsystems)
 - Developing good software is difficult
 - Developing good distributed software is even harder
 
-To do this you need help!
+To do this you need help
 
-- Very hard to build such systems on bare-bones devices
+- Hard to build such systems on bare-bones devices
 - Strong need for software platforms
 
 **Middleware**
 
 - Provides a high-level programming abstraction
-- Hide the complexity associated with distributed systems (including the underlying forms of heterogeneity)
+- Hide the complexity associated with distributed systems,including the underlying forms of heterogeneity
 
 ### Middleware
 
-- **Client-server** platforms; e.g. DCE (Distributed Computing Environment)
-- **Remote Procedure Call (RPC)** middleware; e.g. XML-RPC, JSON-RPC, SOAP
-- **Distributed object** technology; e.g. CORBA, Java RMI
-- **Component-based** programming; e.g. Fractal, Enterprise Java Beans, OpenCOM
+- **Client-server** platforms; for example: Distributed Computing Environment (DCE).
+- **Remote Procedure Call (RPC)** Middleware; for example: XML-RPC, JSON-RPC, SOAP
+- **Distributed object** technology; for example: CORBA, Java RMI
+- **Component-based** programming; for example: Fractal, Enterprise Java Beans, OpenCOM
 - **Microservice** architecture: Loosely coupled, testable services using CI/CD
 - **Other styles**
-  - Resource discovery platforms; e.g. Jini
-  - Group communication services; e.g. JGroups
-  - Publish-subscribe systems; e.g. JMS
-  - Distributed file systems, distributed transaction services, distributed document-based systems, agent-based systems, message-oriented middleware, P2P technologies, etc.
+  - Resource discovery platforms; for example: Jini
+  - Group communication services; for example: JGroups
+  - Publish-subscribe systems; for example: JMS
+  - Distributed file systems, distributed transaction services, distributed document-based systems, agent-based systems, message-oriented Middleware, P2P technologies, etc.
 
 ### RMI
 
-**Remote Method Invocation**: An distributed object middleware solution offering.
+**Remote Method Invocation**: an distributed object Middleware solution offering.
 
-- Reference to remote objects (and their data and method members)
+- Reference to remote objects and their data and method members
 - Pass objects across the network
-- Request-Reply protocol (synchronous) and associated semantics
+- Request-Reply protocol and associated semantics
 - Location transparency
 
 **Aim**: to make distributed programming as easy as standard Java programming
@@ -1796,7 +1797,7 @@ To do this you need help!
 #### RPC Middleware / DOM
 
 - Interaction between objects is done through defined interfaces
-- Abstraction, where client software does not need to know the details of the implementation
+- Abstraction, where client software doesn't need to know the details of the implementation
 - Platform and language independence
 - Evolution of software
 
@@ -1809,7 +1810,7 @@ To do this you need help!
 - Proxies, stubs, dispatchers are auto-generated by the IDL compiler
 - Client = service consumer; Server = service provider
 
-#### Key Components – Client side
+#### Key components: client side
 
 ![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202402131120919.png)
 
@@ -1822,10 +1823,10 @@ To do this you need help!
 
 - One stub is created per interface method
 - Carries out marshalling of a call into a request message sent to remote end
-- Marshalling is the process of transforming the memory representation of an object to a data format suitable for storage or transmission (flattening)
+- Marshalling is the process of transforming the memory representation of an object to a data format suitable for storage or transmission
 - Also unmarshals returning replies
 
-#### Key Components – Server side
+#### Key components: server side
 
 ![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202402131120782.png)
 
@@ -1833,22 +1834,22 @@ To do this you need help!
 
 - Receives incoming messages and directs them to an appropriate server stub
 
-**Server stubs (skeletons)**
+**Server stubs skeletons**
 
 - Unmarshals message and then invokes appropriate code body
 - Also marshals reply values and initiates transmission back to the client
 
-#### Key Components - Registry
+#### Key components: Registry
 
-To implement the key components of a Registry in RMI (Remote Method Invocation), you will typically follow these steps:
+To implement the key components of a Registry in Remote Method Invocation, you typically follow these steps:
 
-1. Start the RMI Registry on a designated port (default is 1099):
+1. Start the RMI Registry on a designated port, default is 1099:
 
 ```
 start rmiregistry
 ```
 
-2. Register (bind) server objects with the RMI Registry:
+2. Register server objects with the RMI Registry:
 
 ```java
 LocateRegistry.createRegistry(port); // If the registry is not already running on the specified port
@@ -1870,8 +1871,8 @@ rmi://<hostname>:<port>/<ServiceName>
 
 Where:
 
-- `<hostname>` is the IP address or hostname where the RMI Registry is running.
-- `<port>` is the port number on which the RMI Registry is listening (default is 1099).
+- `<hostname>` is the IP address or host name where the RMI Registry is running.
+- `<port>` is the port number on which the RMI Registry is listening, default is 1099.
 - `<ServiceName>` is the name under which the remote object is bound in the RMI Registry.
 
 Examples:
@@ -1882,16 +1883,16 @@ Examples:
 
 ![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202402131121202.png)
 
-#### Disadvantages of DOM
+#### Disadvantages of dom
 
 - **Synchronous interaction**: client blocks while a method is invoked remotely
 - **Distributed garbage collection**: efficiency vs bloat
-- **Generated structures are static**: cannot be changed at runtime
-- **Generated structures are heavyweight**: high cost for simple transactions, e.g. embedded devices
+- **Generated structures are static**: can't be changed at runtime
+- **Generated structures are heavyweight**: high cost for simple transactions, for example: embedded devices
 
-### RMI How To
+### RMI how to
 
-**Step 1** Define interface(s)
+**Step 1** Define interfaces
 
 - Extends the Remote interface: identifies interfaces whose methods may be invoked from non-local JVMs
 - Each method throws RemoteException: a ‘catch-all’ for communication-related exceptions
@@ -1903,14 +1904,14 @@ import java.rmi.RemoteException;
 public interface PasswordGenerator extends Remote {
     // returns a randomly-generated password
     public String genPassword(int ID) throws RemoteException;
-    // returns null if the password is incorrect / does not exist
+    // returns null if the password is incorrect / doesn't exist
     public byte[] downloadSource(int ID, String password) throws RemoteException;
 }
 ```
 
-**Step 2** Implement the interface (aka the server)
+**Step 2** Implement the interface, or the server
 
-- Extends UnicastRemoteObject i.e. it can be called remotely, therefore, the compiler needs to generate a stub for it
+- Extends UnicastRemoteObject: it can be called remotely, therefore, the compiler needs to generate a stub for it
 - RemoteException
 
 ```java
@@ -1933,7 +1934,7 @@ public class PasswordServer extends UnicastRemoteObject implements PasswordGener
 **Step 3** Start the server and announce it
 
 - Create an instance of the server class
-- Register (bind) the instance to the RMI registry under a given name
+- Register the instance to the RMI registry under a given name
 
 ```java
 public static void main(String[] args) {
@@ -1951,7 +1952,7 @@ public static void main(String[] args) {
 **Step 4** Develop the client
 
 - Create a stub by looking up the server
-- Use the instance as if it is a local instance of the server class
+- Use the instance as if it's a local instance of the server class
 
 ```java
 import java.rmi.Naming;
@@ -1973,21 +1974,21 @@ public class PasswordClient {
 }
 ```
 
-## Topic 6 - Concurrency
+## Topic 6: Concurrency
 
-### What is Concurrency?
+### What's concurrency?
 
 Concurrency happens when multiple parts of the program running simultaneously.
 
 **why?**
 
-- utilization – Make use of multi-core processors
-- performance – Efficient integration with slow devices, e.g. disks
-- user-friendliness – Responsive applications
+- utilization: Make use of multi-core processors
+- performance: Efficient integration with slow devices, for example: disks
+- user-friendliness: Responsive applications
 
-### Concurrency in Java
+### Concurrency in java
 
-We build concurrent Java programs using **_Thread_**. A Java thread is an object. Like all other objects, they have attributes and methods. Unlike other objects, each has its own **_point of execution_**, and runs by itself.
+Build concurrent Java programs using **_Thread_**. A Java thread is an object. Like all other objects, they have attributes and methods. Unlike other objects, each has its own **_point of execution_**, and runs by itself.
 
 A thread is an object whose code runs in parallel with the rest of the program.
 
@@ -2018,7 +2019,7 @@ public static void main(String[] args) {
 }
 ```
 
-> It is the easiest approach, but it is not recommended because it does not allow you to extend any other class.
+> It's the easiest approach, but it's not recommended because it doesn't allow you to extend any other class.
 
 - implement the `Runnable` interface, then create a `Thread` object passing an instance of your class.
 
@@ -2046,7 +2047,7 @@ public class PrinterRunnable implements Runnable {
 }
 ```
 
-To use this class, we must create an instance and then **pass it to an instance of the `Thread` class**.
+To use this class, create an instance and then **pass it to an instance of the `Thread` class**.
 
 ```java
 public class RunnableSingleThread {
@@ -2058,9 +2059,9 @@ public class RunnableSingleThread {
 }
 ```
 
-### Creating Multiple Threads
+### Creating multiple threads
 
-We can create many Threads via an **array** of Thread objects.
+Create many Threads via an **array** of Thread objects.
 
 ```java
 public class RunnableMultipleThreads {
@@ -2093,16 +2094,16 @@ Output:
 
 Both Threads are running at the same time. There are \*_no guarantees_ about the order of their execution, hence the need for concurrent programming 'good practices'.
 
-### Mapping to Hardware
+### Mapping to hardware
 
-CPU (processor) has many cores (4–16 typical), each can run one thread at a time. If fewer threads than cores, all threads truly run in parallel. If more threads than cores, Java / OS does time-slicing. That is, run the 1st thread for a while, then the 2nd, then the 1st, etc. We cannot predict when switches occur!
+CPU has many cores, 4–16 typical, each can run one thread at a time. If fewer threads than cores, all threads truly run in parallel. If more threads than cores, Java / OS does time-slicing, which means, run the first thread for a while, then the second, then the first, etc. It's hard to predict when switches occur.
 
-### Thread Priorities
+### Thread priorities
 
 Each Thread has a priority which can be read using `getPriority()`
 
 - MIN PRIORITY = 1
-- NORM PRIORITY = 5 (default)
+- NORM PRIORITY = 5, default
 - MAX PRIORITY = 10
 
 Priority can be changed using `setPriority(int)`
@@ -2111,7 +2112,7 @@ Priority can be changed using `setPriority(int)`
 
 Threads inherit priority of their creator, if not specified.
 
-### Thread Control
+### Thread control
 
 ![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202402131257683.png)
 
@@ -2126,15 +2127,15 @@ Waiting on other systems might take forever, or at least the user might get bore
 
 Two possible outcomes:
 
-- if it is running an `interruptable` method (e.g. sleep), the method unblocks and throws the `InterruptedException`
+- if it's running an `interruptable` method, for example sleep, the method unblocks and throws the `InterruptedException`
 - otherwise, its interrupted status is set to TRUE.
 
 Methods for reading interrupted status:
 
-- `isInterrupted()` – read only
-- `interrupted()` – read and clear (i.e. reset)
+- `isInterrupted()`: read only
+- `interrupted()`: read and clear
 
-### Thread Control
+### Thread control
 
 `sleep(long milliseconds)` puts the Thread to sleep.
 
@@ -2161,7 +2162,7 @@ public static void main(String[] args) {
 }
 ```
 
-Here we wait until all five threads have finished.
+Wait until all five threads have finished.
 
 ```java
 MyThread[] m = new MyThread[5];
@@ -2178,7 +2179,7 @@ for(int i = 0; i < 5; i++) {
 System.out.print("all threads completed");
 ```
 
-This doesn't work! Why?
+This doesn't work. Why?
 
 ```java
 MyThread[] m = new MyThread[5];
@@ -2192,11 +2193,11 @@ for (int i = 0; i < 5; i++) {
 System.out.print("all threads completed");
 ```
 
-The code provided will not work as intended because calling `m[i].join()` immediately after `m[i].start()` within the same loop will cause the main thread to wait for each thread to complete before proceeding to start the next thread. This defeats the purpose of multithreading, where you typically want threads to run concurrently rather than sequentially. As a result, your program will behave as if you are running the threads sequentially, rather than concurrently.
+The code provided won't work as intended because calling `m[i].join()` immediately after `m[i].start()` within the same loop cause the main thread to wait for each thread to complete before proceeding to start the next thread. This defeats the purpose of multi-threading, where you typically want threads to run concurrently rather than sequentially. As a result, your program behave as if you are running the threads sequentially, rather than concurrently.
 
 To allow all threads to run concurrently and then wait for all of them to complete before printing "all threads completed," you should call `join()` after starting all the threads in the second loop.
 
-### Thread Names
+### Thread names
 
 Threads can be optionally given names through their constructor
 
@@ -2205,13 +2206,13 @@ Thread t = new Thread(aRunnableThing,"cool name");
 Thread t = new Thread("cool name");
 ```
 
-We can also use `setName(String)` and `getName()`, within a class that extends Runnable, you have to obtain the relevant Thread object first:
+Use `setName(String)` and `getName()`, within a class that extends Runnable, you have to obtain the relevant Thread object first:
 
 ```java
 Thread.currentThread().getName()
 ```
 
-### Benefits of Multithreading
+### Benefits of multi-threading
 
 Sorting the values in a large array can be made parallel:
 
@@ -2345,11 +2346,11 @@ Output:
 0.9995128056561186
 ```
 
-How much speed-up will this give?
+How much speed-up can this give?
 
-### Data Parallelism
+### Data parallelism
 
-All threads ‘see’ the same Java objects in memory. If we have a large array, each thread can perform a calculation on some part of it. Write the results to disjoint regions of a pre-allocated output array. It's efficient since it makes good use of multi-core CPUs.
+All threads ‘see’ the same Java objects in memory. Given a large array, each thread can perform a calculation on some part of it. Write the results to disjoint regions of a pre-allocated output array. It's efficient since it makes good use of multi-core CPU.
 
 ```java
 public class ParallelMath {
@@ -2412,7 +2413,7 @@ public class ParallelMath {
 
 ## Executors
 
-Thread creation is (relatively) expensive. It unnecessarily ties together concepts of creating threads and running tasks on them. It's difficult to control how many threads running in a complex application.
+Thread creation is relatively expensive. It unnecessarily ties together concepts of creating threads and running tasks on them. It's difficult to control how many threads running in a complex app.
 
 Executors are a higher-level interface for creating threads. Executor object manages thread creation. Runnable tasks are submitted to the executor to run on some thread.
 
@@ -2422,13 +2423,13 @@ public interface Executor {
 }
 ```
 
-#### Tread Pools
+#### Tread pools
 
 Simplest Executor implementation: fixed thread pool.
 
 - create with `ExecutorService.newFixedThreadPool(nThreads)`
 
-This will start a pool containing a maximum of `nThreads` threads.
+This starts a pool containing a maximum of `nThreads` threads.
 
 ```java
 ExecutorService pool = Executors.newFixedThreadPool(8);
@@ -2438,13 +2439,13 @@ pool.execute(r1);
 pool.execute(r2);
 ```
 
-`ExecutorService.shutdown` is similar to `Thread.join`, wait for all tasks to finish, then terminate all the threads.
+`ExecutorService.shutdown` is similar to `Thread.join`, wait for all tasks to finish, then stop all the threads.
 
 `ExecutorService.awaitTermination` waits for shutdown to complete
 
 `ExecutorService.shutdownNow` interrupts all threads
 
-### Additional Reading
+### Additional reading
 
 [https://www.geeksforgeeks.org/multithreading-in-java/](https://www.geeksforgeeks.org/multithreading-in-java/)
 

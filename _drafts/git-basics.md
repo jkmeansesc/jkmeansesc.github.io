@@ -1,10 +1,11 @@
 ---
 layout: post
-title: 用命令行驾驭git
+title: 用命令行驾驭 git
 description: git basics
 image: https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202312201913798.jpg
 category:
   - 不学无术
+  - git
 tags:
   - git
 toc: true
@@ -19,7 +20,7 @@ lang: zh-CN
 
 ## Git 101
 
-### Git基础操作
+### Git 基础操作
 
 | 初始化一个新的`repository` |
 | -------------------------- |
@@ -41,7 +42,7 @@ commit 9f1944464c12e9ff09a9b1f32245bfc705e8732d (HEAD -> main)
 Author: minicoderwen <373441770@qq.com>
 Date:   Fri Dec 22 00:28:11 2023 +0000
 
-    update karabiner # 这个是commit message
+    update karabiner # 这个是 commit message
 ```
 
 然后就可以用获取到的`commit id`来
@@ -58,18 +59,18 @@ Date:   Fri Dec 22 00:28:11 2023 +0000
 
 | 创建`branch`的几种方式     |
 | -------------------------- |
-| git branch new_branch      |
-| git checkout new_branch    |
-| git checkout -b new_branch |
-| git switch -c new_branch   |
+| git branch new-branch      |
+| git checkout new-branch    |
+| git checkout -b new-branch |
+| git switch -c new-branch   |
 
 | 合并`branch`         |
 | -------------------- |
-| git merge new_branch |
+| git merge new-branch |
 
 | 切换`branch`               |
 | -------------------------- |
-| git switch existing_branch |
+| git switch existing-branch |
 
 | 查看`staging area`中的所有文件 |
 | ------------------------------ |
@@ -81,12 +82,12 @@ Date:   Fri Dec 22 00:28:11 2023 +0000
 
 首先，删除文件本身，再
 
-| 告诉git我们要删除这个文件 |
+| 告诉 git 我们要删除这个文件 |
 | ------------------------- |
 | git rm some-file          |
 | git add .                 |
 
-这两条命令实现同样的效果，那就是告诉git不要再追踪这个文件了。
+这两条命令实现同样的效果，那就是告诉 git 不要再追踪这个文件了。
 
 #### 如何撤销对 `unstaged` 文件的修改？
 
@@ -98,7 +99,7 @@ Date:   Fri Dec 22 00:28:11 2023 +0000
 | -------------- |
 | git checkout . |
 
-这条命令表示回退当前分支下所有被追踪的文件到上一个`commit`的状态。`checkout`是git常用撤销修改的命令。但是git提供了一个更明确的指令，叫作`restore`，能实现同样的效果。
+这条命令表示回退当前分支下所有被追踪的文件到上一个`commit`的状态。`checkout`是 git 常用撤销修改的命令。但是 git 提供了一个更明确的指令，叫作`restore`，能实现同样的效果。
 
 | 撤销修改              |
 | --------------------- |
@@ -113,11 +114,11 @@ Date:   Fri Dec 22 00:28:11 2023 +0000
 - `-f`表示强制删除
 - `-n`表示列举出要删除的文件，但是不真的删除
 
-| 删除untracked文件和目录   |
+| 删除 untracked 文件和目录   |
 | ------------------------- |
 | git clean -d -f some-file |
 
-| 列举出untracked的文件和目录 |
+| 列举出 untracked 的文件和目录 |
 | --------------------------- |
 | git clean -d -n             |
 
@@ -137,16 +138,16 @@ Date:   Fri Dec 22 00:28:11 2023 +0000
 
 #### 如何删除本地的 `commit`？
 
-| 回退1个commit    |
+| 回退 1 个 commit    |
 | ---------------- |
 | get reset HEAD~1 |
 
-| 回退2个commit    |
+| 回退 2 个 commit    |
 | ---------------- |
 | git reset HEAD~2 |
 
 - 使用 `--soft`
-  - --soft 表示回退到某个`commit`，但是保留所有修改在`staging area`，只有commit被回退了，可以直接再次`git commit`。
+  - --soft 表示回退到某个`commit`，但是保留所有修改在`staging area`，只有 commit 被回退了，可以直接再次`git commit`。
   - 不用 --soft 表示修改的内容会被从`staging area`移除到`unstaged`，但是修改不会被删除。
 - 使用 `--hard`
 
@@ -154,27 +155,27 @@ Date:   Fri Dec 22 00:28:11 2023 +0000
 
 #### 如何删除 `branch`
 
-| 使用 -d 删除branch        |
+| 使用 -d 删除 branch        |
 | ------------------------- |
-| git branch -d some_branch |
+| git branch -d some-branch |
 
-| 使用 -D 删除branch        |
+| 使用 -D 删除 branch        |
 | ------------------------- |
-| git branch -D some_branch |
+| git branch -D some-branch |
 
 - `-d` 表示删除一个已经`merge`的`branch`，如果`branch`没有被`merge`，则会报错。
 - `-D` 表示强制删除一个`branch`，不管`branch`有没有被`merge`。
 
-### 什么是detached HEAD
+### 什么是 detached HEAD
 
 当我们`checkout`某一个特定的`commit`，这时候就处于`detached`的状态，表示`HEAD`指向的不是一个`branch`，而是一个`commit`。有时候我们在`commit`的时候忘了一些东西，我们可以用这种方法来切换到那个`commit`特定的节点，去补充我们落下的东西。
 
 那么如何在`detached HEAD`模式下进行修改并合并进`main`目标分支呢？
 
 ```bash
-# 首先checkout某一个commit
+# 首先 checkout 某一个 commit
 git checkout 9f1944464c12e9ff09a9b1f32245bfc705e8732d
-# 进行修改，然后commit
+# 进行修改，然后 commit
 git add some-file
 git add .
 git commit -m "some message"
@@ -183,55 +184,55 @@ git commit -m "some message"
 此时`main`分支是不包含这个`commit`的，我们需要新建一个分支包含这个`commit`，再合并到`main`目标分支。
 
 ```bash
-git log # 获取我们要合并的commit id，类似 037e3f3
-git branch new_branch 037e3f3 # 新建一个分支包含这个commit
-git branch # 此时查看分支，会发现 detached HEAD的提示没有了
-git checkout main # 切换到main分支
-git merge new_branch # 合并new_branch分支
-git branch -d new_branch # 删除new_branch分支，因为已经不需要这个分支了
+git log # 获取我们要合并的 commit id，类似 037e3f3
+git branch new_branch 037e3f3 # 新建一个分支包含这个 commit
+git branch # 此时查看分支，会发现 detached HEAD 的提示没有了
+git checkout main # 切换到 main 分支
+git merge new_branch # 合并 new_branch 分支
+git branch -d new_branch # 删除 new_branch 分支，因为已经不需要这个分支了
 ```
 
 ### 什么是.gitignore？
 
-我们可以创建一个`.gitignore`来告诉git哪些文件不需要被追踪，比如IDE的配置文件、编译后的文件、日志文件等。
+我们可以创建一个`.gitignore`来告诉 git 哪些文件不需要被追踪，比如 IDE 的配置文件、编译后的文件、日志文件等。
 
 ```plaintext
-*.log # 忽略所有的log文件
-!test.log # 但是不忽略test.log
+*.log # 忽略所有的 log 文件
+!test.log # 但是不忽略 test.log
 
-some_folder/ # 忽略some_folder目录下的所有文件
-**/some_folder/ # 忽略所有目录下的some_folder目录
-**/some_folder/** # 忽略所有目录下的some_folder目录和文件
+some_folder/ # 忽略 some_folder 目录下的所有文件
+**/some_folder/ # 忽略所有目录下的 some_folder 目录
+**/some_folder/** # 忽略所有目录下的 some_folder 目录和文件
 ```
 
-### Git基础命令总结
+### Git 基础命令总结
 
 | 命令                           | 作用                                          |
 | ------------------------------ | --------------------------------------------- |
-| git --version                  | 查看git版本                                   |
-| git init                       | 初始化一个新的repository                      |
+| git --version                  | 查看 git 版本                                   |
+| git init                       | 初始化一个新的 repository                      |
 | git status                     | 查看当前状态                                  |
-| git log                        | 查看commit历史                                |
-| git ls-files                   | 查看staging area中的所有文件                  |
-| git add some-file              | 添加文件到staging area                        |
-| git add .                      | 添加所有文件到staging area                    |
-| git commit -m "message"        | 提交staging area中的文件到repository          |
-| git checkout commitid          | 切换到某个commit(detached HEAD)               |
-| git branch branch_name         | 新建一个branch                                |
-| git checkout branch_name       | 切换到某个branch                              |
-| git checkout -b branch_name    | 新建一个branch并切换到这个branch              |
-| git switch -c branch_name      | 新建一个branch并切换到这个branch              |
-| git merge other_branch         | 合并other_branch到当前branch                  |
-| git rm some-file               | 删除文件并且告诉git不要再追踪这个文件         |
-| git restore some-file          | 撤销对unstaged文件的修改                      |
-| git restore --staged some-file | 撤销对staged文件的修改                        |
-| git clean -df some-file        | 删除untracked文件                             |
-| git reset HEAD~1               | 回退1个commit                                 |
-| git reset --soft HEAD~1        | 回退1个commit，但是保留所有修改在staging area |
-| git reset --hard HEAD~1        | 回退1个commit，删除所有修改                   |
-| git branch -D branch_name      | 强制删除branch                                |
+| git log                        | 查看 commit 历史                                |
+| git ls-files                   | 查看 staging area 中的所有文件                  |
+| git add some-file              | 添加文件到 staging area                        |
+| git add .                      | 添加所有文件到 staging area                    |
+| git commit -m "message"        | 提交 staging area 中的文件到 repository          |
+| git checkout commit-id          | 切换到某个 commit(detached HEAD)               |
+| git branch branch-name         | 新建一个 branch                                |
+| git checkout branch-name       | 切换到某个 branch                              |
+| git checkout -b branch-name    | 新建一个 branch 并切换到这个 branch              |
+| git switch -c branch-name      | 新建一个 branch 并切换到这个 branch              |
+| git merge other-branch         | 合并 other-branch 到当前 branch                  |
+| git rm some-file               | 删除文件并且告诉 git 不要再追踪这个文件         |
+| git restore some-file          | 撤销对 unstaged 文件的修改                      |
+| git restore --staged some-file | 撤销对 staged 文件的修改                        |
+| git clean -df some-file        | 删除 untracked 文件                             |
+| git reset HEAD~1               | 回退 1 个 commit                                 |
+| git reset --soft HEAD~1        | 回退 1 个 commit，但是保留所有修改在 staging area |
+| git reset --hard HEAD~1        | 回退 1 个 commit，删除所有修改                   |
+| git branch -D branch-name      | 强制删除 branch                                |
 
-## 什么是Git Stash
+## 什么是 Git Stash
 
 如果我们在`branch1`上修改了一些文件，但是我们想要切换到`branch2`上去，但是我们又不想要把修改的内容`commit`到`branch1`上，这时候我们可以用`git stash`命令。`git stash`会将已经修改的内容存到栈中，然后回退到修改前`HEAD`的状态，我们可以在后续应用这些修改。
 
@@ -302,7 +303,7 @@ stash@{0}: On main: some message
 
 我们可以用`git stash clear`来清空栈中所有的`stash`。
 
-## 什么是Git Reflog
+## 什么是 Git reflog
 
 `git reflog`可以查看所有的`commit`历史，包括`reset`和`rebase`的历史。我们可以用这个命令来找回丢失的`commit`和`branch`。
 
@@ -316,15 +317,15 @@ aa2183d (HEAD -> main, origin/main, origin/HEAD) HEAD@{2}: commit: nvim add trou
 f1259a9 HEAD@{6}: commit: update nvim
 ```
 
-使用`git reflog`找回丢失的commit。
+使用`git reflog`找回丢失的 commit。
 
 ```bash
 git reflog
 git reset --hard 60d9e5b
-git log # 此时60d9e5b又变成了HEAD
+git log # 此时 60d9e5b 又变成了 HEAD
 ```
 
-使用`git reflog`找回丢失的branch。
+使用`git reflog`找回丢失的 branch。
 
 ```bash
 git checkout -b new_branch
@@ -332,25 +333,25 @@ git add .
 git commit -m "file added"
 git switch main
 git branch -D new_branch # 删除分支
-git reflog # 找到 "file added" 这个commit id
-git checkout 60d9e5b # 此时处于detached模式
-git switch -c new_branch # 创建一个包含这个commit的新分支
+git reflog # 找到 "file added" 这个 commit id
+git checkout 60d9e5b # 此时处于 detached 模式
+git switch -c new_branch # 创建一个包含这个 commit 的新分支
 ```
 
-## 什么是Git Merge
+## 什么是 Git Merge
 
 假设有一个`new_branch`分支需要合并到`master`分支：
 
 - 如果`new_branch`有新的`commit`，`master`没有，`git merge`会默认使用`fast-forward`进行合并。
 - 如果`new_branch`和`master`都有新的`commit`，`git merge`会默认使用`non-fast-forward recursive merge`进行合并。
 
-### 什么是fast-forward
+### 什么是 fast-forward
 
 ```bash
-git checkout -b new_branch # 从master创建一个新分支
+git checkout -b new_branch # 从 master 创建一个新分支
 # 在新分支上修改新增内容并提交
-git checkout master # 切换到master分支
-git merge new_branch # 将new_branch合并到master
+git checkout master # 切换到 master 分支
+git merge new_branch # 将 new_branch 合并到 master
 ```
 
 从`master`上创建新分支并进行开发，之后新分支的提交合并回`master`分支，此时`fast-forward`发生。
@@ -362,7 +363,7 @@ commit dc266f220355690a48a56b520dbdd0aeb2a8d4e8 (HEAD -> main, origin/main, orig
 Author: minicoderwen <373441770@qq.com>
 Date:   Thu Jan 4 11:58:23 2024 +0000
 
-    new_branch commit 2 <<<<<<<<<<< fast-forward merge之后，新的HEAD指向这个new_branch的最后一次commit
+    new_branch commit 2 <<<<<<<<<<< fast-forward merge 之后，新的 HEAD 指向这个 new_branch 的最后一次 commit
 
 commit f2a4922b8d01b2365e6056bee765701ad063adbe
 Author: minicoderwen <373441770@qq.com>
@@ -374,7 +375,7 @@ commit 3d6ff634564a0d17a0f3cd83d2f8e5c4acf86ff5
 Author: BigWen <48466898+minicoderwen@users.noreply.github.com>
 Date:   Thu Dec 28 07:24:21 2023 +0000
 
-    original master commit <<<<<<<<<<< 原来的master分支指向这个分支
+    original master commit <<<<<<<<<<< 原来的 master 分支指向这个分支
 ```
 
 #### 了解 --squash
@@ -401,7 +402,7 @@ Date:   Thu Dec 28 07:24:21 2023 +0000
 
 最后执行`git commit -m "some message"`，`new_branch`上的所有改动就被合并到了`master`上。
 
-### 什么是non-fast-forward recursive merge
+### 什么是 non-fast-forward recursive merge
 
 #### 了解 --no-ff
 
@@ -421,7 +422,7 @@ git merge --no-ff new_branch
 
 如果要回退，只需要`git reset --hard HEAD~1`（不需要数`new_branch`的`commit`数量）。此时`new_branch`上的分支也会被从`master`上回退。
 
-## 什么是Git Rebase
+## 什么是 Git rebase
 
 ![git rebase](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401101948187.png)
 
@@ -444,7 +445,7 @@ git checkout master
 git merge feature
 ```
 
-### 什么时候使用rebase？
+### 什么时候使用 rebase？
 
 - 当`feature`分支还没合入`master`但`master`已经有了新的`commits`。
 
@@ -464,43 +465,43 @@ git merge feature
 
 ## 什么是 Cherry-Pick
 
-假设我们在`feature`分支有3个新的`commit`，我们想要把某一个特定的`commit`合并到`master`分支。
+假设我们在`feature`分支有 3 个新的`commit`，我们想要把某一个特定的`commit`合并到`master`分支。
 
 ```bash
-git log # 获取这个commit的id
+git log # 获取这个 commit 的 id
 git checkout master
 git cherry-pick 3d6ff634564a0d17a0f3cd83d2f8e5c4acf86ff5
 ```
 
 > 注意：`cherry-pick`会创建一个新的`commit`，所以`commit id`会变化。
 
-## 运用Tag管理版本
+## 运用 Tag 管理版本
 
-当某一个`commit`具有一定的意义，比如`v1.0`，我们可以给那个`commit`打上Tag。
+当某一个`commit`具有一定的意义，比如`v1.0`，我们可以给那个`commit`打上 Tag。
 
 ```bash
 git tag # 获取所有的`tag`。
 git tag v1.0 3d6ff634564a0d17a0f3cd83d2f8e5c4acf86ff5 # 给这个分支打上标签
-git show v1.0 # 查看这个tag的信息
-git checkout v1.0 # 切换到这个tag所在的分支，注意是detached-HEAD模式
-git tag -d v1.0 # 删除这个tag
-git tag -a v2.0 -m "some message" # 创建一个annotated tag
-git show v2.0 # 查看这个tag的信息，会显示"some message"
+git show v1.0 # 查看这个 tag 的信息
+git checkout v1.0 # 切换到这个 tag 所在的分支，注意是 detached-HEAD 模式
+git tag -d v1.0 # 删除这个 tag
+git tag -a v2.0 -m "some message" # 创建一个 annotated tag
+git show v2.0 # 查看这个 tag 的信息，会显示"some message"
 ```
 
-## Github 101
+## GitHub 101
 
-首先在Github上创建一个新的仓库，然后
+首先在 GitHub 上创建一个新的仓库，然后
 
 > 仓库名注意和本地的仓库名保持一致。
 
-| 连接本地仓库至Github远程仓库   |
+| 连接本地仓库至 GitHub 远程仓库   |
 | ------------------------------ |
 | git init                       |
 | git add .                      |
 | git commit -m "Initial commit" |
 | git branch -M master           |
-| git remote add origin \<url\>  |
+| git remote add origin \<URL\>  |
 | git push -u origin master      |
 
 `origin` 是远程仓库的别名，可以自定义。
@@ -509,15 +510,15 @@ git show v2.0 # 查看这个tag的信息，会显示"some message"
 
 ![remote branch](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401142057014.png)
 
-当我们执行`git push origin master`，Git会将`master`的内容创建一个新的分支叫作Remote Tracking Branch (READ-ONLY)，好让Git知道这个本地仓库要推送到一个别名叫作`origin`的仓库的`master`分支上。
+当我们执行`git push origin master`，Git 会将`master`的内容创建一个新的分支叫作 Remote Tracking Branch (READ-ONLY)，好让 Git 知道这个本地仓库要推送到一个别名叫作`origin`的仓库的`master`分支上。
 
-同样，当我们执行`git pull`的时候，Git会先将远程仓库的内容`fetch`到Remote Tracking Branch分支上，然后再`merge`回本地分支。
+同样，当我们执行`git pull`的时候，Git 会先将远程仓库的内容`fetch`到 Remote Tracking Branch 分支上，然后再`merge`回本地分支。
 
-所以，本地的`master`分支和远程的`master`分支并没有直接的关联，而是要通过Remote Tracking Branch。
+所以，本地的`master`分支和远程的`master`分支并没有直接的关联，而是要通过 Remote Tracking Branch。
 
-> 我们同样可以`git push origin feature`来在远程仓库创建一个新的feature分支，道理是一样的。
+> 我们同样可以`git push origin feature`来在远程仓库创建一个新的 feature 分支，道理是一样的。
 
-假设我们在远程仓库上创建了一个新的分支`remote-feature`，此时在本地`git branch -a`是看不到的，我们可以使用`get fetch origin`将远程仓库的内容`fetch`到本地作为Remote Tracking Branch，此时`git branch -a`就能看到了。
+假设我们在远程仓库上创建了一个新的分支`remote-feature`，此时在本地`git branch -a`是看不到的，我们可以使用`get fetch origin`将远程仓库的内容`fetch`到本地作为 Remote Tracking Branch，此时`git branch -a`就能看到了。
 
 ### Remote && Local Tracking Branch
 
@@ -527,23 +528,23 @@ git show v2.0 # 查看这个tag的信息，会显示"some message"
 | git branch -a                             | 查看本地和远程所有分支                   |
 | git branch -r                             | 查看远程分支                             |
 | git remote show origin                    | 查看远程仓库的详细信息                   |
-| git branch -vv                            | 查看Local Tracking Branch 和他们的Remote |
-| git branch --track feature origin/feature | 创建一个Local Tracking Branch            |
+| git branch -vv                            | 查看 Local Tracking Branch 和他们的 Remote |
+| git branch --track feature origin/feature | 创建一个 Local Tracking Branch            |
 
 当我们`git branch -c new_branch`的时候，`git branch -a`会显示远程仓库是没有`track`这个分支的。
 
 我们可以使用`git push origin new_branch`在远程创建这个分支。
 
-如果远程仓库已经存在，我们可以`git branch --track new_branch origin/new_branch`来创建一个Local Tracking Branch。
+如果远程仓库已经存在，我们可以`git branch --track new_branch origin/new_branch`来创建一个 Local Tracking Branch。
 
 此时`git branch -vv`会显示`new_branch`和`origin/new_branch`的关联。
 
-### 如何clone一个远程仓库
+### 如何 clone 一个远程仓库
 
-`git clone <url>`
+`git clone <URL>`
 
-### 了解Upstream
+### 了解 Upstream
 
-当我们`git push origin new_branch`的时候，会发现本地和远程仓库是没有被互相`track`的。我们需要手动去创建Remote && Local Tracking Branch来创建分支之间的联系。
+当我们`git push origin new_branch`的时候，会发现本地和远程仓库是没有被互相`track`的。我们需要手动去创建 Remote && Local Tracking Branch 来创建分支之间的联系。
 
-所以我们可以`git push -u origin new_branch`，这样Git会自动创建Remote && Local Tracking Branch。
+所以我们可以`git push -u origin new_branch`，这样 Git 会自动创建 Remote && Local Tracking Branch。

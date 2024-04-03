@@ -10,7 +10,7 @@ baseurl: ""
 # The language of the webpage › http://www.lingoes.net/en/translator/langcode.htm
 # If it has the same name as one of the files in folder `_data/locales`, the layout language will also be changed,
 # otherwise, the layout language will use the default value of 'en'.
-lang: zh-CN
+lang: en-US
 
 # Change to your timezone › https://kevinnovak.github.io/Time-Zone-Picker
 timezone: Asia/Shanghai
@@ -20,7 +20,7 @@ timezone: Asia/Shanghai
 
 title: 小文写字的地方 # the main title
 
-tagline: I'm prettly lovely this time of year # it will display as the sub-title
+tagline: JK Means Esc # it will display as the sub-title
 
 description: A blog that you won't read # used by seo meta and the atom feed
 
@@ -28,7 +28,7 @@ description: A blog that you won't read # used by seo meta and the atom feed
 url: "https://blog.techwen.cn"
 
 github:
-  username: minicoderwen # change to your github username
+  username: jkmeansesc # change to your github username
 
 twitter:
   username: ChrisIsInMood # change to your twitter username
@@ -41,7 +41,7 @@ social:
   links:
     # The first element serves as the copyright owner's link
     - https://twitter.com/chrisisinmood # change to your twitter homepage
-    - https://github.com/minicoderwen # change to your github homepage
+    - https://github.com/jkmeansesc # change to your github homepage
     # Uncomment below to add more social links
     # - https://www.facebook.com/username
     # - https://www.linkedin.com/in/username
@@ -65,7 +65,7 @@ google_analytics:
 #     light  - Use the light color scheme
 #     dark   - Use the dark color scheme
 #
-theme_mode: # [light|dark]
+theme_mode: dark
 
 # The CDN endpoint for images.
 # Notice that once it is assigned, the CDN url

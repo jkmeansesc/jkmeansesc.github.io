@@ -1,0 +1,166 @@
+/*
+ * The syntax dark mode styles.
+ */
+
+@import 'catppuccin-mocha';
+
+@mixin dark-syntax {
+  --language-border-color: var(--surface0);
+  --highlight-bg-color: var(--crust);
+  --highlighter-rouge-color: var(--subtext1);
+  --highlight-lineno-color: var(--overlay1);
+  --inline-code-bg: var(--surface1);
+  --code-color: var(--text);
+  --code-header-text-color: var(--overlay0);
+  --code-header-muted-color: var(--surface0);
+  --code-header-icon-color: var(--surface2);
+  --clipboard-checked-color: var(--green);
+  --filepath-text-color: var(--lavender);
+
+  .highlight .gp {
+    color: #87939d;
+  }
+
+  /* --- Syntax highlight theme from `rougify style base16.dark` --- */
+
+  .highlight table td {
+    padding: 5px;
+  }
+
+  .highlight table pre {
+    margin: 0;
+  }
+
+  .highlight,
+  .highlight .w {
+    color: var(--rosewater);
+    background-color: var(--crust);
+  }
+
+  .highlight .err {
+    color: var(--crust);
+    background-color: var(--red);
+  }
+
+  .highlight .c,
+  .highlight .ch,
+  .highlight .cd,
+  .highlight .cm,
+  .highlight .cpf,
+  .highlight .c1,
+  .highlight .cs {
+    color: #848484;
+  }
+
+  .highlight .cp {
+    color: var(--yellow);
+  }
+
+  .highlight .nt {
+    color: var(--yellow);
+  }
+
+  .highlight .o,
+  .highlight .ow {
+    color: var(--rosewater);
+  }
+
+  .highlight .p,
+  .highlight .pi {
+    color: var(--rosewater);
+  }
+
+  .highlight .gi {
+    color: var(--green);
+  }
+
+  .highlight .gd {
+    color: var(--maroon);
+    background-color: #320000;
+  }
+
+  .highlight .gh {
+    color: var(--sapphire);
+    background-color: var(--crust);
+    font-weight: bold;
+  }
+
+  .highlight .k,
+  .highlight .kn,
+  .highlight .kp,
+  .highlight .kr,
+  .highlight .kv {
+    color: var(--mauve);
+  }
+
+  .highlight .kc {
+    color: var(--peach);
+  }
+
+  .highlight .kt {
+    color: var(--peach);
+  }
+
+  .highlight .kd {
+    color: var(--peach);
+  }
+
+  .highlight .s,
+  .highlight .sb,
+  .highlight .sc,
+  .highlight .dl,
+  .highlight .sd,
+  .highlight .s2,
+  .highlight .sh,
+  .highlight .sx,
+  .highlight .s1 {
+    color: var(--green);
+  }
+
+  .highlight .sa {
+    color: var(--mauve);
+  }
+
+  .highlight .sr {
+    color: var(--teal);
+  }
+
+  .highlight .si {
+    color: var(--peach);
+  }
+
+  .highlight .se {
+    color: var(--peach);
+  }
+
+  .highlight .nn {
+    color: var(--yellow);
+  }
+
+  .highlight .nc {
+    color: var(--yellow);
+  }
+
+  .highlight .no {
+    color: var(--yellow);
+  }
+
+  .highlight .na {
+    color: var(--sapphire);
+  }
+
+  .highlight .m,
+  .highlight .mb,
+  .highlight .mf,
+  .highlight .mh,
+  .highlight .mi,
+  .highlight .il,
+  .highlight .mo,
+  .highlight .mx {
+    color: var(--green);
+  }
+
+  .highlight .ss {
+    color: var(--green);
+  }
+}
