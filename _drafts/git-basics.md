@@ -5,7 +5,6 @@ description: git basics
 image: https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202312201913798.jpg
 category:
   - 不学无术
-  - git
 tags:
   - git
 toc: true
@@ -83,9 +82,9 @@ Date:   Fri Dec 22 00:28:11 2023 +0000
 首先，删除文件本身，再
 
 | 告诉 git 我们要删除这个文件 |
-| ------------------------- |
-| git rm some-file          |
-| git add .                 |
+| --------------------------- |
+| git rm some-file            |
+| git add .                   |
 
 这两条命令实现同样的效果，那就是告诉 git 不要再追踪这个文件了。
 
@@ -114,13 +113,13 @@ Date:   Fri Dec 22 00:28:11 2023 +0000
 - `-f`表示强制删除
 - `-n`表示列举出要删除的文件，但是不真的删除
 
-| 删除 untracked 文件和目录   |
+| 删除 untracked 文件和目录 |
 | ------------------------- |
 | git clean -d -f some-file |
 
 | 列举出 untracked 的文件和目录 |
-| --------------------------- |
-| git clean -d -n             |
+| ----------------------------- |
+| git clean -d -n               |
 
 #### 如何撤销对 `staged` 文件的修改？
 
@@ -138,11 +137,11 @@ Date:   Fri Dec 22 00:28:11 2023 +0000
 
 #### 如何删除本地的 `commit`？
 
-| 回退 1 个 commit    |
+| 回退 1 个 commit |
 | ---------------- |
 | get reset HEAD~1 |
 
-| 回退 2 个 commit    |
+| 回退 2 个 commit |
 | ---------------- |
 | git reset HEAD~2 |
 
@@ -155,11 +154,11 @@ Date:   Fri Dec 22 00:28:11 2023 +0000
 
 #### 如何删除 `branch`
 
-| 使用 -d 删除 branch        |
+| 使用 -d 删除 branch       |
 | ------------------------- |
 | git branch -d some-branch |
 
-| 使用 -D 删除 branch        |
+| 使用 -D 删除 branch       |
 | ------------------------- |
 | git branch -D some-branch |
 
@@ -207,30 +206,30 @@ some_folder/ # 忽略 some_folder 目录下的所有文件
 
 ### Git 基础命令总结
 
-| 命令                           | 作用                                          |
-| ------------------------------ | --------------------------------------------- |
-| git --version                  | 查看 git 版本                                   |
-| git init                       | 初始化一个新的 repository                      |
-| git status                     | 查看当前状态                                  |
-| git log                        | 查看 commit 历史                                |
-| git ls-files                   | 查看 staging area 中的所有文件                  |
-| git add some-file              | 添加文件到 staging area                        |
-| git add .                      | 添加所有文件到 staging area                    |
-| git commit -m "message"        | 提交 staging area 中的文件到 repository          |
-| git checkout commit-id          | 切换到某个 commit(detached HEAD)               |
-| git branch branch-name         | 新建一个 branch                                |
-| git checkout branch-name       | 切换到某个 branch                              |
-| git checkout -b branch-name    | 新建一个 branch 并切换到这个 branch              |
-| git switch -c branch-name      | 新建一个 branch 并切换到这个 branch              |
-| git merge other-branch         | 合并 other-branch 到当前 branch                  |
-| git rm some-file               | 删除文件并且告诉 git 不要再追踪这个文件         |
-| git restore some-file          | 撤销对 unstaged 文件的修改                      |
-| git restore --staged some-file | 撤销对 staged 文件的修改                        |
-| git clean -df some-file        | 删除 untracked 文件                             |
-| git reset HEAD~1               | 回退 1 个 commit                                 |
+| 命令                           | 作用                                              |
+| ------------------------------ | ------------------------------------------------- |
+| git --version                  | 查看 git 版本                                     |
+| git init                       | 初始化一个新的 repository                         |
+| git status                     | 查看当前状态                                      |
+| git log                        | 查看 commit 历史                                  |
+| git ls-files                   | 查看 staging area 中的所有文件                    |
+| git add some-file              | 添加文件到 staging area                           |
+| git add .                      | 添加所有文件到 staging area                       |
+| git commit -m "message"        | 提交 staging area 中的文件到 repository           |
+| git checkout commit-id         | 切换到某个 commit(detached HEAD)                  |
+| git branch branch-name         | 新建一个 branch                                   |
+| git checkout branch-name       | 切换到某个 branch                                 |
+| git checkout -b branch-name    | 新建一个 branch 并切换到这个 branch               |
+| git switch -c branch-name      | 新建一个 branch 并切换到这个 branch               |
+| git merge other-branch         | 合并 other-branch 到当前 branch                   |
+| git rm some-file               | 删除文件并且告诉 git 不要再追踪这个文件           |
+| git restore some-file          | 撤销对 unstaged 文件的修改                        |
+| git restore --staged some-file | 撤销对 staged 文件的修改                          |
+| git clean -df some-file        | 删除 untracked 文件                               |
+| git reset HEAD~1               | 回退 1 个 commit                                  |
 | git reset --soft HEAD~1        | 回退 1 个 commit，但是保留所有修改在 staging area |
-| git reset --hard HEAD~1        | 回退 1 个 commit，删除所有修改                   |
-| git branch -D branch-name      | 强制删除 branch                                |
+| git reset --hard HEAD~1        | 回退 1 个 commit，删除所有修改                    |
+| git branch -D branch-name      | 强制删除 branch                                   |
 
 ## 什么是 Git Stash
 
@@ -491,22 +490,20 @@ git show v2.0 # 查看这个 tag 的信息，会显示"some message"
 
 ## GitHub 101
 
-首先在 GitHub 上创建一个新的仓库，然后
+首先在 GitHub 上创建一个新的仓库，然后连接本地仓库至 GitHub 远程仓库。
 
-> 仓库名注意和本地的仓库名保持一致。
+> 仓库名注意和本地的仓库名保持一致。`origin` 是远程仓库的别名，可以自定义。
 
-| 连接本地仓库至 GitHub 远程仓库   |
-| ------------------------------ |
-| git init                       |
-| git add .                      |
-| git commit -m "Initial commit" |
-| git branch -M master           |
-| git remote add origin \<URL\>  |
-| git push -u origin master      |
+```bash
+git init
+git add .
+git commit -m "Initial commit"
+git branch -M master
+git remote add origin \<URL\>
+git push -u origin master
+```
 
-`origin` 是远程仓库的别名，可以自定义。
-
-### 一些概念
+### GitHub 的一些概念
 
 ![remote branch](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401142057014.png)
 
@@ -522,16 +519,16 @@ git show v2.0 # 查看这个 tag 的信息，会显示"some message"
 
 ### Remote && Local Tracking Branch
 
-| 命令                                      | 作用                                     |
-| ----------------------------------------- | ---------------------------------------- |
-| git remote                                | 查看远程仓库                             |
-| git branch -a                             | 查看本地和远程所有分支                   |
-| git branch -r                             | 查看远程分支                             |
-| git remote show origin                    | 查看远程仓库的详细信息                   |
+| 命令                                      | 作用                                       |
+| ----------------------------------------- | ------------------------------------------ |
+| git remote                                | 查看远程仓库                               |
+| git branch -a                             | 查看本地和远程所有分支                     |
+| git branch -r                             | 查看远程分支                               |
+| git remote show origin                    | 查看远程仓库的详细信息                     |
 | git branch -vv                            | 查看 Local Tracking Branch 和他们的 Remote |
-| git branch --track feature origin/feature | 创建一个 Local Tracking Branch            |
+| git branch --track feature origin/feature | 创建一个 Local Tracking Branch             |
 
-当我们`git branch -c new_branch`的时候，`git branch -a`会显示远程仓库是没有`track`这个分支的。
+当我们`git branch -c new_branch`的时候，`git branch -a`会显示远程仓库是没有追踪 t 这个分支的。
 
 我们可以使用`git push origin new_branch`在远程创建这个分支。
 
@@ -541,10 +538,47 @@ git show v2.0 # 查看这个 tag 的信息，会显示"some message"
 
 ### 如何 clone 一个远程仓库
 
-`git clone <URL>`
+```bash
+git clone <URL>
+```
 
 ### 了解 Upstream
 
-当我们`git push origin new_branch`的时候，会发现本地和远程仓库是没有被互相`track`的。我们需要手动去创建 Remote && Local Tracking Branch 来创建分支之间的联系。
+`-u` 的用处：
+
+当我们`git push origin new_branch`的时候，会发现本地和远程仓库是没有被互相追踪的。我们需要手动去创建 Remote && Local Tracking Branch 来创建分支之间的联系。
 
 所以我们可以`git push -u origin new_branch`，这样 Git 会自动创建 Remote && Local Tracking Branch。
+
+### 删除远程分支和提交
+
+不能直接使用`git branch -D remote-feature`来删除远程分支。可以执行：
+
+```bash
+git branch --delete --remotes origin/remote-feature
+git push origin --delete remote-feature
+```
+
+如何删除提交？
+
+```bash
+git reset --hard HEAD~1 # 回退到上一个 commit
+```
+
+此时修改只是本地的，这个时候 push 会提示失败，因为此时这个分支的历史已经和远程分支不一样了。
+
+```console
+hint: Updates were rejected because the tip of your current branch is behind its remote counterpart.
+```
+
+我们可以使用`git push --force`来强制推送。
+
+```bash
+git push --force origin master
+```
+
+### GitHub 小结
+
+![](https://raw.githubusercontent.com/jkmeansesc/picwen/main/img/202404041134020.png)
+
+# GitHub Deep Dive
