@@ -4,9 +4,9 @@ title: 用命令行驾驭 git
 description: git basics
 image: https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202312201913798.jpg
 category:
-  - 不学无术
+- 不学无术
 tags:
-  - git
+- git
 toc: true
 comments: true
 math: false
@@ -15,8 +15,8 @@ pin: false
 sitemap: true
 published: true
 lang: zh-CN
+date: 2024-04-06 02:40 +0800
 ---
-
 ## Git 101
 
 ### Git 基础操作
@@ -231,7 +231,7 @@ some_folder/ # 忽略 some_folder 目录下的所有文件
 | git reset --hard HEAD~1        | 回退 1 个 commit，删除所有修改                    |
 | git branch -D branch-name      | 强制删除 branch                                   |
 
-## 什么是 Git Stash
+### 什么是 Git Stash
 
 如果我们在`branch1`上修改了一些文件，但是我们想要切换到`branch2`上去，但是我们又不想要把修改的内容`commit`到`branch1`上，这时候我们可以用`git stash`命令。`git stash`会将已经修改的内容存到栈中，然后回退到修改前`HEAD`的状态，我们可以在后续应用这些修改。
 
@@ -302,7 +302,7 @@ stash@{0}: On main: some message
 
 我们可以用`git stash clear`来清空栈中所有的`stash`。
 
-## 什么是 Git reflog
+### 什么是 Git reflog
 
 `git reflog`可以查看所有的`commit`历史，包括`reset`和`rebase`的历史。我们可以用这个命令来找回丢失的`commit`和`branch`。
 
@@ -337,7 +337,7 @@ git checkout 60d9e5b # 此时处于 detached 模式
 git switch -c new_branch # 创建一个包含这个 commit 的新分支
 ```
 
-## 什么是 Git Merge
+### 什么是 Git Merge
 
 假设有一个`new_branch`分支需要合并到`master`分支：
 
@@ -421,7 +421,7 @@ git merge --no-ff new_branch
 
 如果要回退，只需要`git reset --hard HEAD~1`（不需要数`new_branch`的`commit`数量）。此时`new_branch`上的分支也会被从`master`上回退。
 
-## 什么是 Git rebase
+### 什么是 Git rebase
 
 ![git rebase](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401101948187.png)
 
@@ -450,7 +450,7 @@ git merge feature
 
 > 注意：`rebase`会更改代码的历史，因为`rebase`后`commit id`变了。
 
-## 如何处理冲突？
+### 如何处理冲突？
 
 [参考这篇博文](https://blog.techwen.cn/posts/resolve-git-conflict-in-neovim/)
 
@@ -462,7 +462,7 @@ git merge feature
 
 解决冲突后正常`commit`就可以了。
 
-## 什么是 Cherry-Pick
+### 什么是 Cherry-Pick
 
 假设我们在`feature`分支有 3 个新的`commit`，我们想要把某一个特定的`commit`合并到`master`分支。
 
@@ -474,7 +474,7 @@ git cherry-pick 3d6ff634564a0d17a0f3cd83d2f8e5c4acf86ff5
 
 > 注意：`cherry-pick`会创建一个新的`commit`，所以`commit id`会变化。
 
-## 运用 Tag 管理版本
+### 运用 Tag 管理版本
 
 当某一个`commit`具有一定的意义，比如`v1.0`，我们可以给那个`commit`打上 Tag。
 
@@ -576,9 +576,6 @@ hint: Updates were rejected because the tip of your current branch is behind its
 ```bash
 git push --force origin master
 ```
-
 ### GitHub 小结
 
 ![](https://raw.githubusercontent.com/jkmeansesc/picwen/main/img/202404041134020.png)
-
-# GitHub Deep Dive

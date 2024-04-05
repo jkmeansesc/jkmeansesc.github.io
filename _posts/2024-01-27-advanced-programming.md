@@ -1307,8 +1307,6 @@ Display the linked list backward: 1 3 30 2 1 red 10 green
 
 ### Set
 
-#### Set interface
-
 > Important: anything that implements Set can't have `duplicate` elements.
 
 ![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401301530381.png)
@@ -1702,7 +1700,7 @@ Web search
 
 Massively multiplayer online games
 
-- Online games for example: Fortnite, Among Us, support large numbers of users viewing and changing a common world
+- Online games for example: Fortnite, 'Among Us', support large numbers of users viewing and changing a common world
 - Need for low latency coordination to support gameplay
 
 ### Ok, it’s important. But is it easy?
@@ -1824,7 +1822,7 @@ To do this you need help
 - One stub is created per interface method
 - Carries out marshalling of a call into a request message sent to remote end
 - Marshalling is the process of transforming the memory representation of an object to a data format suitable for storage or transmission
-- Also unmarshals returning replies
+- Also un-marshals returning replies
 
 #### Key components: server side
 
@@ -1836,7 +1834,7 @@ To do this you need help
 
 **Server stubs skeletons**
 
-- Unmarshals message and then invokes appropriate code body
+- Un-marshals message and then invokes appropriate code body
 - Also marshals reply values and initiates transmission back to the client
 
 #### Key components: Registry
