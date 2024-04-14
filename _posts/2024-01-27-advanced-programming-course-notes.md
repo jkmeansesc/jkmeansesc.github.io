@@ -328,6 +328,143 @@ public abstract class Shape {
   - notionally a finer type of contract
   - a class can implement more than one interface
 
+### Topic 1 Lab
+
+What you will do in this lab:
+
+- Design and inherit classes
+- Make your own abstract class and interface - Refactor classes to construct class hierarchies
+
+### Exercise 1a: Compiling
+
+This initial exercise gives you some practice of compiling and running code from the command line.
+
+- Open a text editor and write a short Java programme with a main method that prints
+  Hello World.
+- Save this is as a file called HelloWorld.java
+- Open a command prompt
+- Navigate to the folder containing the file you just created
+- Compile the code using: `javac HelloWorld.java`, if successful, this will create a HelloWorld.class file)
+- Run the code using: `java HelloWorld` Note: java not javac, and no extension after the filename.
+
+```java
+  public class HelloWorld {
+    public static void main(String[] args) {
+      System.out.println("Hello World");
+    }
+  }
+```
+
+### Exercise 1b: Designing classes
+
+Write a new Java file that has a class to represent an employee. This class is to be used for staff management purposes. The class requires to:
+
+- Be called Employee
+- Have 4 instance variables: name, ID, salary, department
+- Have a constructor that takes 3 parameters to match the instance variables except ID - Have a method called `editName` to modify the employee’s name. Make sure that you use appropriate variable types and visibility modifiers.
+
+```java
+class Employee {
+  private String name;
+  private int ID;
+  private double salary;
+  private String department;
+
+  public Employee(String n, double s, String d) {
+    this.name = n;
+    this.salary = s;
+    this.department = d;
+    numOfEmployees++;
+    this.ID = numOfEmployees;
+  }
+
+  public void editName(String newName) {
+    this.name = newName;
+  }
+
+  public double getSalary() {
+    return this.salary;
+  }
+}
+```
+
+### Exercise 1c: Static
+
+Create a static variable within the Employee class to hold the value of the number of employees created. Each time an Employee instance is created, ID is set according to the value of this variable which is then incremented.
+
+Next, create a static method that prints the number of unique IDs that have been assigned to employees.
+
+```java
+class Employee {
+  ...
+  private static int numOfEmployees = 0;
+  public static int getIDcount() {
+    return numOfEmployees;
+  }
+}
+```
+
+### Exercise 1d: Inheritance
+
+Design a Manager class that inherits from Employee. The subclass needs to have an additional instance variable to hold the value of a bonus (surplus to salary). The subclass also needs to have a method called `calcTotalEarnings` to return the total earnings of the manager as the sum of the salary and the bonus. Also, implement a new constructor that initialises a new instance using the constructor of the superclass. Satisfy yourself that you have edited the appropriate methods.
+
+```java
+class Manager extends Employee {
+  private double bonus;
+
+  public Manager(String n, double s, String d, double b) {
+    super(n, s, d);
+    this.bonus = b;
+  }
+
+  public double calcTotalEarnings() {
+    return getSalary() + bonus;
+  }
+}
+```
+
+### Exercise 1e: Abstract classes
+
+Design an abstract class Person for defining a person with a name. Go back and edit your Employee class to inherit the Person abstract class.
+
+```java
+abstract class Person {
+  String name;
+}
+
+class Employee extends Person {
+  ...
+}
+```
+
+### Exercise 1f: Interfaces
+
+Design a new class Invoice to represent an invoice, with instance variables to hold the value of the invoice and a textual description.
+
+Now create an interface Payable that defines a method `calcPaymentAmount` which returns the value to be paid for a given class the implements the new interface. Make both the Employee and Invoice classes implement this interface.
+
+```java
+interface Payable {
+  public double calcPaymentAmount();
+}
+
+class Invoice implements Payable {
+  double value;
+  String description;
+
+  public double calcPaymentAmount() {
+    return this.value;
+  }
+}
+
+class Employee extends Person implements Payable {
+  ...
+  public double calcPaymentAmount() {
+    return this.salary;
+  }
+}
+```
+
 ## Topic 2: object oriented programming
 
 ### Overview
@@ -687,7 +824,287 @@ Use the final keyword in a class definition to indicate that it can't be overrid
 
 One good reason to use the "final" keyword is that it can be used with methods and classes, preventing overriding in subclasses. This ensures that the semantics of the class or method can't be changed in a subclass. As the superclass developer, you take full responsibility for the implementation, and no subclass should be allowed to modify it.
 
-## Topic 3 - design patterns
+### Topic 2 Lab
+
+In Lab 1, we explored inheritance. This lab delves deeper into inheritance and introduces other object-oriented concepts, notably encapsulation and polymorphism.
+
+#### Exercise 2a: Inheritance
+
+- **Objective:** Define a class `Pet` that extends the abstract class `AbstractPet`. Consider if any methods need definition in `Pet`.
+  - **Question:** Are there any methods that need definition in `Pet`? Why or why not?
+
+```java
+public abstract class AbstractPet {
+  protected String name;
+  protected int age;
+
+  public AbstractPet(String n, int a) {
+    name = n;
+    age = a;
+  }
+
+  public String toString() {
+    return name + " is aged " + age;
+  }
+}
+```
+
+There's no need to define extra methods because the parent class `AbstractPet` already defined them.
+
+#### Exercise 2b: Constructors
+
+- **Objective:** Implement two constructors for `Pet`:
+  - A constructor with two parameters.
+  - A constructor with one parameter, initializing the name and setting age to 0.
+
+```java
+public class Pet extends AbstractPet {
+
+  public Pet(String name, int age) {
+    super(name, age);
+  }
+
+  public Pet(String name) {
+    super(name, 0);
+  }
+  ...
+}
+
+```
+
+#### Exercise 2c: Getters and Setters
+
+- **Objective:** Define getter and setter methods for the instance variables of the `Pet` class.
+  - Ensure the name is a non-empty string and the age is a positive integer through error checking in the setters.
+
+```java
+public class Pet extends AbstractPet {
+  ...
+  public String getName() {
+    return super.name;
+  }
+
+  public int getAge() {
+    return super.age;
+  }
+
+  public void setName(String name) {
+    if (name.isEmpty()) {
+      throw new IllegalArgumentException("Name cannot be empty");
+    }
+    super.name = name;
+  }
+
+  public void setAge(int age) {
+    if (age < 0) {
+      throw new IllegalArgumentException("Age cannot be negative");
+    }
+    super.age = age;
+  }
+  ...
+}
+```
+
+#### Exercise 2d: Method Overriding
+
+- **Objective:** Create a `toString` method in `Pet` to print `name + " is my pet and is aged " + age`.
+  - **Questions:**
+    - Which method is this overriding?
+    - The `toString` method in `AbstractPet` is itself overriding another. Which is it?
+
+```java
+public class Pet extends AbstractPet {
+  ...
+  // Exercise 2d: this method overrides the toString method from the parent class
+  // AbstractPet
+  // AbstractPet's toString method overrides the toString method of Object
+  @Override
+  public String toString() {
+    return super.name + " is my pet and is aged " + super.age;
+  }
+}
+```
+
+#### Exercise 2e: Inheritance II
+
+- **Objective:** Extend the `Pet` class with two new classes: `Cat` and `Dog`. Add suitable instance variables for breed and furColour.
+  - Specialize `Cat` with a `favouriteSpot` and `Dog` with a `favouriteToy`.
+  - Add a `giveTreat` method to `Dog` that prints `name + " says thanks for the treat!"`.
+
+```java
+/** Exercise 2e */
+public class Cat extends Pet {
+
+  private String breed;
+  private String furColor;
+  private String favouriteSpot;
+
+  public Cat(String name, int age, String breed, String furColor, String favouriteSpot) {
+    super(name, age);
+    this.breed = breed;
+    this.furColor = furColor;
+    this.favouriteSpot = favouriteSpot;
+  }
+
+  public String getBreed() {
+    return breed;
+  }
+
+  public void setBreed(String breed) {
+    this.breed = breed;
+  }
+
+  public String getFurColor() {
+    return furColor;
+  }
+
+  public void setFurColor(String furColor) {
+    this.furColor = furColor;
+  }
+
+  public String getFavouriteSpot() {
+    return favouriteSpot;
+  }
+
+  public void setFavouriteSpot(String favouriteSpot) {
+    this.favouriteSpot = favouriteSpot;
+  }
+
+  // Exercise 2f
+  public String toString(String extra) {
+    return super.name
+        + " is a "
+        + this.getBreed()
+        + " and enjoys sleeping on "
+        + this.getFavouriteSpot()
+        + extra;
+  }
+}
+
+/** Exercise 2e */
+public class Dog extends Pet {
+  private String breed;
+  private String furColor;
+  private String favouriteToy;
+
+  public Dog(String name, int age, String breed, String furColor, String favouriteToy) {
+    super(name, age);
+    this.breed = breed;
+    this.furColor = furColor;
+    this.favouriteToy = favouriteToy;
+  }
+
+  public String getBreed() {
+    return breed;
+  }
+
+  public void setBreed(String breed) {
+    this.breed = breed;
+  }
+
+  public String getFurColor() {
+    return furColor;
+  }
+
+  public void setFurColor(String furColor) {
+    this.furColor = furColor;
+  }
+
+  public String getFavouriteToy() {
+    return favouriteToy;
+  }
+
+  public void setFavouriteToy(String favouriteToy) {
+    this.favouriteToy = favouriteToy;
+  }
+
+  public void giveTreat() {
+    System.out.println(super.name + " says thanks for the treat!");
+  }
+}
+```
+
+#### Exercise 2f: Method Overloading
+
+- **Objective:** In both `Cat` and `Dog`, overload the `toString` method to include an extra parameter and an additional sentence about the pet.
+  - Example: `"Rex is a collie and enjoys playing with a tennis ball every day."`
+
+```java
+public class Cat extends Pet {
+  ...
+  // Exercise 2f
+  public String toString(String extra) {
+    return super.name
+        + " is a "
+        + this.getBreed()
+        + " and enjoys sleeping on "
+        + this.getFavouriteSpot()
+        + extra;
+  }
+}
+
+public class Dog extends Pet {
+  ...
+  // Exercise 2f
+  public String toString(String extra) {
+    return super.name
+        + " is a "
+        + this.getBreed()
+        + " and enjoys playing with "
+        + this.getFavouriteToy()
+        + extra;
+  }
+}
+```
+
+#### Exercise 2g: Testing
+
+- **Objective:** Build a `PetTest` class to test the defined classes.
+  - Create a `Pet` array to hold objects of types `Pet`, `Cat`, and `Dog`, instantiated with suitable values.
+  - Invoke `toString` on each array element and discuss which variants of the method are called and why.
+  - Pick an array element holding a `Dog` instance and invoke `provideTreat` on it. Discuss the outcome.
+
+```java
+/**
+ * Exercise 2g: Cat's toString calls the cat's toString method, because it is passed with an extra string that is only defined in the Cat class. Without the extra string, it will invoke the toString method of the parent class Pet. The same goes for Dog.
+ */
+public class PetTest {
+  public static void main(String[] args) {
+
+    Pet[] pets = new Pet[5];
+    pets[0] = new Dog("Fido", 5, "Labrador", "Black", "Ball");
+    pets[1] = new Cat("Mittens", 3, "Persian", "White", "The couch");
+    pets[2] = new Dog("Rex", 1, "German Shepherd", "Brown", "Stick");
+    pets[3] = new Cat("Snowball", 2, "Siamese", "White", "The bed");
+    pets[4] = new Pet("Yoyo", 2);
+
+    for (Pet p : pets) {
+      if (p instanceof Dog) {
+        System.out.println(((Dog) p).toString(" every day"));
+        ((Dog) p).giveTreat();
+      } else if (p instanceof Cat) {
+        System.out.println(((Cat) p).toString(" every day"));
+      } else {
+        System.out.println(p);
+      }
+    }
+  }
+}
+```
+
+**Output**:
+
+```console
+Fido is a Labrador and enjoys playing with Ball every day
+Fido says thanks for the treat!
+Mittens is a Persian and enjoys sleeping on The couch every day
+Rex is a German Shepherd and enjoys playing with Stick every day
+Rex says thanks for the treat!
+Snowball is a Siamese and enjoys sleeping on The bed every day
+Yoyo is my pet and is aged 2
+```
+
+## Topic 3: design patterns
 
 ### Overview
 
@@ -1160,6 +1577,276 @@ public class ObserverTest {
 }
 ```
 
+### Topic 3 Lab
+
+This lab focuses on applying design patterns to solve common software engineering problems. Specifically, we will explore the Composite and Decorator design patterns.
+
+#### Exercise 3a: Composite Design Pattern
+
+- **Overview:** Following the shop discount calculation example from the lecture, this exercise involves enhancing the existing implementation.
+- **Objective:** Implement a new method `compDelivery()` as declared in the updated component. Determine where this method should be implemented. When invoked, it should return 5% of the total value of the items if they're eligible for a discount, or £0 if not.
+- **Test Case:** Utilize the provided test driver class to validate your implementation. The expected output is:
+
+```plaintext
+iPad Air costs 30.0 to deliver.
+MacBook costs 42.5 to deliver.
+Power Adaptor costs 0.0 to deliver.
+Magic Keyboard costs 0.0 to deliver.
+Magic Trackpad costs 0.0 to deliver.
+Mac accessory pack {Power Adaptor, Magic Keyboard, Magic Trackpad,} collection costs 0.0 to deliver.
+MacBook pack {MacBook, Power Adaptor, Magic Keyboard, Magic Trackpad,} collection costs 42.5 to deliver.
+```
+
+**ShopComponent.java**:
+
+```java
+public interface ShopComponent {
+  public Double compPrice(Double discount);
+
+  public Double compDelivery();
+}
+```
+
+**ShopComposite.java**:
+
+```java
+import java.util.ArrayList;
+
+public class ShopComposite implements ShopComponent {
+  // This will store the leaves
+  private ArrayList<ShopComponent> children;
+  private String name;
+
+  // Constructor - create the list and set the name
+  public ShopComposite(String n) {
+    children = new ArrayList<ShopComponent>();
+    name = n;
+  }
+
+  // Composites normally delegate the methods to the leaves
+  public Double compPrice(Double discount) {
+    Double price = 0.0;
+    // arraylists can be iterated...
+    for (ShopComponent a : children) {
+      price += a.compPrice(discount);
+    }
+    return price;
+  }
+
+  // new method
+  public Double compDelivery() {
+    Double deliveryCharge = 0.0;
+    for (ShopComponent a : children) {
+      deliveryCharge += a.compDelivery();
+    }
+    return deliveryCharge;
+  }
+
+  // Add and remove just call the arraylist methods
+  public void add(ShopComponent a) {
+    children.add(a);
+  }
+
+  public void remove(ShopComponent a) {
+    children.remove(a);
+  }
+
+  public String toString() {
+    String totalString = name;
+    totalString += " {";
+    for (ShopComponent a : children) {
+      // Invokes toString on children..
+      totalString += a + ",";
+    }
+    totalString += "} collection";
+    return totalString;
+  }
+}
+```
+
+**ShopLeaf.java**:
+
+```java
+public class ShopLeaf implements ShopComponent {
+  private Double basePrice;
+  private Boolean canBeDiscounted;
+  private String name;
+
+  // Constructor - set the properties of the item
+  public ShopLeaf(Double base, Boolean disc, String n) {
+    basePrice = base;
+    canBeDiscounted = disc;
+    name = n;
+  }
+
+  // Comp price - only discounts if discounting is allowed
+  public Double compPrice(Double discount) {
+    if (canBeDiscounted) {
+      return basePrice * (1.0 - (discount / 100.0));
+    } else {
+      return basePrice;
+    }
+  }
+
+  // new method
+  public Double compDelivery() {
+    if (canBeDiscounted) {
+      return 0.05 * basePrice;
+    } else {
+      return 0.0;
+    }
+  }
+
+  // Nice display
+  public String toString() {
+    return name;
+  }
+}
+```
+
+**CompositeDeliveryDriver.java**:
+
+```java
+public class CompositeDeliveryDriver {
+  public static void displayDelivery(ShopComponent c) {
+    System.out.println(c + " costs " + c.compDelivery() + " to deliver.");
+  }
+
+  public static void main(String[] args) {
+
+    ShopLeaf ipad = new ShopLeaf(600.0, true, "iPad Air");
+    ShopLeaf laptop = new ShopLeaf(850.0, true, "MacBook");
+    ShopLeaf powerAdaptor = new ShopLeaf(50.0, false, "Power Adaptor");
+    ShopLeaf keyboard = new ShopLeaf(125.0, false, "Magic Keyboard");
+    ShopLeaf trackpad = new ShopLeaf(115.0, false, "Magic Trackpad");
+    displayDelivery(ipad);
+    displayDelivery(laptop);
+    displayDelivery(powerAdaptor);
+    displayDelivery(keyboard);
+    displayDelivery(trackpad);
+
+    ShopComposite accessoryPack = new ShopComposite("Mac accessory pack");
+    accessoryPack.add(powerAdaptor);
+    accessoryPack.add(keyboard);
+    accessoryPack.add(trackpad);
+    displayDelivery(accessoryPack);
+
+    ShopComposite laptopPack = new ShopComposite("MacBook pack");
+    laptopPack.add(laptop);
+    laptopPack.add(powerAdaptor);
+    laptopPack.add(keyboard);
+    laptopPack.add(trackpad);
+    displayDelivery(laptopPack);
+  }
+}
+```
+
+#### Exercise 3b: Decorator Design Pattern
+
+- **Overview:** This exercise introduces the decorator pattern through a car customization scenario.
+- **Objective:**
+- Implement the `LuxuryCar` class, which hasn't been provided.
+- Implement two concrete decorators: `AlloyDecorator` and `CDDecorator`. The `AlloyDecorator` adds an extra cost of £250, while the `CDDecorator` adds £150.
+- **Test Case:** Verify your solution using the provided driver class. The correct output should be:
+
+```plaintext
+Polo costs 10000.0 and is a basic car
+GolfSport costs 10250.0 and is a basic car + Alloys
+GolfBeats costs 10150.0 and is a basic car + CD Player
+SuperGolf costs 10400.0 and is a basic car + Alloys + CD Player
+BMW costs 50150.0 and is a shinier, faster car than the basic one + CD Player
+```
+
+**Car.java** and **LuxuryCar.java**:
+
+```java
+public abstract class Car {
+  public abstract Double getPrice();
+  public abstract String getDescription();
+}
+
+public class LuxuryCar extends Car {
+  public Double getPrice() {
+    return 50000.0;
+  }
+  public String getDescription() {
+    return "a shinier, faster car than the basic one";
+  }
+}
+```
+
+**CarDecorator.java** and **AlloyDecorator.java** and **CDDecorator.java**:
+
+```java
+public abstract class CarDecorator extends Car {
+  protected Car decoratedCar;
+
+  public CarDecorator(Car decoratedCar) {
+    this.decoratedCar = decoratedCar;
+  }
+
+  public Double getPrice() {
+    return decoratedCar.getPrice();
+  }
+
+  public String getDescription() {
+    return decoratedCar.getDescription();
+  }
+}
+
+public class AlloyDecorator extends CarDecorator {
+  public AlloyDecorator(Car decoratedCar) {
+    super(decoratedCar); // Call the CarDecorator constructor
+  }
+
+  public Double getPrice() {
+    return super.getPrice() + 250; // Add the price of alloys
+  }
+
+  public String getDescription() {
+    return super.getDescription() + " + Alloys";
+  }
+}
+
+public class CDDecorator extends CarDecorator {
+  public CDDecorator(Car decoratedCar) {
+    super(decoratedCar); // Call the CarDecorator constructor
+  }
+
+  public Double getPrice() {
+    return super.getPrice() + 150; // Add the price of alloys
+  }
+
+  public String getDescription() {
+    return super.getDescription() + " + CD Player";
+  }
+}
+```
+
+**DecoratorTest.java**:
+
+```java
+public class DecoratorTest {
+  public static void main(String[] args) {
+    Car base = new BasicCar();
+    System.out.println("Polo costs " + base.getPrice() + " and is " + base.getDescription());
+
+    Car alloys = new AlloyDecorator(new BasicCar());
+    System.out.println(
+        "GolfSport costs " + alloys.getPrice() + " and is " + alloys.getDescription());
+
+    Car cd = new CDDecorator(new BasicCar());
+    System.out.println("GolfBeats costs " + cd.getPrice() + " and is " + cd.getDescription());
+
+    Car all = new CDDecorator(new AlloyDecorator(new BasicCar()));
+    System.out.println("SuperGolf costs " + all.getPrice() + " and is " + all.getDescription());
+
+    Car cd2 = new CDDecorator(new LuxuryCar());
+    System.out.println("BMW costs " + cd2.getPrice() + " and is " + cd2.getDescription());
+  }
+}
+```
+
 ## Topic 4: Containers
 
 ### Overview
@@ -1246,7 +1933,7 @@ Additional means of traversing list containers.
 
 ![](https://raw.githubusercontent.com/minicoderwen/picwen/main/img/202401301510414.png)
 
-#### `ArrayList` and `LinkedList`
+#### ArrayList and LinkedList
 
 `ArrayList` is an option if you need to support random access through an index without inserting or removing elements from any place other than the end. For example, **_if reads are far more frequent than writes_**.
 
@@ -1642,7 +2329,7 @@ morning	1
 visit	1
 ```
 
-## Topic 5 - Distributed Programming
+## Topic 5: Distributed Programming
 
 ### Overview
 
@@ -1971,6 +2658,207 @@ public class PasswordClient {
     }
 }
 ```
+
+### Topic 5 Lab
+
+This lab focuses on Remote Method Invocation (RMI), allowing students to understand and implement distributed computing concepts. Steps 5a through 5c are the core exercises, with steps 5d and 5e as advanced, optional challenges.
+
+#### Exercise 5a: Developing an RMI client
+
+- **Objective:** Build a client that communicates with an RMI server, which generates a random password. The server's interface is `PasswordGenerator`, and it's located at `//stlinux02.dcs.gla.ac.uk/UnsecurePasswordServer`. Note: Campus or VPN connection is required.
+- **Instructions:** Start with the provided `PasswordClient-starter.java`, rename it to `PasswordClient.java`, and complete the sections marked with _TODO_. Refer to the lecture's example for guidance.
+
+**PasswordClient.java**:
+
+```java
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+public interface PasswordGenerator extends Remote {
+  // returns a randomly-generated password
+  public String genPassword(int ID) throws RemoteException;
+
+  // returns null if the password is incorrect / does not exist
+  public byte[] downloadSource(int ID, String password) throws RemoteException;
+}
+```
+
+**PasswordClient.java**:
+
+```java
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.rmi.Naming;
+
+public class PasswordClient {
+  private static String host =
+      "//stlinux02.dcs.gla.ac.uk/"; // "//localhost" "//stlinux02.dcs.gla.ac.uk/"
+  private static String serviceName = "UnsecurePasswordServer";
+
+  public static void writeBytesToFile(byte[] bytes, OutputStream out) {
+    try {
+      out.write(bytes);
+    } catch (Exception e) {
+      System.err.println("😱 Client exception while writing to file: " + e.toString());
+      e.printStackTrace();
+    }
+  }
+
+  public static void main(String[] args) {
+    try {
+      PasswordGenerator stub = (PasswordGenerator) Naming.lookup(host + serviceName);
+      int myID = 123456789;
+      String returnWord = stub.genPassword(myID);
+      System.out.println("Password: " + returnWord);
+
+      OutputStream output = null;
+      String outputFilename = "sauce.java";
+      try {
+        output = new FileOutputStream(outputFilename);
+      } catch (FileNotFoundException e) {
+        System.err.println("😱 Client exception while trying to create file: " + e.toString());
+        e.printStackTrace();
+      }
+      byte[] bytes = stub.downloadSource(myID, returnWord);
+      writeBytesToFile(bytes, output);
+      System.out.println("Written file @ " + outputFilename + " 😏");
+    } catch (Exception e) {
+      System.err.println("😱 Client exception: " + e.toString());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+#### Exercise 5b: Getting the server source code
+
+There are two ways to obtain the server code:
+
+###### Easy option
+
+- Download the server code from [here](https://yelkhatib.github.io/PasswordServer.java).
+
+###### Challenging option
+
+- Download the server code using the RMI server's `downloadSource` method. Refer to the `PasswordGenerator` interface for parameter and return type details. Use the provided `writeBytesToFile` method to convert the returned array into a file.
+
+#### Exercise 5c: Peeking behind the curtain
+
+- **Objective:** Understand the server's implementation, focusing on how it's defined and its functionalities.
+- **Key Points:**
+  - The server extends `UnicastRemoteObject` for remote method invocation.
+  - Identify methods that can be called remotely and must declare `RemoteException`.
+  - Investigate if the server maintains state and the data structures used.
+  - Examine the server's main method and compare its feature with your expectations.
+
+```java
+import java.io.File;
+import java.io.FileInputStream;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.security.SecureRandom;
+import java.util.HashMap;
+import java.util.Map;
+
+public class PasswordServer extends UnicastRemoteObject implements PasswordGenerator {
+  private static final String host = "//localhost/"; // "//localhost" "//stlinux02.dcs.gla.ac.uk/"
+  private static final String serviceName = "UnsecurePasswordServer";
+  private static final int randomWordLength = 12;
+  private static Map<Integer, String> wordMap = new HashMap<>();
+  private static SecureRandom random = new SecureRandom();
+  // dictionaries
+  private static final String ALPHA_CAPS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  private static final String ALPHA = "abcdefghijklmnopqrstuvwxyz";
+  private static final String NUMERIC = "0123456789";
+  private static final String SPECIAL_CHARS = "!@#$%^&*_=+-/";
+
+  PasswordServer() throws RemoteException {}
+
+  private static String generatePasswordFromDictionaries(int ID, int len, String dic) {
+    if (wordMap.containsKey(ID)) {
+      System.err.println("ID " + ID + " already has a password! 🧐");
+      return wordMap.get(ID);
+    }
+    String word = "";
+    for (int i = 0; i < len; i++) {
+      int index = random.nextInt(dic.length());
+      word += dic.charAt(index);
+    }
+    wordMap.put(ID, word);
+    return word;
+  }
+
+  public String genPassword(int ID) throws RemoteException {
+    System.err.println(ID + " is asking for a password 😆");
+    String password =
+        generatePasswordFromDictionaries(
+            ID, randomWordLength, ALPHA_CAPS + ALPHA + SPECIAL_CHARS + NUMERIC);
+    System.err.println(ID + ", 🤫 the server whispers back " + password);
+    return password;
+  }
+
+  private static byte[] readFileToBytes(String filename) {
+    byte[] bytes = null;
+    try {
+      File file = new File(filename);
+      bytes = new byte[(int) (file.length())];
+      (new FileInputStream(file)).read(bytes);
+    } catch (Exception e) {
+      System.out.println("😱 Server exception while reading the spec file: " + e.toString());
+      e.printStackTrace();
+    }
+    return bytes;
+  }
+
+  public byte[] downloadSource(int ID, String password) throws RemoteException {
+    System.err.println("Incoming! ID " + ID + " has sent " + password);
+    if (wordMap.containsKey(ID)) {
+      String passwordStored = wordMap.get(ID);
+      System.err.println(
+          "🧐 My records show that ID " + ID + " has the password " + passwordStored);
+      if (password.equals(passwordStored)) {
+        System.err.println("ID's " + ID + " password matches! 🎉  Sending them the source file...");
+        byte[] bytes = readFileToBytes("PasswordServer.java");
+        if (bytes == null)
+          System.err.println(
+              "🤔 Something went wrong with reading the source file into an array of bytes!");
+        return bytes;
+      } else {
+        System.err.println("ID's " + ID + " password does not match! 😢");
+      }
+    }
+    return null;
+  }
+
+  public static void main(String[] args) {
+    try {
+      PasswordServer s = new PasswordServer();
+      Naming.rebind(host + serviceName, s);
+      System.err.println("Password server is ready 💪");
+
+      // byte[] bytes = readFileToBytes("PasswordServer.java");
+      // System.out.println(bytes.toString());
+    } catch (Exception e) {
+      System.err.println("😱 Server exception: " + e.toString());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+#### Exercise 5d (Stretch Target): Running the server locally
+
+- **Objective:** Attempt to run the RMI server on your local machine, editing the host variable to `localhost`.
+- **Instructions:** Compile and run the `PasswordServer` class after starting the RMI registry. Note potential issues like `java.net.ConnectException`, `java.rmi.NotBoundException`, or `java.rmi.server.ExportException` and their solutions.
+
+#### Exercise 5e (Stretch Target): Running the modified client
+
+- **Objective:** Modify the client to connect to your local server instance.
+- **Instructions:** Identify and edit the part of your code specifying the server address to match the local server's interface.
+
+These exercises are designed to deepen understanding of RMI by practicing client-server communication in a distributed environment.
 
 ## Topic 6: Concurrency
 
@@ -2409,7 +3297,7 @@ public class ParallelMath {
 }
 ```
 
-## Executors
+### Executors
 
 Thread creation is relatively expensive. It unnecessarily ties together concepts of creating threads and running tasks on them. It's difficult to control how many threads running in a complex app.
 
@@ -2448,3 +3336,276 @@ pool.execute(r2);
 [https://www.geeksforgeeks.org/multithreading-in-java/](https://www.geeksforgeeks.org/multithreading-in-java/)
 
 [https://docs.oracle.com/javase/tutorial/essential/concurrency/index.html](https://docs.oracle.com/javase/tutorial/essential/concurrency/index.html)
+
+### Topic 6 Lab
+
+#### 1. Creating Threads
+
+##### Exercise 1
+
+- **Objective:** Create a class implementing the `Runnable` interface. In its `run()` method, it should sleep for a random number of seconds before printing a message to the console. Test this by starting a `Thread` in a main method.
+- **Note:** Handle the `InterruptedException` from `Thread.sleep()`.
+
+```java
+class MyRunnable implements Runnable {
+  public void run() {
+    int numSeconds = new Random().nextInt(10) + 1;
+    try {
+      Thread.sleep(numSeconds * 1000);
+    } catch (InterruptedException e) {
+      return;
+    }
+    System.out.println("Slept for " + numSeconds + " seconds");
+  }
+}
+
+public class CreatingThreads1 {
+  public static void main(String[] args) {
+    MyRunnable myRunnable = new MyRunnable();
+    Thread myThread = new Thread(myRunnable);
+    myThread.start();
+  }
+}
+```
+
+##### Exercise 2
+
+- **Objective:** Similar to the previous exercise, but extend the `Thread` class instead of implementing `Runnable`.
+
+```java
+class MyThread extends Thread {
+  public void run() {
+    int numSeconds = new Random().nextInt(10) + 1;
+    try {
+      Thread.sleep(numSeconds * 1000);
+    } catch (InterruptedException e) {
+      return;
+    }
+    System.out.println("Slept for " + numSeconds + " seconds");
+  }
+}
+
+public class CreatingThreads1 {
+  public static void main(String[] args) {
+    MyThread myOtherThread = new MyThread();
+    myOtherThread.start();
+  }
+}
+```
+
+##### Exercise 3
+
+- **Objective:** Utilize the `Runnable` class from the first exercise to create and start multiple threads in a new main method.
+
+```java
+public class CreatingThreads2 {
+    public static void main(String[] args) {
+        int numThreads = 5;
+        Thread[] threads = new Thread[numThreads];
+        for (int i = 0; i < numThreads; i++) {
+            MyRunnable myRunnable = new MyRunnable();
+            threads[i] = new Thread(myRunnable);
+            threads[i].start();
+        }
+    }
+}
+```
+
+##### Exercise 4
+
+- **Objective:** Modify Exercise 3 by assigning names to each `Thread` and include the thread name in the completion message.
+
+```java
+            threads[i] = new Thread(myRunnable, "Thread #" + i);
+```
+
+##### Exercise 5
+
+- **Objective:** Ensure the main method prints a message immediately after starting all threads, which should display before the threads complete.
+
+```java
+public class CreatingThreads2 {
+  public static void main(String[] args) {
+    int numThreads = 5;
+    Thread[] threads = new Thread[numThreads];
+    for (int i = 0; i < numThreads; i++) {
+      MyRunnable myRunnable = new MyRunnable();
+      threads[i] = new Thread(myRunnable, "Thread #" + i);
+      threads[i].start();
+    }
+    System.out.println("All threads started!");
+  }
+}
+```
+
+##### Exercise 6
+
+- **Objective:** Implement `Thread.join()` to make the main thread wait for all others to complete before it prints its message.
+
+```java
+public class CreatingThreads2 {
+  public static void main(String[] args) {
+    int numThreads = 5;
+    Thread[] threads = new Thread[numThreads];
+    for (int i = 0; i < numThreads; i++) {
+      MyRunnable myRunnable = new MyRunnable();
+      threads[i] = new Thread(myRunnable, "Thread #" + i);
+      threads[i].start();
+    }
+    for (int i = 0; i < numThreads; i++) {
+      try {
+        threads[i].join();
+      } catch (InterruptedException e) {
+      }
+    }
+    System.out.println("All threads finished!");
+  }
+}
+```
+
+#### 2. Max Finder
+
+**Setup:** use the following code snippet to generate a 2D array of random `Double` values between 0 and 1 as test inputs:
+
+```java
+int nRows = 100;
+int nCols = 50;
+Double[][] randArray = new Double[nRows][nCols];
+for(int r=0; r<nRows; r++) {
+    for(int c=0; c<nCols; c++) {
+        randArray[r][c] = Math.random();
+    }
+}
+```
+
+1. Within a main method, employ loops to find the maximum value in `randArray`. This serves to test your threaded solution.
+
+2. Create a `Runnable` implementation that finds the max of a 1D array. The constructor should accept the 1D array, a result storage array, and the result position. Use a separate instance for each row in `randArray`, storing each maximum in a single result array. Start and join all threads, leaving a 1D array of maximum values.
+
+3. Pass the array from Exercise 2 to a final `Runnable` instance to find the overall maximum. Start and join this thread, then print the final maximum value, which should match the initial non-threaded result.
+
+```java
+public class MaxFinder {
+
+    // Runnable class to find max of a 1D array (Q2.2)
+    public static class MaxRow implements Runnable {
+        Double[] row;
+        int rowNumber;
+        Double[] rowMaxes;
+
+        public MaxRow(Double[] row, Double[] rowMaxes, int rowNumber) {
+            this.row = row;
+            this.rowMaxes = rowMaxes;
+            this.rowNumber = rowNumber;
+        }
+
+        public void run() {
+            rowMaxes[rowNumber] = 0.0;
+            for (int i = 0; i < row.length; i++) {
+                if (row[i] > rowMaxes[rowNumber]) {
+                    rowMaxes[rowNumber] = row[i];
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        int nRows = 100;
+        int nCols = 50;
+        Double[][] randArray = new Double[nRows][nCols];
+        for (int r = 0; r < nRows; r++) {
+            for (int c = 0; c < nCols; c++) {
+                randArray[r][c] = Math.random();
+            }
+        }
+
+        // Find the max using loops (Q2.1)
+        Double max = 0.0;
+        for (int r = 0; r < nRows; r++) {
+            for (int c = 0; c < nCols; c++) {
+                if (randArray[r][c] > max) {
+                    max = randArray[r][c];
+                }
+            }
+        }
+        System.out.println(max);
+
+        // Threaded solution (Q2.3)
+        Double[] rowMaxes = new Double[nRows];
+        Thread[] threads = new Thread[nRows];
+        for (int i = 0; i < nRows; i++) {
+            threads[i] = new Thread(new MaxRow(randArray[i], rowMaxes, i));
+            threads[i].start();
+        }
+        try {
+            for (int i = 0; i < nRows; i++) {
+                threads[i].join();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Double[] finalVal = new Double[1];
+        Thread finalThread = new Thread(new MaxRow(rowMaxes, finalVal, 0));
+        finalThread.start();
+        try {
+            finalThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(finalVal[0]);
+    }
+}
+```
+
+#### 3. Data Parallelism and Thread Pools
+
+1. Modify the `ParallelMath` example to handle cases where the number of inputs isn't exactly divisible by the number of threads.
+
+   ```java
+     public static void main(String[] args) throws InterruptedException {
+         final int numInputs = 1000003;  // not divisible by numThreads (Q3.1)
+         double[] inputs = new double[numInputs];
+         double[] outputs = new double[numInputs];
+         for (int index = 0; index < numInputs; ++index) {
+             inputs[index] = Math.random();
+         }
+         final int numThreads = 4;
+         final int countPerThread = numInputs / numThreads + 1;  // allow for one extra calculation per thread to handle 'leftovers' (Q3.1)
+         final Thread[] threads = new Thread[numThreads];
+         for (int threadIndex = 0; threadIndex < numThreads; ++threadIndex) {
+             final int firstIndex = threadIndex * countPerThread;
+             final int countForThread = Math.min(countPerThread, numInputs - firstIndex);  // make sure the thread doesn't go beyond the last value (Q3.1)
+             threads[threadIndex] = new Thread(new RunOnSubarray(inputs, outputs, firstIndex, countForThread));
+             threads[threadIndex].start();
+         }
+         for (int threadIndex = 0; threadIndex < numThreads; ++threadIndex) {
+             threads[threadIndex].join();
+         }
+     }
+   ```
+
+2. Ensure that both the original and modified implementations produce the same results.
+
+3. Compare the performance of the original and revised implementations to see if there's a performance trade-off for increased flexibility.
+
+4. Alter the implementation to utilize a `FixedThreadPool` for thread management instead of manually creating threads.
+   ```java
+       public static void main(String[] args) throws InterruptedException {
+       final int numInputs = 1000003;  // not divisible by numThreads (Q3.1)
+       double[] inputs = new double[numInputs];
+       double[] outputs = new double[numInputs];
+       for (int index = 0; index < numInputs; ++index) {
+           inputs[index] = Math.random();
+       }
+       final int numThreads = 4;
+       final int countPerThread = numInputs / numThreads + 1;  // allow for one extra calculation per thread to handle 'leftovers' (Q3.1)
+       ExecutorService pool = Executors.newFixedThreadPool(numThreads);  // create a thread-pool (Q3.4)
+       for (int threadIndex = 0; threadIndex < numThreads; ++threadIndex) {
+           final int firstIndex = threadIndex * countPerThread;
+           final int countForThread = Math.min(countPerThread, numInputs - firstIndex);  // make sure the thread doesn't go beyond the last value (Q3.1)
+           pool.execute(new ParallelMath.RunOnSubarray(inputs, outputs, firstIndex, countForThread));
+       }
+       pool.shutdown();
+       pool.awaitTermination(60, TimeUnit.SECONDS);  // wait for all threads to complete (Q3.4)
+   }
+   ```
