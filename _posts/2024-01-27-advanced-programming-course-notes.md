@@ -3609,3 +3609,513 @@ public class MaxFinder {
        pool.awaitTermination(60, TimeUnit.SECONDS);  // wait for all threads to complete (Q3.4)
    }
    ```
+
+## Topic 7: Syncronization
+
+### Race conditions
+
+A benefit of threads is the shared address space. Multiple threads can access the same Java object. It's efficient because it avoids copying data between threads. However, if many threads access the same shared object, it can lead to race conditions and data corruption.
+
+For example, if several threads increment the same counter, like counting number of visitors to a website. If there are 100 threads all incrementing the same counter 1000 times then the result should be 100,000. But it's not guaranteed.
+
+```java
+public void run(){
+  for(int i= 0; i< n; i++){
+    int temp= count.getCount();
+    temp++;
+    count.setCount(temp);
+  }
+}
+```
+
+Remember, we've no idea when Java will move from one thread to another, it could switch thread between the `getCount()` and `setCount()` method calls.
+
+**with one thread:**
+![202404151158615.png](https://raw.githubusercontent.com/jkmeansesc/picwen/main/img/202404151158615.png)
+
+**with two threads (one possible scenario):**
+![202404151159004.png](https://raw.githubusercontent.com/jkmeansesc/picwen/main/img/202404151159004.png)
+
+If control is passed between `get` and `set`, the new thread sees an out-of-date value, remember that `temp` is local to each thread. In fact, thread 1 might be sitting dormant with out-of-date variable values for a long time. When it finally runs and updates `temp`, it will effectively overwrite lots of updates performed by other threads.
+
+This is a **_race condition_**: occurs if the effect of multiple threads on shared data depends on the order in which they're scheduled.
+
+This is a big problem in multi-threaded programs.
+
+### Non-Atomicity
+
+Non-atomicity refers to a property of an operation or a series of operations that cannot be executed as a single, indivisible unit. In other words, a non-atomic action can be interrupted or interleaved with other actions, potentially resulting in incomplete, inconsistent, or unintended outcomes.
+
+`count++` really means:
+
+1. retrieve count from RAM to the CPU
+2. add one
+3. write back to RAM
+
+Hence still have a problem if switching threads.
+![202404151235216.png](https://raw.githubusercontent.com/jkmeansesc/picwen/main/img/202404151235216.png)
+
+### Memory Caching
+
+![202404151237874.png](https://raw.githubusercontent.com/jkmeansesc/picwen/main/img/202404151237874.png)
+
+All variables and objects are stored in main memory. Several layers of cache store copies for faster read and write operations. When a CPU modifies a variable, it updates its cache first. Changes are only visible to other threads in main memory later.
+
+### Synchronized Methods
+
+To avoid **_race conditions_**, we **_synchronize_** threads by restricting which parts of code can be run simultaneously.
+
+```java
+public static class MyCounter{
+  private int count= 0;
+  public synchronized void increment(){
+    count++;
+  }
+  public synchronized void decrement(){
+    count--;
+  }
+  public synchronized int getCount(){
+    return count;
+  }
+}
+```
+
+Only one thread can enter `increment` at any given time, other threads are **blocked** if they try. And only one thread can enter **any** synchronized method of **that object** at any given time. This means that when one thread is executing any of the synchronized methods (`increment`, `decrement`, or `getCount`) of a particular `MyCounter` object, all other threads are prevented from simultaneously accessing any of the object's synchronized methods, ensuring that the shared `count` variable remains exclusively accessible to the currently executing thread until it completes its operation.
+
+### Monitors
+
+Monitor, or monitor lock, is the hidden object associated with each object in the program. It's used to control access to the object's synchronized methods. When a thread enters a synchronized method, it acquires the monitor lock, and when it exits the method, it releases the lock. Only one thread can own each object's monitor at any moment.
+
+`synchronized` methods acquire monitor lock of `this`.
+
+```java
+public static class MyCounter {
+  private int count = 0;
+
+  public synchronized void increment() {
+      count++;
+    }
+  }
+  // ... other methods ...
+}
+```
+
+… is equivalent to
+
+```java
+public static class MyCounter {
+  private int count = 0;
+
+  public void increment() {
+    synchronized (this) {
+      count++;
+    }
+  }
+  // ... other methods ...
+}
+```
+
+The `AnimalCounter` class serves as a practical demonstration of how to employ different synchronization locks (using the synchronized keyword with distinct objects) to achieve fine-grained control over concurrent access to specific shared resources within a single class. The example keeps track of the counts of sheep and cows, each represented by their respective counters (`sheepCounter` and `cowCounter`) and associated lists (sheep and cow ArrayLists). By synchronizing on different objects—specifically, the sheep and cow ArrayLists—when manipulating the animal counts or retrieving their current values, the class ensures that updates to one type of animal counter do not interfere with operations on the other, effectively isolating concurrent access and protecting against race conditions.
+
+```java
+public static class AnimalCounter {
+  private int sheepCounter = 0;
+  private int cowCounter = 0;
+  private ArrayList<Sheep> sheep;
+  private ArrayList<Cow> cows;
+
+  public void newSheepAndCow() {
+    synchronized (sheep) {
+      sheepCounter++;
+      // append new instance to sheep list
+    }
+    synchronized (cows) {
+      cowCounter++;
+      // append new instance to cow list
+    }
+  }
+
+  public int getSheepCount() {
+    synchronized (sheep) {
+      return sheepCounter;
+    }
+  }
+
+  public int getCowCount() {
+    synchronized (cows) {
+      return cowCounter;
+    }
+  }
+}
+```
+
+Where to place `synchronized`? On what object?
+
+**where**: only where it is _needed_ to prevent race conditions because you are asking Java to slow down at a certain point.
+
+**what**: the object you want only one thread to access and manipulate at a time.
+
+### Locks
+
+A lock is an object used to control the threads that want to manipulate a shared resource.
+
+```java
+public static class MyCounter {
+    private int count = 0;
+    private ReentrantLock counterLock = new ReentrantLock();
+
+    public void increment() {
+        counterLock.lock();
+        count++;
+        counterLock.unlock();
+    }
+
+    // ...
+}
+```
+
+When `counterLock` is locked, no other thread can lock it until it has been release.
+
+> If the code between `lock()` and `unlock()` throws an exception, then the lock is never released.
+
+Therefore, always do the following to ensure the lock is released:
+
+```java
+myLock.lock();
+try {
+    // some code
+} finally {
+    myLock.unlock();
+}
+```
+
+### Deadlocks
+
+What if two threads are each waiting for the other to release a lock? The program will hang indefinitely. This is a **_deadlock_**.
+
+```java
+import java.util.concurrent.locks.*;
+
+public class CounterDecounter {
+    public static class MyCounter {
+        // MyCounter now has increment and decrement methods each with locks
+        // Now the locks are also in try blocks
+        private int count = 0;
+        private ReentrantLock counterLock = new ReentrantLock();
+
+        public void increment(int amount) {
+            counterLock.lock();
+            try {
+                count += amount;
+                System.out.println("Adding " + amount + ", result " + count);
+            } finally {
+                counterLock.unlock();
+            }
+        }
+
+        public void decrement(int amount) {
+            counterLock.lock();
+            try {
+                count -= amount;
+                System.out.println("Subtracting " + amount + ", result " + count);
+            } finally {
+                counterLock.unlock();
+            }
+        }
+
+        public int getCount() {
+            return count;
+        }
+    }
+
+    public static class Counter extends Thread {
+        private MyCounter count;
+        private int n;
+        private int amount;
+
+        public Counter(MyCounter count, int n, int amount) {
+            this.count = count;
+            this.n = n;
+            this.amount = amount;
+        }
+
+        public void run() {
+            for (int i = 0; i < n; i++) {
+                count.increment(amount);
+            }
+        }
+    }
+
+    public static class DeCounter extends Thread {
+        private MyCounter count;
+        private int n;
+        private int amount;
+
+        public DeCounter(MyCounter count, int n, int amount) {
+            this.count = count;
+            this.n = n;
+            this.amount = amount;
+        }
+
+        public void run() {
+            for (int i = 0; i < n; i++) {
+                count.decrement(amount);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        MyCounter count = new MyCounter();
+        // Create some counters and decounters
+        // such that we will end up with zero
+        int nCounters = 10, incNum = 10;
+        int nDeCounters = 2, decNum = 50;
+        int nReps = 10;
+
+        Counter[] c = new Counter[nCounters];
+        DeCounter[] d = new DeCounter[nDeCounters];
+
+        // Create and start the counters and decounters
+        for (int i = 0; i < nDeCounters; i++) {
+            d[i] = new DeCounter(count, nReps, decNum);
+            d[i].start();
+        }
+        for (int i = 0; i < nCounters; i++) {
+            c[i] = new Counter(count, nReps, incNum);
+            c[i].start();
+        }
+
+        // Wait for everything to finish
+        try {
+            for (int i = 0; i < nCounters; i++) {
+                c[i].join();
+            }
+            for (int i = 0; i < nDeCounters; i++) {
+                d[i].join();
+            }
+        } catch (InterruptedException e) {
+            // Do nothing
+        }
+        System.out.println("Final Result: " + count.getCount());
+    }
+}
+```
+
+In this example, we want to ensure counter never goes negative, we could put some kind of wait condition in the `decrement` method:
+
+```java
+        public void decrement(int amount) {
+            // This decrement method sleeps whilst it waits for the total to increase
+            // enough to make a decrement not leave the total negative
+            // Unfortunately, due to the lock, it can cause a deadlock.
+            counterLock.lock();
+            try {
+                while (count < amount) {
+                    Thread.sleep(1);
+                }
+                count -= amount;
+                System.out.println("Subtracting " + amount + ", result " + count);
+            } catch (InterruptedException e) {
+                // Fall through
+            } finally {
+                counterLock.unlock();
+            }
+        }
+```
+
+This causes the program to hang whenever it tries to decrement by an amount that is greater than `count` because the thread has locked `counterLock`, no other thread can increase the amount.
+
+When a `decrement` thread tries to subtract, it waits for the count to be big enough before it does the subtraction. But because it's waiting, it's holding onto `conterLock` which means other threads can't `increment` to make the `amount` big enough, hence the deadlock.
+
+### Conditions
+
+Conditions let threads temporarily unlock locks whilst they await some condition to be fulfilled. In this case, we'd like to temporarily unlock within a thread that is waiting to decrement.
+
+```java
+import java.util.concurrent.locks.*;
+
+public class CounterDecounter3 {
+    public static class MyCounter {
+        private int count = 0;
+        private ReentrantLock counterLock = new ReentrantLock();
+        // We now create a condition from our lock
+        private Condition bigEnough = counterLock.newCondition();
+
+        public void increment(int amount) {
+            counterLock.lock();
+            try {
+                count += amount;
+                System.out.println("Adding " + amount + ", result " + count);
+                // Every time an amount is added, signalAll is invoked to wake up any
+                // threads that have called await()
+                bigEnough.signalAll();
+            } finally {
+                counterLock.unlock();
+            }
+        }
+
+        public void decrement(int amount) {
+            counterLock.lock();
+            try {
+                while (count < amount) {
+                    // when await is called, the current thread pauses until
+                    // another thread calls the signalAll() method of the condition
+                    bigEnough.await();
+                    // Once signalAll has been received, if count>amount the decrement
+                    // will happen, otherwise it will await() again
+                }
+                count -= amount;
+                System.out.println("Subtracting " + amount + ", result " + count);
+            } catch (InterruptedException e) {
+                // Fall through
+            } finally {
+                counterLock.unlock();
+            }
+        }
+
+        public int getCount() {
+            return count;
+        }
+    }
+
+    public static class Counter extends Thread {
+    // ...
+    }
+
+    public static class DeCounter extends Thread {
+    // ...
+    }
+
+    public static void main(String[] args) {
+    // ...
+    }
+}
+```
+
+A thread calling `decrement` when `count < amount` will wait until another thread invokes the `Condition.signalAll()` method. Whenever an increment is made, all threads waiting on this condition are restarted. Note that the `signalAll()` doesn't mean that the amount is big enough, the syntax in `decrement()` means that `signallAll()` will cause the thread to check again, it might just ends up invoking `await()` again.
+
+### The Thread Lifecycle
+
+![202404161945294.png](https://raw.githubusercontent.com/jkmeansesc/picwen/main/img/202404161945294.png)
+
+A thread is always in one of 6 states
+
+- trying to acquire a lock makes a thread "blocked"
+- `join()` and `await()` put a thread in "waiting"
+- `sleep()` puts a thread in "timed waiting"
+
+### Immutability
+
+Avoid mutable state, specifically, avoid mutable variables shared between threads. Use `final` to make variables immutable.
+
+Modify objects only from one thread. Read only after all threads completed.
+
+### Atomic Variables
+
+The term "atomic" refers to the property that these variables' operations are guaranteed to execute entirely or not at all, without the possibility of being interrupted by other threads during execution. This ensures data integrity and eliminates the need for explicit synchronization mechanisms like locks or semaphores for individual variable updates.
+
+> see [java.concurrent.atomic](https://docs.oracle.com/javase/8/docs/api/index.html?java/util/concurrent/atomic/package-summary.html)
+
+1. **Indivisibility**: Atomic operations are indivisible, meaning they appear to execute instantaneously from the perspective of other threads. No thread can observe a partially updated state during an atomic operation, as the entire operation is treated as a single, uninterruptible unit of work.
+2. **Thread-Safe Operations**: Atomic variables replace several primitive types (such as int, long, boolean, etc.) and provide thread-safe alternatives that offer operations like read, write, increment, decrement, compare-and-swap, and exchange, which are inherently safe for use in concurrent scenarios.
+3. **Package `java.concurrent.atomic`**: Java's java.concurrent.atomic package contains classes like `AtomicInteger`, `AtomicLong`, `AtomicBoolean`, and others, which encapsulate the capability of atomic variables. For instance, the `AtomicInteger` class offers methods like `get()` to retrieve the current value, `getAndAdd(int delta)` to atomically add a given value to the current value, and `getAndIncrement()` to increment the current value atomically while returning the value before the increment.
+
+### Volatile Variables
+
+`valatile` keyword can be applied to variable declarations
+
+```java
+priavte volatile int myInt;
+```
+
+Any write to a volatile variable is immediately visible to all threads because it bypass cache and writes directly into main memory. It's a way to ensure that all threads see the same value of a variable.
+
+### Concurrent Collections
+
+Collections are useful, such as `ArrayList<T>`, `HashMap<K,V>` etc, but they are not thread-safe. For example, `ArrayList.add` writes at current 'cursor' position, then increments it. It is not atomic. Two concurrent calls to add yield race conditions: values collide.
+
+`java.util.concurrent` provides concurrent collections. It's safe to read/write from multiple threads, often faster than `synchronized` and `ReentrantLock`. Check-then-act race conditions still can occur:
+
+```java
+ConcurrentHashMap<String, Integer> m = new ConcurrentHashMap<String, Integer>();
+
+void addIfMissing(String key, int value) {
+    if (!m.containsKey(key)) {
+        m.put(key, value);
+    }
+}
+```
+
+To illustrate this race condition, consider the following scenario:
+
+1. Two threads, Thread X and Thread Y, both attempt to call `addIfMissing` with the same key, say `uniqueKey`, and different integer values.
+2. Both threads concurrently reach the if statement and independently check whether `uniqueKey` is in the map.
+3. Since neither thread has yet inserted the key, both threads find it missing. Without proper synchronization, it is possible that both threads proceed to insert the key-value pair, even though the intention was to add it only once.
+
+To resolve this race condition, you would typically employ a technique that ensures the atomicity of the check and the insert operation combined, such as using the `putIfAbsent` method provided by `ConcurrentHashMap`, which performs the check and insert in a single, atomic step:
+
+```java
+void addIfMissing(String key, int value){
+    m.putIfAbsent(key, value);
+}
+```
+
+### Executors
+
+Thread creation is relatively expensive, it unnecessarily ties together concepts of _creating_ threads and _running tasks_ on them. It is difficult to control how many threads running in a complex app.
+
+Executors are a higher-level interface for creating threads. `runnable` tasks are submitted to the executor to run on some thread.
+
+### Thread Pools
+
+The simplest executor implementation is a fixed thread pool, created using `ExecutorService.newFixedThreadPool(nThreads)`, where `nThreads` specifies the maximum number of threads in the pool.
+
+Create with `ExecutorService.newFixedThreadPool(nThreads)`, this will start a pool containing a maximum of `nThreads` threads.
+
+```java
+public class ExecutorDemo {
+    public static void main(String[] args) {
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+
+        // Submitting Runnable tasks to the executor
+        executor.execute(new MyRunnable());
+        executor.execute(new OtherRunnable());
+
+        // Initiating graceful shutdown of the executor
+        executor.shutdown();
+
+        // Waiting for the executor to terminate
+        try {
+            executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        } catch (InterruptedException e) {
+            // Handle interruption, if necessary
+        }
+
+        System.out.println("Executor has terminated.");
+    }
+}
+
+class MyRunnable implements Runnable {
+    @Override
+    public void run() {
+        // Code to be executed concurrently
+        // ...
+    }
+}
+
+class OtherRunnable implements Runnable {
+    @Override
+    public void run() {
+        // Code to be executed concurrently
+        // ...
+    }
+}
+```
+
+`ExecutorService.shutdown` is similar to `Thread.join`: wait for all tasks to finish, then stop all the threads.
+
+`ExecutorService.awaitTermination` waits for shutdown to complete.
+
+`ExecutorService.shutdownNow` interrupts all threads.
+
+### Topic 7 Lab
