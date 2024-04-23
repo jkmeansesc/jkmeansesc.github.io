@@ -9,7 +9,7 @@ tags:
   - java
 toc: true
 comments: true
-math: false
+math: true
 mermaid: true
 pin: false
 sitemap: true
@@ -497,7 +497,7 @@ With the OOP approach, each object holds specific data and functions. In other w
 
 **Example - Loan**
 
-All data properties and methods are tied to a specific instance. The class is built around the data. It has an implementation, hidden from external use. There is a no-argument constructor. A constructor with no arguments is also available. Getters and setters are included .
+All data properties and methods are tied to a specific instance. The class is built around the data. It has an implementation, hidden from external use. There is a no-argument constructor. A constructor with no arguments is also available. Getters and Setters are included .
 
 ```java
 public class Loan {
@@ -875,7 +875,7 @@ public class Pet extends AbstractPet {
 #### Exercise 2c: Getters and Setters
 
 - **Objective:** Define getter and setter methods for the instance variables of the `Pet` class.
-  - Ensure the name is a non-empty string and the age is a positive integer through error checking in the setters.
+  - Ensure the name is a non-empty string and the age is a positive integer through error checking in the Setters.
 
 ```java
 public class Pet extends AbstractPet {
@@ -1587,7 +1587,7 @@ This lab focuses on applying design patterns to solve common software engineerin
 - **Objective:** Implement a new method `compDelivery()` as declared in the updated component. Determine where this method should be implemented. When invoked, it should return 5% of the total value of the items if they're eligible for a discount, or £0 if not.
 - **Test Case:** Utilize the provided test driver class to validate your implementation. The expected output is:
 
-```plaintext
+```console
 iPad Air costs 30.0 to deliver.
 MacBook costs 42.5 to deliver.
 Power Adaptor costs 0.0 to deliver.
@@ -4119,3 +4119,1370 @@ class OtherRunnable implements Runnable {
 `ExecutorService.shutdownNow` interrupts all threads.
 
 ### Topic 7 Lab
+
+#### **Max Finder, continued**
+
+In this exercise you will create a race condition, then fix it.
+
+1. Start with your code from Q2 of last week’s lab sheet.
+2. To induce a race condition, create a new version of your `Runnable` object that, instead of being passed an array for the results, is passed an instance of the following object (all threads should be passed the same instance):
+
+   ```java
+   public class SharedDouble {
+       private Double d;
+       public Double getD() { return d; }
+       public void setD(Double d) { this.d = d; }
+   }
+   ```
+
+   Within your `Runnable` class, at each iteration through its row, your `Runnable` object should call `getD()` to get the current global maximum and then, if the value in its array is bigger, call `setD` with the new value. Start and join all of the threads, and once they have all finished, print `SharedDouble.getD()`.
+
+   Do you see the same as in the loop solution?
+
+   ```java
+   public class MaxFinder2 {
+       public static class MaxRow implements Runnable {
+           Double[] row;
+           SharedDouble d;  // use this to track the maximum across all threads (Q1.2)
+
+           public MaxRow(Double[] row, SharedDouble d) {
+               this.row = row;
+               this.d = d;
+           }
+
+           public void run() {
+               for (int i = 0; i < row.length; i++) {
+                   Double globalMax = d.getD();  // get the current shared maximum value (Q1.2)
+                   if (row[i] > globalMax) {  // check if this value is greater...
+                       try {
+                           Thread.sleep(1);  // sleeping (or doing other stuff) between getD and setD increases the chance of a race condition (Q1.3)
+                       } catch (InterruptedException e) {
+                           e.printStackTrace();
+                       }
+                       d.setD(row[i]);  // ...and if the value was greater, update the maximum (Q1.2)
+                   }
+               }
+           }
+       }
+
+       public static void main(String[] args) {
+           int nRows = 100;
+           int nCols = 50;
+           Double[][] randArray = new Double[nRows][nCols];
+           for (int r = 0; r < nRows; r++) {
+               for (int c = 0; c < nCols; c++) {
+                   randArray[r][c] = Math.random();
+               }
+           }
+
+           // Find the max using loops
+           Double max = 0.0;
+           for (int r = 0; r < nRows; r++) {
+               for (int c = 0; c < nCols; c++) {
+                   if (randArray[r][c] > max) {
+                       max = randArray[r][c];
+                   }
+               }
+           }
+           System.out.println(max);
+
+           // Threaded solution
+           SharedDouble d = new SharedDouble();
+           d.setD(0.0);
+           Thread[] threads = new Thread[nRows];
+           for (int i = 0; i < nRows; i++) {
+               threads[i] = new Thread(new MaxRow(randArray[i], d));
+               threads[i].start();
+           }
+           try {
+               for (int i = 0; i < nRows; i++) {
+                   threads[i].join();
+               }
+           } catch (InterruptedException e) {
+               e.printStackTrace();
+           }
+
+           System.out.println(d.getD());
+       }
+   }
+   ```
+
+   **output:**
+
+   ```console
+   0.9997989255362931
+   0.9958813640364966
+   ```
+
+3. You may well not see a race condition—if you think about the circumstances required for one to be visible, then you should see that it is unlikely. However, it is possible to make it more likely. Place a `Thread.sleep` within the `run` method of your `Runnable` object in a position that makes the race condition more likely to take place. You should be able to make it such that the threaded version disagrees with the non-threaded version more often than not.
+
+   ```java
+   public class SharedDoubleWithCompare {
+       // Q1.4
+       private Double d;
+
+       public Double getD() {
+           return d;
+       }
+
+       public void setD(Double d) {
+           this.d = d;
+       }
+
+       public void compare(Double a) {
+           if (a > d) {
+               try {
+                   Thread.sleep(1);  // still to increase the chance we see a race condition
+               } catch (InterruptedException e) {
+                   e.printStackTrace();
+               }
+               d = a;
+           }
+       }
+   }
+   ```
+
+4. Create a copy of your code and refactor it such that all comparisons are done in the `SharedDouble` object. Thus, `SharedDouble` should include a method like this (including the sleep to encourage race conditions):
+
+   ```java
+   public class SharedDouble {
+       ...
+       public void compare(Double a) {
+           if (a > d) {
+               try {
+                   Thread.sleep(1);
+               } catch (InterruptedException e) {
+                   e.printStackTrace();
+               }
+               d = a;
+           }
+       }
+   }
+   ```
+
+   ```java
+   public class MaxFinder3 {
+       public static class MaxRow implements Runnable {
+           Double[] row;
+           SharedDoubleWithCompare d;  // Q1.4
+
+           public MaxRow(Double[] row, SharedDoubleWithCompare d) {
+               this.row = row;
+               this.d = d;
+           }
+
+           public void run() {
+               for (int i = 0; i < row.length; i++) {
+                   d.compare(row[i]);  // have SharedDoubleWithCompare do the compare-and-update (Q1.4)
+               }
+           }
+       }
+
+       public static void main(String[] args) {
+           int nRows = 100;
+           int nCols = 50;
+           Double[][] randArray = new Double[nRows][nCols];
+           for (int r = 0; r < nRows; r++) {
+               for (int c = 0; c < nCols; c++) {
+                   randArray[r][c] = Math.random();
+               }
+           }
+
+           // Find the max using loops
+           Double max = 0.0;
+           for (int r = 0; r < nRows; r++) {
+               for (int c = 0; c < nCols; c++) {
+                   if (randArray[r][c] > max) {
+                       max = randArray[r][c];
+                   }
+               }
+           }
+           System.out.println(max);
+
+           // Threaded solution
+           SharedDoubleWithCompare d = new SharedDoubleWithCompare();
+           d.setD(0.0);
+           Thread[] threads = new Thread[nRows];
+           for (int i = 0; i < nRows; i++) {
+               threads[i] = new Thread(new MaxRow(randArray[i], d));
+               threads[i].start();
+           }
+           try {
+               for (int i = 0; i < nRows; i++) {
+                   threads[i].join();
+               }
+           } catch (InterruptedException e) {
+               e.printStackTrace();
+           }
+
+           System.out.println(d.getD());
+       }
+   }
+   ```
+
+   **output:**
+
+   ```console
+   0.9994470546464659
+   0.9851904528393041
+   ```
+
+5. You now have two versions of the code, both exhibiting race conditions. Fix one with a synchronized block or method, and the other with a lock (this will only work one way round!).
+
+   ```java
+   public class SharedDoubleLock {
+       private Double d;
+       private ReentrantLock l = new ReentrantLock();  // this lock will be used to control access to the counter (Q1.5)
+
+       public void lock() {
+           l.lock();  // acquire the lock, preventing other threads from doing so
+       }
+
+       public void unlock() {
+           l.unlock();  // release the lock, so other threads can acquire it
+       }
+
+       public Double getD() {
+           return d;
+       }
+
+       public void setD(Double d) { // no need for synchronized here, since we now lock before calling it
+           this.d = d;
+       }
+   }
+
+   public class MaxFinder3FixedWithLock {
+       public static class MaxRow implements Runnable {
+           Double[] row;
+           SharedDoubleLock d;
+
+           public MaxRow(Double[] row, SharedDoubleLock d) {
+               this.row = row;
+               this.d = d;
+           }
+
+           public void run() {
+               for (int i = 0; i < row.length; i++) {
+                   d.lock();  // explicitly acquire the lock, so only one thread at a time is inside the loop body (Q1.5)
+                   Double globalMax = d.getD();
+                   if (row[i] > globalMax) {
+                       try {
+                           Thread.sleep(1);
+                       } catch (InterruptedException e) {
+                           e.printStackTrace();
+                       }
+                       d.setD(row[i]);
+                   }
+                   d.unlock();  // explicitly release the lock, allowing other threads to enter the loop body (Q1.5)
+               }
+           }
+       }
+
+       public static void main(String[] args) {
+           int nRows = 100;
+           int nCols = 50;
+           Double[][] randArray = new Double[nRows][nCols];
+           for (int r = 0; r < nRows; r++) {
+               for (int c = 0; c < nCols; c++) {
+                   randArray[r][c] = Math.random();
+               }
+           }
+
+           // Find the max using loops
+           Double max = 0.0;
+           for (int r = 0; r < nRows; r++) {
+               for (int c = 0; c < nCols; c++) {
+                   if (randArray[r][c] > max) {
+                       max = randArray[r][c];
+                   }
+               }
+           }
+           System.out.println(max);
+
+           // Threaded solution
+           SharedDoubleLock d = new SharedDoubleLock();
+           d.setD(0.0);
+           Thread[] threads = new Thread[nRows];
+           for (int i = 0; i < nRows; i++) {
+               threads[i] = new Thread(new MaxRow(randArray[i], d));
+               threads[i].start();
+           }
+           try {
+               for (int i = 0; i < nRows; i++) {
+                   threads[i].join();
+               }
+           } catch (InterruptedException e) {
+               e.printStackTrace();
+           }
+
+           System.out.println(d.getD());
+       }
+   }
+   ```
+
+   **output:**
+
+   ```console
+   0.9998252403592289
+   0.9998252403592289
+   ```
+
+   ```java
+   public class SharedDoubleSync {
+       private Double d;
+
+       public Double getD() {
+           return d;
+       }
+
+       public void setD(Double d) {
+           this.d = d;
+       }
+
+       public synchronized void compare(Double a) {  // synchronized keyword ensures only one thread is doing compare-and-update at any moment (Q1.5)
+           if (a > d) {
+               try {
+                   Thread.sleep(1);
+               } catch (InterruptedException e) {
+                   e.printStackTrace();
+               }
+               d = a;
+           }
+       }
+   }
+
+   public class MaxFinder3FixedWithSync {
+       public static class MaxRow implements Runnable {
+           Double[] row;
+           SharedDoubleSync d;
+
+           public MaxRow(Double[] row, SharedDoubleSync d) {
+               this.row = row;
+               this.d = d;
+           }
+
+           public void run() {
+               for (int i = 0; i < row.length; i++) {
+                   d.compare(row[i]);
+               }
+           }
+       }
+
+       public static void main(String[] args) {
+           int nRows = 100;
+           int nCols = 50;
+           Double[][] randArray = new Double[nRows][nCols];
+           for (int r = 0; r < nRows; r++) {
+               for (int c = 0; c < nCols; c++) {
+                   randArray[r][c] = Math.random();
+               }
+           }
+
+           // Find the max using loops
+           Double max = 0.0;
+           for (int r = 0; r < nRows; r++) {
+               for (int c = 0; c < nCols; c++) {
+                   if (randArray[r][c] > max) {
+                       max = randArray[r][c];
+                   }
+               }
+           }
+           System.out.println(max);
+
+           // Threaded solution
+           SharedDoubleSync d = new SharedDoubleSync();
+           d.setD(0.0);
+           Thread[] threads = new Thread[nRows];
+           for (int i = 0; i < nRows; i++) {
+               threads[i] = new Thread(new MaxRow(randArray[i], d));
+               threads[i].start();
+           }
+           try {
+               for (int i = 0; i < nRows; i++) {
+                   threads[i].join();
+               }
+           } catch (InterruptedException e) {
+               e.printStackTrace();
+           }
+
+           System.out.println(d.getD());
+       }
+   }
+   ```
+
+   **output:**
+
+   ```console
+   0.9998265626381346
+   0.9998265626381346
+   ```
+
+#### **Atomic Counter**
+
+The `CounterExample` example from the lectures illustrates how a race condition arises when a counter is incremented from multiple threads. The provided code includes a fix using `synchronized` in file `CounterExample4.java`, and an alternative using `ReentrantLock` in `CounterExample5.java`.
+
+```java
+public class CounterExample3 {
+  public static class MyCounter {
+      // We need this method because ints are immutable
+      private int count = 0;
+
+      public void increment() {
+          count++;
+      }
+
+      public int getCount() {
+          return count;
+      }
+  }
+
+  public static class Counter extends Thread {
+      private MyCounter count;
+      private int n;
+
+      public Counter(MyCounter count, int n) {
+          this.count = count;
+          this.n = n;
+      }
+
+      public void run() {
+          for (int i = 0; i < n; i++) {
+              count.increment();
+          }
+      }
+  }
+
+  public static void main(String[] args) {
+      MyCounter count = new MyCounter();
+      int nCounters = 100;
+      Counter[] c = new Counter[nCounters];
+      for (int i = 0; i < nCounters; i++) {
+          c[i] = new Counter(count, 1000);
+          c[i].start();
+      }
+      try {
+          for (int i = 0; i < nCounters; i++) {
+              c[i].join();
+          }
+      } catch (InterruptedException e) {
+          // Do nothing
+      }
+      System.out.println(count.getCount());
+  }
+}
+```
+
+```java
+ public class CounterExample4 {
+     public static class MyCounter {
+         private int count = 0;
+
+         // We declare this method 'synchronized' which means
+         // only one thread can be in it at a time...
+         public void increment() {
+             synchronized (this) {
+                 count++;
+             }
+         }
+
+         public int getCount() {
+             return count;
+         }
+     }
+
+     public static class Counter extends Thread {
+     // ...
+     }
+
+     public static void main(String[] args) {
+     // ...
+     }
+ }
+```
+
+```java
+import java.util.concurrent.locks.*;
+
+public class CounterExample5 {
+    public static class MyCounter {
+        // Instead of synchronised, we can use a lock.
+        private int count = 0;
+        private ReentrantLock counterLock = new ReentrantLock();
+
+        public void increment() {
+            counterLock.lock();
+            count++;
+            counterLock.unlock();
+        }
+
+        public int getCount() {
+            return count;
+        }
+    }
+
+    public static class Counter extends Thread {
+    // ...
+    }
+
+    public static void main(String[] args) {
+    // ...
+    }
+}
+```
+
+1.  Implement an alternative fix using a suitable class from `java.concurrent.atomic`; verify this always yields the correct final count.
+
+    ```java
+    import java.util.concurrent.atomic.AtomicInteger;
+
+    public class CounterExampleAtomic {
+        public static class MyCounter {
+            private AtomicInteger count = new AtomicInteger(0);
+
+            public void increment() {
+                // this method isn't synchronised, but the increment method on AtomicInteger means it's safe
+                count.incrementAndGet();
+            }
+
+            public int getCount() {
+                return count.get();
+            }
+        }
+
+        public static class Counter extends Thread {
+            private MyCounter count;
+            private int n;
+
+            public Counter(MyCounter count, int n) {
+                this.count = count;
+                this.n = n;
+            }
+
+            public void run() {
+                for (int i = 0; i < n; i++) {
+                    count.increment();
+                }
+            }
+        }
+
+        public static void main(String[] args) {
+            MyCounter count = new MyCounter();
+            int nCounters = 100;
+            Counter[] c = new Counter[nCounters];
+            for (int i = 0; i < nCounters; i++) {
+                c[i] = new Counter(count, 1000);
+                c[i].start();
+            }
+            try {
+                for (int i = 0; i < nCounters; i++) {
+                    c[i].join();
+                }
+            } catch (InterruptedException e) {
+            }
+            System.out.println(count.getCount());
+        }
+    }
+    ```
+
+    **output:**
+
+    ```console
+    100000
+    ```
+
+2.  Measure the performance of the three correct implementations, in the case where you have fewer threads than CPU cores, and in the case where you have more.
+3.  Add the `volatile` modifier to the declaration of field `MyCounter.count` in the original code (with the race condition). Does the presence of `volatile` affect how often the final count is correct, or how different it is on average? Why?
+
+    ```java
+    public class CounterExampleVolatile {
+        public static class MyCounter {
+            private volatile int count = 0;  // field is volatile, hence will not be cached (Q2.3)
+
+            public void increment() {
+                count++;
+            }
+
+            public int getCount() {
+                return count;
+            }
+        }
+
+        public static class Counter extends Thread {
+            private MyCounter count;
+            private int n;
+
+            public Counter(MyCounter count, int n) {
+                this.count = count;
+                this.n = n;
+            }
+
+            public void run() {
+                for (int i = 0; i < n; i++) {
+                    count.increment();
+                }
+            }
+        }
+
+        public static void main(String[] args) {
+            MyCounter count = new MyCounter();
+            int nCounters = 100;
+            Counter[] c = new Counter[nCounters];
+            for (int i = 0; i < nCounters; i++) {
+                c[i] = new Counter(count, 1000);
+                c[i].start();
+            }
+            try {
+                for (int i = 0; i < nCounters; i++) {
+                    c[i].join();
+                }
+            } catch (InterruptedException e) {
+                //Do nothing
+            }
+            System.out.println(count.getCount());
+            // The output here should still be less than 100K. volatile doesn't make the entire read-increment-write process
+            // atomic -- we might still switch thread between read and write. It would be sufficient if only one thread were
+            // writing (but many reading)
+        }
+    }
+    ```
+
+    **output:**
+
+    ```console
+    94177
+    ```
+
+## Topic 8: I/O
+
+`I` = Input
+
+`O` = Output
+
+```java
+// make a filereader object
+FileReader fr = new FileReader("C:\\Users\\ucackxb\\Week5\\students.csv");
+// make a scanner around the filereader
+Scanner s = new Scanner(fr);
+
+// Loop until no lines left
+while (s.hasNextLine()) {
+    // get the next line
+    String line = s.nextLine();
+    // do something with the line
+}
+```
+
+**Try-Finally**
+
+```java
+// make a filereader object
+FileReader fr = new FileReader("C:\\Users\\ucackxb\\Week5\\students.csv");
+try {
+    // make a scanner around the filereader
+    Scanner s = new Scanner(fr);
+    // Loop until no lines left
+    while (s.hasNextLine()) {
+        // get the next line
+        String line = s.nextLine();
+        // do something with the line
+    }
+} finally {
+    fr.close();
+}
+```
+
+Code in `finnaly` block is always executed, even if there is an exception.
+
+**Try-with-Resources**
+
+```java
+try (FileReader fr = new FileReader("students.csv")) {
+    Scanner s = new Scanner(fr);
+    // Loop until no lines left
+    while (s.hasNextLine()) {
+        // get the next line
+        String line = s.nextLine();
+        // do something with the line
+    }
+} // fr is automatically closed here!
+```
+
+Anything defined in `try()` will be automatically closed when the block is exited.
+
+You can still define `catch` and `finnaly` blocks.
+
+```java
+// Make a file reader object
+try (FileReader fr = new FileReader("students.csv")) {
+    Scanner s = null;
+    s.nextLine(); // NullPointerException!
+} catch (IOException e) {
+    // This is run after fr.close()
+} finally {
+    // This is run after the catch block
+}
+```
+
+Immediately after `NullPointerException` is thrown, `fr` is closed. Then the `catch` block will get run, then the `finally` block.
+
+The benefit using `try-with-resources`:
+
+- you don't have to remember to close the resource, it's done automatically
+- it is more concise.
+- throws the original exception from the `try`, if anything, like `close`, also throws an exception in the `finally` block.
+
+You can define multiple resources in the `try` block:
+
+```java
+try (
+    FileReader fr = new FileReader("students.csv");
+    PrintWriter pw = new PrintWriter("modified_students.csv")
+) {
+    Scanner s = new Scanner(fr);
+
+    // Loop until no lines left
+    while (s.hasNextLine()) {
+        // Get the next line
+        String line = s.nextLine();
+        pw.println(line.toUpperCase());
+    }
+} // pw then fr are automatically closed here!
+```
+
+Java will close the resource in the opposite order, so `pw` is closed before `fr`.
+
+### Stream
+
+`Reader` reads characters/strings.
+
+`Writer` writes characters/strings.
+
+`InputStream` reads raw bytes.
+
+`OutputStream` writes raw bytes.
+
+```java
+public class FileInputStream extends InputStream {
+
+    // ...
+
+    FileInputStream(String name);
+
+    // ...
+
+    int read(); // Reads a byte of data from this input stream.
+
+    int read(byte[] b); // Reads up to b.length bytes from the
+                        // input stream into an array of bytes.
+
+    // ...
+
+    void close();
+}
+```
+
+Modern systems have `> 1` byte per character, like [cjk](https://en.wikipedia.org/wiki/CJK_characters) characters. Unicode standard defines how characters are encoded as bytes.
+
+The following code removes all spaces from a file:
+
+```java
+try (
+    FileReader rd = new FileReader("test.txt");
+    FileWriter wr = new FileWriter("no-spaces.txt")
+) {
+    int character;
+    while ((character = rd.read()) != -1) {
+        if ((char) character != ' ') {
+            wr.write((char) character);
+        }
+    }
+}
+```
+
+The `read()` method returns `-1` when the end of the file is reached. The process in the code is slow because `FileReader` and `FileWriter` interact with the underlying system for every single read or write operation, in this case for example, compare if the character is a space.
+
+Therefore, introducing buffered I/O:
+
+```java
+try (
+    BufferedReader rd = new BufferedReader(new FileReader("test.txt"));
+    BufferedWriter wr = new BufferedWriter(new FileWriter("no-spaces.txt"))
+) {
+    int character;
+    while ((character = rd.read()) != -1) {
+        if ((char) character != ' ') {
+            wr.write((char) character);
+        }
+    }
+}
+```
+
+Buffered I/O in Java works by using a temporary storage area called a buffer to store data read from or written to a file. When you read data from a file, Java doesn't immediately transfer each byte directly from the file to your program. Instead, it reads a chunk of data from the file into a buffer in memory. Then, your program can read from this buffer at a much faster speed than directly from the file. Similarly, when you write data to a file, Java doesn't immediately write each byte directly to the file. Instead, it first writes the data to a buffer in memory. When the buffer becomes full, Java then writes the entire buffer to the file in one go. This buffering process helps improve performance by reducing the number of interactions with the slower disk storage.
+
+### Random Access
+
+Sequential access means to read progressively from start of file. Random access means to read from any locations we choose.
+
+We can make a file behave more like an array:
+
+```java
+public class RandomAccessFile
+    implements DataInput, DataOutput, Closeable {
+    RandomAccessFile(String name, String mode);
+    long length();
+    void seek(long pos);
+    long getFilePointer();
+    byte readByte();
+    float readFloat();
+    void write(byte[] b);
+    // ...
+}
+```
+
+When we're using random access file we typically want to read just some part of the file or some subset of the data element stored in that file, we can calculate the position of the data we want to read and then use the `seek` method to move the file pointer to that position, by calculating it means for example, multiply the size of each element that is in fixed length.
+
+```java
+class Student {
+    int rollNumber; // 4 bytes
+    short age;      // 2 bytes
+    float grade;    // 4 bytes
+}
+```
+
+![](https://raw.githubusercontent.com/jkmeansesc/picwen/main/img/202404221724919.png)
+
+So $$100^{th}$$ student will be at byte $$100×(4+2+4)$$ bytes.
+
+```java
+void readStudent(RandomAccessFile f, int studentIndex) {
+    f.seek(studentIndex * (4 + 2 + 4));
+    int rollNumber = f.readInt();
+    short age = f.readShort();
+    float grade = f.readFloat();
+    // ...
+}
+```
+
+This works fine for fixed length records, but not for variable length records:
+
+```java
+class Student {
+    int rollNumber; // 4 bytes
+    String name;    // ???
+    short age;      // 2 bytes
+    float grade;    // 4 bytes
+}
+```
+
+In this case we don't know the exact length of `name`. There are generally 2 standard methods to address this.
+
+1. **Pad to constant length**: We can arbitrate a maximal length, for example, 20 characters, then pad everything that's shorter to fiddle that name, for example with spaces.
+
+   ```java
+   void writeStudent(RandomAccessFile f, Student student) {
+       // ...
+       byte[] name = student.name.getBytes(Charset.forName("UTF-8"));
+       byte[] namePadded = new byte[MAX_CHARS];
+       System.arraycopy(name, 0, namePadded, 0, name.length);
+       // ...
+       f.writeInt(student.rollNumber);
+       f.writeInt(student.age);
+       f.writeFloat(student.grade);
+       f.write(namePadded);
+   }
+   ```
+
+   One problem is that we must choose a `MAX_CHARS` that is big enough for all names. Another problem is that if one name is too long, it wastes space because we pad all names to the same length.
+
+2. **More space-efficient: pointers and packing**: we still use fixed-size records for each `student`, excluding the name, but replace with integers in place of name to store offset (position) and length. After all fixed-size records are written, we pack all names together at the end of the file. When reading, we seek to given offset, and read given length for `name`.
+
+   > see lab 8 for code examples
+
+### Serialization
+
+Serialization means to convert an object to a stream of bytes.
+
+Deserialization means to convert the bytes back into an object.
+
+Java has built-in support for serialization, which simplifies the process of reading from and writing to data streams. You don't need to manually handle the details of converting each field of an object into bytes, or reconstructing an object from bytes.
+
+While Java's built-in serialization mechanisms are convenient and reduce the need for custom code, they also come with limitations. The automatic nature of Java Serialization means it operates with a one-size-fits-all approach, which might not be optimized for specific use cases. For example:
+
+- Performance: Java Serialization includes metadata in the serialized form, such as class information and version IDs, which can lead to larger payloads. This is not ideal when performance and data size are critical factors, especially in network transmissions.
+
+- Control Over Format: With Java Serialization, you don’t have control over the exact format of the serialized data. In scenarios where you need a specific data format (e.g., a tightly packed binary format or a specific JSON/XML structure for web APIs), you would have to implement custom serialization code.
+
+- Handling of Non-serializable Objects: If your object graph includes types that are not serializable, Java's default serialization will fail. Custom serialization code would allow you to handle these cases more gracefully, either by providing fallback mechanisms or by selectively ignoring non-serializable fields.
+
+```java
+try (
+    FileOutputStream fos = new FileOutputStream("out.tmp");
+    ObjectOutputStream oos = new ObjectOutputStream(fos)
+) {
+    oos.writeInt(12);
+    oos.writeDouble(12.34);
+    oos.writeObject("Today");
+    oos.writeObject(new Date());
+}
+```
+
+Every object that is to be serialized must implement the `Serializable` interface.
+
+```java
+class Student {
+    int rollNumber;
+    String name;
+    short age;
+    float grade;
+}
+
+Student student = new Student();
+
+// ... (other code)
+
+try (
+    FileOutputStream fos = new FileOutputStream("out.tmp");
+    ObjectOutputStream oos = new ObjectOutputStream(fos)
+) {
+    oos.writeObject(student); // NotSerializableException
+}
+```
+
+This will throw a `NotSerializableException` because `Student` does not implement `Serializable`.
+
+```java
+class Student implements Serializable {
+    int rollNumber;
+    String name;
+    short age;
+    float grade;
+}
+
+Student student = new Student();
+
+// ... (other code)
+
+try (
+    FileOutputStream fos = new FileOutputStream("out.tmp");
+    ObjectOutputStream oos = new ObjectOutputStream(fos)
+) {
+    oos.writeObject(student); // works!
+}
+```
+
+Non-serializable superclass fields are not saved. If a serializable class has a non-serializable superclass, the state of the superclass is not serialized, and the fields are initialized during Deserialization to their default values.
+
+```java
+class Person {
+    int age;
+}
+
+class Student extends Person implements Serializable {
+    double grade;
+}
+
+Student original = new Student();
+original.age = 23;
+original.grade = 3.8;
+
+try (ObjectOutputStream oos = new ObjectOutputStream(
+        new FileOutputStream("out.tmp"))) {
+    oos.writeObject(original);
+}
+
+try (ObjectInputStream ois = new ObjectInputStream(
+        new FileInputStream("out.tmp"))) {
+    Student loaded = (Student) ois.readObject();
+}
+
+// now, original.age == 23 but loaded.age == 0!
+```
+
+Static and transient fields are not serialized.
+
+```java
+// Serialization: write some objects
+try (
+    FileOutputStream fos = new FileOutputStream("out.tmp");
+    ObjectOutputStream oos = new ObjectOutputStream(fos)
+) {
+    oos.writeInt(12);
+    oos.writeDouble(12.34);
+    oos.writeObject("Today");
+    oos.writeObject(new Date());
+}
+
+// Deserialization: read them back
+try (
+    FileInputStream fis = new FileInputStream("out.tmp");
+    ObjectInputStream ois = new ObjectInputStream(fis)
+) {
+    int twelve = ois.readInt();
+    double number = ois.readDouble();
+    String word = (String) ois.readObject();
+    Date date = (Date) ois.readObject();
+}
+```
+
+**`void writeObject(Object obj)`**:
+
+1. **Write the name of the class of the object**:
+
+   The serialization mechanism records the class name of the object being serialized. This is important because during Deserialization, Java needs to know which class to instantiate. The class name is used to ensure that the byte stream can be accurately converted back into the correct type of object.
+
+2. **The class must be available when deserializing**:
+
+   When the serialized data is being deserialized, the Java runtime needs to have access to the corresponding class. If the class definition is not available (e.g., if the class has been removed from the project or the `classpath` does not include it), a `ClassNotFoundException` will be thrown during Deserialization.
+
+3. **Check the type of each field of the object**:
+
+   Serialization involves recursively processing each field of the object. The `writeObject` method checks the type of each field and handles it appropriately: primitive fields (like int, double, etc.) are written directly to the output stream in their binary representation. Object references are more complex, the method needs to serialize the object that the reference points to, which might involve serializing an entire object graph.
+
+4. **Avoid infinite loops with cyclic references**:
+
+   Objects in Java can reference each other, potentially forming cyclic references. For example, two objects might each contain a reference to the other. To handle this, the serialization mechanism keeps track of each object that has already been written to the stream. If a previously serialized object is encountered again, a reference to it is written to the stream instead of re-serializing the object. This prevents infinite loops during serialization.
+
+5. **Write all fields, public or private, and ignores Getters**:
+
+   Serialization processes all fields of an object, regardless of their access modifiers (i.e., private, public, protected). This means that even private data that is not accessible outside the class can be serialized and deserialized, which can be a security concern if not handled carefully. Serialization does not use getter methods to access the fields, it directly accesses the fields themselves. This approach can bypass any logic implemented in Getters and Setters, potentially leading to inconsistencies if the Getters and Setters contain important behavior.
+
+**`readObject()`**:
+
+1. **Read the name of the class**:
+
+   The Deserialization process begins by reading the name of the class of the object that needs to be instantiated. This is necessary because Java needs to know which type of object it should create when it reconstructs the byte stream.
+
+2. **Create a new instance using the default constructor**:
+
+   Java typically uses the no-arg constructor of the class to instantiate the object. Interestingly, during serialization, Java can instantiate objects without invoking any constructor through the use of the Java Reflection API. This can lead to scenarios where the object's state is restored without any of the constructor logic being applied, which can be important if the constructor includes initialization code.
+
+3. **Read values of fields and copy them into the object**:
+
+   After an instance is created, `readObject` reads the values of each field from the input stream and assigns them to the corresponding fields in the object. This includes both primitive data types and references to other objects.
+   If a field is an object, `readObject` must deserialize it as well, which might involve recursively deserializing a whole graph of objects connected to the initial object.
+
+4. **Setters are not used**:
+
+   The fields are directly assigned through reflection, bypassing any setter methods. This means that any logic contained in Setters (like validation or additional computations) will not be executed during Deserialization, which is a critical aspect to consider when designing objects intended for serialization.
+
+### Topic 8 Lab
+
+You will use the following class definition from the lecture:
+
+```java
+class Student {
+    int rollNumber;
+    String name;
+    short age;
+    float grade;
+}
+```
+
+Create an array students of type Student[] and populate it with 10000 students. The roll numbers should be in order, increasing from zero, so for example `students[23].rollNumber == 23`. Choose random values for their age and grade. For the name, use a suitable scheme to generate random strings, e.g., choose a letter (A-Z) at random, and repeat it a random number of times (or any other scheme you like).
+
+In the next parts, you will develop **four separate approaches**, for reading and writing this array of Student objects in different formats.
+
+1. CSV File
+
+   1. Write a method that prints an array of students to a CSV file, i.e., containing lines like
+
+      ```console
+      0,Harry Potter,12,3.2
+      1,Hermione Granger,13,4.8
+      ```
+
+      Save the array students to disc using this method.
+
+   2. Write a method that loads a CSV file like you just wrote, and returns a new array of students. Restore the students array using this method. Write a test method that verifies the original and restored students are identical.
+
+2. Serialization
+
+   Modify the Student class to be serializable. Write code to save the array students using Java serialization, via an `ObjectOutputStream`, and to load it using an `ObjectInputStream`. Again, check that the original and restored students are identical.
+
+3. Padded Binary
+
+   1. Write a method `toPaddedBytes` that converts a string to a fixed-length array of bytes, by padding it with zero bytes (most of the code for this is in the lecture slides).
+   2. Write a second method `fromPaddedBytes` that reverses this operation, i.e., returns the original string, when given the byte array.
+   3. Write a test function that verifies the second method correctly reverses the first (e.g., for random strings).
+   4. Write a method that saves the students array to either a `DataOutputStream` or a `RandomAccessFile`, by writing the `rollNumber`, age, and grade fields as raw bytes, and the name by first converting it using `toPaddedBytes`. You should write the students directly one after the other, without any separators.
+   5. Write code that opens the binary file you just wrote, using `RandomAccessFile`. Allow the user to enter the roll number (index) of a student; your program should then access the relevant student in the file by seeking to the relevant offset (position), and print their details.
+
+4. Packed Binary
+
+   1. Add two fields, `nameOffset` and `nameLength` to class Student.
+   2. Write a method that takes the students array as input, converts each name to a byte[] array (not padded this time!), and concatenates all the resulting arrays to make one large array. It should also record where the name of each student starts in this large array in their `nameOffset` field, and the length in bytes of the name in their `nameLength` field.
+   3. Write the students to disc similarly to before, but now excluding the name field and including `nameOffset` and `nameLength`. Write the concatenated byte array of names at the end of the file.
+   4. Write a method that loads the data saved by the previous one.
+
+5. Comparing Approaches
+
+   Compare the sizes on disc of the different representations (CSV, Java serialization, padded binary, and packed binary). Which method is most efficient (smallest)? Which is least efficient (largest)? Think about why.
+
+#### Solution
+
+```java
+package lab8;
+
+import java.io.Serializable;
+
+class Student implements Serializable {
+    int rollNumber;
+    String name;
+    short age;
+    float grade;
+    int nameOffset, nameLength;  // for part 4
+
+    Student(int rollNumber_, String name_, short age_, float grade_) {
+        rollNumber = rollNumber_;
+        name = name_;
+        age = age_;
+        grade = grade_;
+    }
+}
+```
+
+```java
+package lab8;
+
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.*;
+
+public class Solution {
+
+    private static final int MAX_BYTES = 50;
+
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+
+        Student[] originalStudents = createStudents(10000);
+
+        // Part 1
+        writeToCsv(originalStudents, "students.csv");
+        Student[] loadedStudents = readFromCsv("students.csv");
+        if (areStudentsEqual(originalStudents, loadedStudents)) {
+            System.out.println("students loaded correctly from csv");
+        } else {
+            System.out.println("loaded students are different =(");
+        }
+
+        // Part 2
+        serialize(originalStudents, "students.ser");
+        loadedStudents = deserialize("students.ser");
+        if (areStudentsEqual(originalStudents, loadedStudents)) {
+            System.out.println("students loaded correctly by deserialisation");
+        } else {
+            System.out.println("loaded students are different =(");
+        }
+
+        // Part 3
+        writeToPaddedBinary(originalStudents, "students.padded");
+        readOneFromPaddedBinary("students.padded");
+
+        // Part 4
+        writeToPackedBinary(originalStudents, "students.packed");
+        loadedStudents = readFromPackedBinary("students.packed");
+        if (areStudentsEqual(originalStudents, loadedStudents)) {
+            System.out.println("students loaded correctly from packed binary");
+        } else {
+            System.out.println("loaded students are different =(");
+        }
+    }
+
+    private static Student[] readFromPackedBinary(String filename) throws IOException {
+        int numBytesPerStudent = 4 + 2 + 4 + 4 + 4;
+        try (RandomAccessFile file = new RandomAccessFile(filename, "r")) {
+
+            // Prepare a suitable size array to hold the students
+            int numStudents = file.readInt();
+            Student[] students = new Student[numStudents];
+            for (int index = 0; index < numStudents; ++index) {
+                // Seek the file to the start position of the next student (extra 4 to skip int numStudents)
+                file.seek(4 + index * numBytesPerStudent);
+
+                // Read all the 'simple' fields and create student object
+                students[index] = new Student(
+                        file.readInt(),
+                        "",    // we'll fix this below
+                        file.readShort(),
+                        file.readFloat()
+                );
+
+                // Read the fields describing where the name is stored
+                int nameOffset = file.readInt();
+                int nameLength = file.readInt();
+
+                // Seek to the start of the name, read it, and store in the student object
+                // We jump past all the fixed-size student records, then further to the required name
+                file.seek(4 + numStudents * numBytesPerStudent + nameOffset);
+                byte[] nameBytes = new byte[nameLength];
+                file.read(nameBytes);
+                students[index].name = new String(nameBytes, Charset.forName("UTF-8"));
+            }
+            return students;
+        }
+    }
+
+    private static void writeToPackedBinary(Student[] students, String filename) throws IOException {
+        int nextNameStartByte = 0;
+        byte[][] allNameBytes = new byte[students.length][];
+        for (int index = 0; index < students.length; ++index) {
+            Student student = students[index];
+            byte[] nameBytes = student.name.getBytes(Charset.forName("UTF-8"));
+            student.nameLength = nameBytes.length;
+            student.nameOffset = nextNameStartByte;
+            nextNameStartByte += nameBytes.length;
+            allNameBytes[index] = nameBytes;
+        }
+
+        try (
+                OutputStream stream = new FileOutputStream(filename);
+                DataOutputStream dos = new DataOutputStream(stream)
+        ) {
+            // Write the total number of students -- this will make reading easier
+            dos.writeInt(students.length);
+
+            // Write each student as a fixed-size record
+            for (int index = 0; index < students.length; ++index) {
+                Student student = students[index];
+                dos.writeInt(student.rollNumber);
+                dos.writeShort(student.age);
+                dos.writeFloat(student.grade);
+                dos.writeInt(student.nameOffset);
+                dos.writeInt(student.nameLength);
+            }
+
+            // Write all the name bytes packed together at the end
+            for (int index = 0; index < allNameBytes.length; ++index) {
+                dos.write(allNameBytes[index]);
+            }
+        }
+    }
+
+    private static void readOneFromPaddedBinary(String filename) throws IOException {
+        System.out.println("enter the index of a student:");
+        int index = new Scanner(System.in).nextInt();
+        int numBytesPerStudent = 4 + MAX_BYTES + 2 + 4;
+        try (RandomAccessFile file = new RandomAccessFile(filename, "r")) {
+            file.seek(index * numBytesPerStudent);
+            System.out.println("rollNumber = " + file.readInt());
+            byte[] nameBytes = new byte[MAX_BYTES];
+            file.read(nameBytes);
+            System.out.println("name = " + fromPaddedBytes(nameBytes));
+            System.out.println("age = " + file.readShort());
+            System.out.println("grade = " + file.readFloat());
+        }
+    }
+
+    private static void writeToPaddedBinary(Student[] students, String filename) throws IOException {
+        try (
+                OutputStream stream = new FileOutputStream(filename);
+                DataOutputStream dos = new DataOutputStream(stream)
+        ) {
+            for (int index = 0; index < students.length; ++index) {
+                Student student = students[index];
+                dos.writeInt(student.rollNumber);
+                dos.write(toPaddedBytes(student.name));
+                dos.writeShort(student.age);
+                dos.writeFloat(student.grade);
+            }
+        }
+    }
+
+    private static byte[] toPaddedBytes(String string) {
+        byte[] name = string.getBytes(Charset.forName("UTF-8"));
+        byte[] namePadded = new byte[MAX_BYTES];
+        System.arraycopy(name, 0, namePadded, 0, name.length);
+        return namePadded;
+    }
+
+    private static String fromPaddedBytes(byte[] bytes) {
+        int length = 0;
+        for (; length < bytes.length; ++length) {
+            if (bytes[length] == 0)
+                break;  // length of string is index of first padding zero
+        }
+        return new String(bytes, 0, length, Charset.forName("UTF-8"));
+    }
+
+    private static Student[] deserialize(String filename) throws IOException, ClassNotFoundException {
+        try (
+                InputStream stream = new FileInputStream(filename);
+                ObjectInputStream ois = new ObjectInputStream(stream)
+        ) {
+            return (Student[]) ois.readObject();
+        }
+    }
+
+    private static void serialize(Student[] students, String filename) throws IOException {
+        try (
+                OutputStream stream = new FileOutputStream(filename);
+                ObjectOutputStream oos = new ObjectOutputStream(stream)
+        ) {
+            oos.writeObject(students);
+        }
+    }
+
+    private static boolean areStudentsEqual(Student[] originals, Student[] loadeds) {
+        if (originals.length != loadeds.length)
+            return false;
+        for (int index = 0; index < originals.length; ++index) {
+            Student original = originals[index];
+            Student loaded = loadeds[index];
+            if (original.rollNumber != loaded.rollNumber ||
+                    !original.name.equals(loaded.name) ||
+                    original.age != loaded.age ||
+                    original.grade != loaded.grade
+            ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static Student[] readFromCsv(String filename) throws IOException {
+        ArrayList<Student> students = new ArrayList<>();
+        try (
+                FileReader reader = new FileReader(filename);
+                Scanner scanner = new Scanner(reader)
+        ) {
+            while (scanner.hasNext()) {
+                String line = scanner.nextLine();
+                String[] bits = line.split(",");
+                assert bits.length == 4;
+                students.add(new Student(
+                        Integer.parseInt(bits[0]),
+                        bits[1],
+                        Short.parseShort(bits[2]),
+                        Float.parseFloat(bits[3])
+                ));
+            }
+            return students.toArray(new Student[0]);
+        }
+    }
+
+    private static void writeToCsv(Student[] students, String filename) throws FileNotFoundException {
+        try (PrintWriter writer = new PrintWriter(filename)) {
+            for (int index = 0; index < students.length; ++index) {
+                String line = students[index].rollNumber + "," + students[index].name + "," + students[index].age + "," + students[index].grade;
+                writer.println(line);
+            }
+        }
+    }
+
+    private static Student[] createStudents(int numStudents) {
+        Random random = new Random();
+        Student[] students = new Student[numStudents];
+        for (int index = 0; index < students.length; ++index) {
+            String nameChar = String.valueOf((char) (random.nextInt(26) + 'a'));  // choose a random character, by first choosing a random integer 0-26
+            String name = nameChar.repeat(random.nextInt(4, 10));  // repeat that character 4-10 times to create the name
+            students[index] = new Student(
+                    index,
+                    name,
+                    (short) random.nextInt(10, 100),
+                    random.nextFloat() * 10.0f
+            );
+        }
+        return students;
+    }
+}
+```
