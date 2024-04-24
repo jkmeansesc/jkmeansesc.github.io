@@ -5218,6 +5218,13 @@ In the next parts, you will develop **four separate approaches**, for reading an
 
    Compare the sizes on disc of the different representations (CSV, Java serialization, padded binary, and packed binary). Which method is most efficient (smallest)? Which is least efficient (largest)? Think about why.
 
+   ```console
+    .rw-r--r--@  250k sif  23 Apr 18:31  students.csv
+    .rw-r--r--@  245k sif  23 Apr 18:31  students.packed
+    .rw-r--r--@  600k sif  23 Apr 18:31  students.padded
+    .rw-r--r--@  335k sif  23 Apr 18:31  students.ser
+   ```
+
 #### Solution
 
 ```java
@@ -5483,6 +5490,639 @@ public class Solution {
             );
         }
         return students;
+    }
+}
+```
+
+## Topic 9: Reflection
+
+In computer science, reflective programming or reflection is the ability of a process to examine, introspect, and modify its own structure and behavior.
+
+```java
+package animals;
+
+class Animal {
+    public String name;
+    public float weight;
+
+    public void eat(String food) {
+        // ...
+    }
+}
+
+class Bird extends Animal {
+    public float wingspan;
+    private int numFeathers;
+
+    public void peck(String what) {
+        // ...
+    }
+}
+
+Object tweety = new Bird();
+tweety.weight = 25.0;
+```
+
+To use reflection on this, we need to import package `java.lang.reflect`.
+
+```java
+import java.lang.reflect.*;
+```
+
+The first thing we can do is to get some information about the class:
+
+```java
+Class<?>  tweetyClass = tweety.getClass();
+```
+
+An instance of `Class` gives information at runtime about `tweetyClass`, like the name of the class, the fields.
+
+It's important to understand the difference between the code of our class `Bird` and the reflective class `Class<?>` which is an object that represents the class `Bird`. The code of our class `Bird` is not something we can directly manipulate when our program is running, it is fixed when the program is compiled by `javac`. But the `Class` object is available at runtime that happens to contain a description of the `Bird` class from our code.
+
+So what can we do with this `Class` object called `tweetyClass`:
+
+- get the name of the class:
+
+```java
+System.out.println(tweetyClass.getName());
+// prints animals.Bird
+
+System.out.println(tweetyClass.getSimpleName());
+// prints Bird
+```
+
+- get information about the fields of the class:
+
+```java
+Fields [] birdFields = tweetyClass.getFields(); // returns the public instance field of the class
+System.out.println(birdFields.length);
+// prints 3
+```
+
+`getFields()` returns the public instance field of the class as well as the public fields in the superclass, in this case, `name` and `weight` in `Animal`. It doesn't include private fields.
+
+The `Field` object here contained in `birdFields` do not reflect the values of the fields in our specific instance called `tweety`. Instead it provides a way to inspect the declarations of the field it the class itself. This means that the `Fields` object describe the fact that a `Bird` has a `wingspan`, a `name`, and a `weight` but it doesn't contain any value for those fields.
+
+We can inspect the fields of the class:
+
+```java
+System.out.println(birdFields[1].getName()); // asking for their names
+// prints weight
+```
+
+> We can't predict what order the fields will be in, so we can't rely on the order of the fields in the array.
+
+We can also ask for its type:
+
+```java
+System.out.println(birdFields[1].getType().getName());
+// prints float
+```
+
+Another example is `getDeclaredFields()`, which returns all the fields in the class, including private fields, but not any fields in the superclass.
+
+```java
+Field[] birdFields = tweetyClass.getDeclaredFields();
+System.out.println(birdFields.length);
+// prints 2
+```
+
+We can ask Java to tell us the values of the fields in a specific instance:
+
+```java
+System.out.println(birdFields[1].get(tweety));
+// prints 25.0
+```
+
+- inspect methods:
+
+```java
+Method[] methods = tweetyClass.getMethod();
+Method eatMethod = methods[0];
+System.out.println(eatMethod.getName());
+// prints eat
+```
+
+Similarly, we have `getDeclaredMethods()`, which doesn't include methods from the superclass, but only the methods declared in the class itself, including private methods.
+
+We can also call `getParameterTypes()` to get the types of the parameters of the method.
+
+```java
+Class<?>[] eatParamTypes = eatMethod.getParameterTypes();
+System.out.println(eatParamTypes[0].getSimpleName());
+// prints java.lang.String
+```
+
+- we can call the reflective methods on our instance via the reflection system:
+
+```java
+eatMethod.invoke(tweety, "bread");
+```
+
+This is equivalent to directly calling `tweety.eat("bread")`.
+
+The real power of this approach is that we can now call methods by name, where the name is only decided when the program is run. For example, you're supposed to ask the user to enter some text about what our `tweety` should do:
+
+```java
+// Let the user enter a method name, then call that method
+String methodName = new Scanner(System.in).nextLine();
+Method chosenMethod = tweetyClass.getMethod(methodName);
+chosenMethod.invoke(tweety, "bread");
+```
+
+What happened here is that the user can directly modify what method gets called without having to write a new `if` statement for each possible method.
+
+In fact, we can go further than this, and instead of just calling a method by name, we can construct an entirely new object choosing the class itself by name.
+
+```java
+package animals;
+
+class Animal {
+    String name;
+    float weight;
+
+    abstract void makeSound();
+}
+
+class Dog {
+    void makeSound() {
+        System.out.println("woof");
+    }
+}
+
+class Cat {
+    void makeSound() {
+        System.out.println("miaou");
+    }
+}
+```
+
+Ask a user to enter a type of animal:
+
+```java
+System.out.println("Enter a type of animal:");
+String className = new Scanner(System.in).nextLine();
+```
+
+If we don't already have one instance to inspect, there's a static method on the `Class` object called `forName()` that will give us a `Class` object for a class name:
+
+```java
+Class<?> reflectedClass = Class.forName("animals." + className);
+// throws an exception if requested name doesn't exist
+```
+
+With this reflected class object, we can look for a suitable constructor:
+
+```java
+Constructor constructor = reflectedClass.getConstructor();
+```
+
+When called with no parameters, this will give us the constructor that takes no parameters. We can now invoke that default constructor to create a new instance:
+
+```java
+Animal newAnimal = (Animal) constructor.newInstance();
+newAnimal.makeSound(); // prints woof or miaou
+```
+
+This approach avoids writing excessive `if else` statements, for example, `if` the user enters `Dog`, then create a `Dog`, `if` the user enters `Cat`, then create a `Cat`, etc. Another important benefit, is that even if we don't know all the possible sub classes of `Animal` at compile time, we can still create instances of them at runtime. This means that the user can enter something like `Tiger` where reflection can do the right thing, whereas `if` statement wouldn't because we don't know `Tiger` existed at the time of writing `if` statements.
+
+This situation actually comes up quite often in practice when building large systems, because many different parts of the system are developed separately and then combined together when running the program. So not knowing all the possible subclasses of `Animal` is quite a common occurrence.
+
+In short, almost any aspect of the program structure can be inspected through reflection, see [javadoc](https://docs.oracle.com/javase/8/docs/technotes/guides/reflection/index.html)
+
+`Serialization` uses reflection internally:
+
+- `getClass` to get info on the class, name, whether implements `Serializable` etc.
+- `getDeclaredFields` to get info on fields
+- `field.get` to get the value of each field
+
+Reflection is useful for automatic bindings for GUI and databases.
+
+#### Don't use reflection too liberally
+
+1. Reflection = slow
+2. The reflection breaks the object oriented programming in certain ways and let you violate the principles of good programming like encapsulation or not been able to see implementation details etc.
+3. Reflection removes or works around something that is guaranteed by the Java compiler, private access, etc.
+
+### Configuration
+
+Configuration = infrequently modify aspects of the program, changed after compilation/deployment.
+
+- log paths, database servers, etc.
+
+We don't need a fancy GUI for those settings.
+
+The mechanism that Java provides with this kind of configuration is called properties files, with a particular format.
+
+```text
+logPath=/var/logs
+timeout=500
+databaseServer=192.168.1.43
+```
+
+Java provides a class called `Properties` to read and write these files.
+
+```java
+Properties props = new Properties();
+try (InputStream is = new FileInputStream("config.properties")) {
+    props.load(is);
+}
+
+String dbs = props.getProperty("databaseServer");
+```
+
+In our `Animal` example earlier we had some classes `Dog` and `Cat` but maybe there could be tens of others that might be available in the given system when it's running but not in advance when we're writing the code. We can make a type of `Animal` for each of those classes and then use reflection to create instances of them.
+
+- in `config.properties`:
+
+```text
+typeOfAnimal=Armadillo
+```
+
+- in `main.java`:
+
+```java
+Properties props = new Properties();
+try (InputStream is = new FileInputStream("config.properties")) {
+    props.load(is);
+}
+Animal animal = (Animal) Class.forName("animals." + props.getProperty("typeOfAnimal")).getConstructor().newInstance();
+```
+
+This way we can simply change the `config.properties` file to create a new type of animal without modifying the code at all.
+
+### Topic 9 Lab
+
+#### Part 1: Dynamic Method Calls
+
+1. Write a program that instantiates a new `pets.cat`. It should then prompt the user to enter an action the cat should perform (corresponding to a method name on `cat`). Call the method entered by the user, using reflection, and passing no parameters.
+2. Check that your approach works for methods that take zero parameters, and that you get an exception if the user enters a method that expects a parameter.
+3. Modify the code to check (using reflection) whether the chosen method takes a parameter, and if so, to ask the user to enter that parameter, before making the method call with it.
+
+#### Part 2: Reflective I/O
+
+1. Write a function that takes an object as input, and prints its class name, then prints the names, types, and values of each of its public and private fields (including those inherited from base classes), using reflection to find which fields are present on the provided instance. For values of object (reference) fields, print the result of `toString()`.
+2. Adapt your function to print object (reference) fields recursively, i.e., calling itself to print the object they refer to. Ensure that the output represents the object structure, i.e., which fields belong to the top-level object as opposed to its object fields. A natural way to do this would be by indenting the 'child' fields to reflect the structure, as in Assessed Exercise 1.
+3. Adapt your code to write to a file instead of printing. Write another function that can read this file, and recreate the original object hierarchy, using reflection to instantiate the classes and call their default constructors, then to set the values of the fields.
+4. Adapt your approach to handle the case that there are circular references among objects (e.g., by maintaining a `HashSet` of objects already written, and including each only once).
+
+Congratulations, you have just re-implemented the basic functionality of the Java serialization mechanism.
+
+#### Solution
+
+```java
+package lab9;
+
+class Person {
+    String name;
+    int age;
+    Pet ownedPet;
+}
+
+abstract class Pet {
+    String name;
+    Person owner;
+    int age;
+    float weight;
+
+    abstract void makeNoise();
+}
+
+class Cat extends Pet {
+    String favouriteBed;
+    int numMiceEaten;
+
+    void eat(String food) {
+        System.out.println(this.name + " is eating " + food);
+    }
+
+    void sleep() {
+        System.out.println(this.name + " is sleeping");
+    }
+
+    void hunt(String prey) {
+        System.out.println(this.name + " is hunting " + prey);
+    }
+
+    void purr() {
+        System.out.println(this.name + " is purring");
+    }
+
+    void makeNoise() {
+        purr();
+    }
+}
+
+class Dog extends Pet {
+    String favouriteBone;
+
+    void bark() {
+        System.out.println(this.name + " is barking");
+    }
+
+    void makeNoise() {
+        bark();
+    }
+}
+
+class Duck extends Pet {
+    String favouriteBread;
+    float lengthOfBeak;
+
+    void quack() {
+        System.out.println(this.name + " is quacking");
+    }
+
+    void makeNoise() {
+        quack();
+    }
+}
+```
+
+```java
+package lab9;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.PrintWriter;
+import java.lang.reflect.*;
+import java.util.*;
+
+public class Solution {
+    public static void main(String[] args) throws Exception {
+
+        part1();
+        part2_12();
+        part2_34();
+    }
+
+    private static void part1() throws Exception {
+        Cat kitty = new Cat();
+        kitty.name = "Kitty";
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("enter a method name:");
+        String methodName = scanner.next();
+
+        Class<?> clazz = kitty.getClass();
+        Method method = findMethod(methodName, clazz);
+        if (method == null) {
+            System.out.println("method not found");
+            return;
+        }
+        Parameter[] parameters = method.getParameters();
+        if (parameters.length > 0) {
+            System.out.println("enter the parameter:");
+            String parameter = scanner.next();
+            method.invoke(kitty, parameter);
+        } else {
+            method.invoke(kitty);
+        }
+    }
+
+    private static Method findMethod(String methodName, Class<?> clazz) {
+        Method[] methods = clazz.getDeclaredMethods();
+        for (int index = 0; index < methods.length; ++index) {
+            if (methods[index].getName().equals(methodName)) return methods[index];
+        }
+        return null;
+    }
+
+    private static void part2_12() throws Exception {
+        Cat kitty = new Cat();
+        kitty.name = "Kitty";
+        kitty.age = 3;
+        kitty.numMiceEaten = 20;
+        kitty.weight = 3.5f;
+        kitty.favouriteBed = "blanket";
+
+        Person owner = new Person();
+        owner.name = "Harry Potter";
+        owner.age = 14;
+        owner.ownedPet = kitty;
+
+        printObject(kitty, "");
+        printObject(owner, "");
+    }
+
+    private static void part2_34() throws Exception {
+        Cat kitty = new Cat();
+        kitty.name = "Kitty";
+        kitty.age = 3;
+        kitty.numMiceEaten = 20;
+        kitty.weight = 3.5f;
+        kitty.favouriteBed = "blanket";
+
+        Person owner = new Person();
+        owner.name = "Harry Potter";
+        owner.age = 14;
+        owner.ownedPet = kitty;
+        kitty.owner = owner;
+
+        writeObject(kitty, "kitty.txt");
+
+        Cat loadedKitty = (Cat) readObject("kitty.txt");
+
+        if (loadedKitty.name.equals(kitty.name)
+                && loadedKitty.age == kitty.age
+                && loadedKitty.numMiceEaten == kitty.numMiceEaten
+                && loadedKitty.weight == kitty.weight
+                && loadedKitty.favouriteBed.equals(kitty.favouriteBed)
+                && loadedKitty.owner.name.equals(kitty.owner.name)
+                && loadedKitty.owner.age == kitty.owner.age) {
+            System.out.println("kitty loaded succesfully!");
+        } else {
+            System.out.println("faulty kitty =(");
+        }
+    }
+
+    private static void printObject(Object obj, String prefix) throws IllegalAccessException {
+        Class<?> clazz = obj.getClass();
+        System.out.println(prefix + clazz.getName());
+        Field[] fields = getAllFields(obj);
+        for (int index = 0; index < fields.length; ++index) {
+            Field field = fields[index];
+            Object value = field.get(obj);
+
+            // This commented line is for 2.1
+            // System.out.println(prefix + field.getName() + " (" + field.getType().getSimpleName()
+            // + ") = " + value.toString());
+
+            // ...and this is for 2.2
+            System.out.print(
+                    prefix + field.getName() + " (" + field.getType().getSimpleName() + ")");
+            if (!field.getType().isPrimitive()
+                    && field.getType() != String.class
+                    && value != null) {
+                System.out.println(":");
+                printObject(value, prefix + ">");
+            } else if (value == null) {
+                System.out.println(" = null");
+            } else {
+                System.out.println(" = " + value.toString());
+            }
+        }
+    }
+
+    private static Field[] getAllFields(Object obj) {
+        // Since we want public and private fields, we must use getDeclaredFields
+        // But, that does not return fields for the base class -- hence we loop up the class
+        // hierarchy
+        Class<?> clazz = obj.getClass();
+        ArrayList<Field> allFields = new ArrayList<>();
+        while (clazz != Object.class) { // i.e. stop when there are no more base classes
+            Field[] fields = clazz.getDeclaredFields();
+            allFields.addAll(Arrays.asList(fields));
+            clazz = clazz.getSuperclass();
+        }
+        return allFields.toArray(new Field[0]);
+    }
+
+    private static void writeObject(Object obj, String filename)
+            throws FileNotFoundException, IllegalAccessException {
+        // To avoid looping forever (e.g. when cat references owner, and owner references cat), we
+        // keep track of
+        // which objects we've already written, and which we're about to write
+        // We start from the passed object, write it and its primitives, then write any objects it
+        // referenced, then any
+        // objects they referenced that are not already written, etc.
+        ArrayList<Object> objectsToWrite = new ArrayList<>();
+        HashSet<Object> objectsWritten = new HashSet<>();
+        objectsToWrite.add(obj);
+        try (PrintWriter writer = new PrintWriter(filename)) {
+            while (objectsToWrite.size() > 0) {
+                Object nextObject = objectsToWrite.remove(objectsToWrite.size() - 1);
+                writeSubObject(nextObject, objectsToWrite, objectsWritten, writer);
+                objectsWritten.add(nextObject);
+            }
+        }
+    }
+
+    private static void writeSubObject(
+            Object obj,
+            ArrayList<Object> objectsToWrite,
+            HashSet<Object> objectsWritten,
+            PrintWriter writer)
+            throws IllegalAccessException {
+        // This writes a single object to a PrintWriter
+        Class<?> clazz = obj.getClass();
+        Field[] fields = getAllFields(obj);
+
+        // First write a line saying the object's id (hash), class name, and number of fields
+        writer.println(obj.hashCode() + "," + clazz.getName() + "," + fields.length);
+
+        // Then write two lines per field, saying the name, type, and value. For objects, the
+        // value is their hash (id)
+        for (int index = 0; index < fields.length; ++index) {
+            Field field = fields[index];
+            Object value = field.get(obj);
+            writer.println(field.getName());
+            if (!field.getType().isPrimitive()
+                    && field.getType() != String.class
+                    && value != null) {
+                writer.println("object " + value.hashCode());
+                if (value != obj
+                        && !objectsToWrite.contains(value)
+                        && !objectsWritten.contains(value))
+                    objectsToWrite.add(
+                            value); // make a note that we need to write this object later
+            } else if (value == null) {
+                writer.println("null");
+            } else {
+                writer.println("value " + value.toString());
+            }
+        }
+    }
+
+    private static class ObjectReference {
+        // Used in readObject below, to temporarily track object references that need setting
+        ObjectReference(long containingObjectId, Field field, long targetObjectId) {
+            this.containingObjectId = containingObjectId;
+            this.field = field;
+            this.targetObjectId = targetObjectId;
+        }
+
+        long containingObjectId;
+        Field field;
+        long targetObjectId;
+    }
+
+    private static Object readObject(String filename) throws Exception {
+        HashMap<Long, Object> idToObject = new HashMap<>();
+        ArrayList<ObjectReference> objectReferences =
+                new ArrayList<>(); // this will store object references that we 'fix up' at the end
+                                   // to point to  he right things
+        Object rootObject = null;
+        try (FileReader reader = new FileReader(filename);
+                Scanner scanner = new Scanner(reader)) {
+            while (scanner.hasNext()) {
+                // Read the 'header' line giving the class name etc.
+                String classLine = scanner.nextLine();
+                String[] bits = classLine.split(",");
+                assert bits.length == 3;
+                long id = Long.parseLong(bits[0]);
+                String className = bits[1];
+                int numFields = Integer.parseInt(bits[2]);
+
+                // Create the corresponding object, using the default constructor
+                Class<?> clazz = Class.forName(className);
+                Object obj = clazz.getDeclaredConstructor().newInstance();
+                Field[] fields = getAllFields(obj);
+                if (rootObject == null) {
+                    rootObject = obj; // we'll return this, the first object
+                }
+
+                // Read each field's name and parse its value
+                for (int fieldIndex = 0; fieldIndex < numFields; ++fieldIndex) {
+                    String fieldName = scanner.nextLine();
+                    Field field = findField(fields, fieldName);
+                    String valueLine = scanner.nextLine();
+                    if (valueLine.startsWith("object ")) {
+                        long valueId = Long.parseLong(valueLine.split(" ")[1]);
+                        objectReferences.add(new ObjectReference(id, field, valueId));
+                    } else if (valueLine.startsWith("value ")) {
+                        String value = valueLine.substring(6); // i.e. chop off "value "
+                        Class<?> fieldType = field.getType();
+                        if (fieldType == String.class) {
+                            field.set(obj, value);
+                        } else if (fieldType == int.class) {
+                            field.set(obj, Integer.parseInt(value));
+                        } else if (fieldType == float.class) {
+                            field.set(obj, Float.parseFloat(value));
+                        } else {
+                            throw new RuntimeException("unsupported type");
+                        }
+                    } else if (valueLine.equals("null")) {
+                        field.set(obj, null);
+                    } else {
+                        throw new RuntimeException("unexpected value");
+                    }
+                }
+
+                // Store the loaded object, associated with its id so other objects can refer to it
+                idToObject.put(id, obj);
+            }
+        }
+
+        // Fix all the object references to be correct. We can't do this during loading, since
+        // an object may reference one that we've not yet read from the file
+        for (int index = 0; index < objectReferences.size(); ++index) {
+            ObjectReference ref = objectReferences.get(index);
+            Object containingObject = idToObject.get(ref.containingObjectId);
+            Object targetObject = idToObject.get(ref.targetObjectId);
+            ref.field.set(containingObject, targetObject);
+        }
+
+        return rootObject;
+    }
+
+    private static Field findField(Field[] fields, String name) {
+        // Given an array of fields from getDeclaredFields or whatever, return the one with the
+        // specified name
+        for (int i = 0; i < fields.length; ++i) {
+            if (fields[i].getName().equals(name)) return fields[i];
+        }
+        return null;
     }
 }
 ```
