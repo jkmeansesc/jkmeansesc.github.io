@@ -6126,3 +6126,430 @@ public class Solution {
     }
 }
 ```
+
+## Topic 10: Modern & Functional Java
+
+### Local classes and closures
+
+```java
+class MyClass extends SomeBaseClass {
+    ...
+
+    int doSlowThing() {
+        // do something slow!
+    }
+}
+
+class TheApplication {
+    ...
+
+    void startSlowThing() {
+        MyClass myObj = new MyClass();
+        ...
+
+        myObj.doSlowThing();
+    }
+
+    ...
+}
+```
+
+Let's assume that we can't change `Myclass`, this is quite common in practice in the real world.
+Suppose we now decide to run it in a new thread. There are two ways to do this, check out the previous Topics. The problem is that `Myclass` can't do it since it's not a `Runnable` or a `Thread`. To call `doSlowThing()` we have to create a new class to capture that functionality.
+
+To use the `Runnable` solution, we would end up with something like this:
+
+```java
+class SlowRunnable implements Runnable {
+    MyClass thObj;
+
+    SlowRunnable(MyClass theObj_) {
+        this.thObj = theObj_;
+    }
+
+    @Override
+    void run() {
+        thObj.doSlowThing();
+    }
+}
+
+...
+
+class TheApplication {
+    ...
+
+    void startSlowThing() {
+        MyClass myObj = new MyClass();
+        SlowRunnable r = new SlowRunnable(myObj);
+        Thread t = new Thread(r);
+        t.start();
+    }
+
+    ...
+}
+```
+
+This is too verbose for such a simple task. It can get quite annoying and unmanageable in big projects where there are a lot of classes in the system. And the `SlowRunnable` might only be called in this one place in the entire program. We can use local classes to avoid this:
+
+```java
+class TheApplication {
+    ...
+    void startSlowThing() {
+        MyClass myObj = new MyClass();
+
+        class SlowRunnable implements Runnable {
+            MyClass theObj;
+
+            SlowRunnable(MyClass theObj_) {
+                this.theObj = theObj_;
+            }
+
+            @Override
+            void run() {
+                theObj.doSlowThing();
+            }
+        }
+
+        SlowRunnable r = new SlowRunnable(myObj);
+        Thread t = new Thread(r);
+        t.start();
+    }
+    ...
+}
+```
+
+`SlowRunnable` is now a local class, it's only visible inside `startSlowThing()`. It's a lot more readable and manageable.
+
+Remember:
+
+- local classes can only be instantiated inside the method where they're declared
+- you can return an instance of `SlowRunnable` from `startSlowThing()` and pass it to another method, but you can't create a new instance of `SlowRunnable` outside of `startSlowThing()`
+- you can't add modifiers to a local class, like `public` or `private`, because it's only visible in the method where it's declared
+
+We can still further shorten the code:
+
+```java
+class TheApplication {
+    ...
+    void startSlowThing() {
+        MyClass myObj = new MyClass();
+
+        class SlowRunnable implements Runnable {
+
+            void run() {
+                myObj.doSlowThing();
+            }
+        }
+
+        SlowRunnable r = new SlowRunnable();
+        Thread t = new Thread(r);
+        t.start();
+    }
+    ...
+}
+```
+
+The idea to use variables from the outer method, to use them in the inner class, is called **closures**. Java creates fields for every captured variable (including `this`).
+
+For this to work, the captured `myObj` can't change, so it must be `final` or assigned exactly once. The reason is that if the variable were allowed to change, then the inner class instances wouldn't have any way of seeing that because Java makes a copy of the outer variable, so any changes made to the outer `myObj` can't be seen by `SlowRunnable`.
+
+Since we only use it in one place, we don't exactly need to give it a name, we can use an anonymous class:
+
+```java
+class TheApplication {
+    ...
+    void startSlowThing() {
+        MyClass myObj = new MyClass();
+
+        Runnable r = new Runnable() {
+            @Override
+            void run() {
+                myObj.doSlowThing();
+            }
+        };
+
+        Thread t = new Thread(r);
+        t.start();
+    }
+    ...
+}
+```
+
+**anonymous inner class:** provide class body after `new`, _without_ giving the class a name, nor using `class` keyword.
+
+Another trick to make our code more concise is to take advantage of the keyword `var` (since Java 10) so that we don't need to declare everything twice:
+
+```java
+class TheApplication {
+    ...
+    void startSlowThing() {
+        var myObj = new MyClass();
+
+        var r = new Runnable() {
+            @Override
+            void run() {
+                myObj.doSlowThing();
+            }
+        };
+
+        var t = new Thread(r);
+        t.start();
+    }
+    ...
+}
+```
+
+The Java compiler checks the type of the right hand side of the assignment and infers the type of the left hand side. It's not dynamic typing, it's still statically typed. It's not totally universal since `var` only works for local variables, not member variables or method parameters. Also if you're using `var` you need to assign the variable immediately like `var r = ...`.
+
+### Lambda and method references
+
+Java gives a special name to interfaces that declare just one method called **functional interfaces**. For example, `Runnable`, you can make your own:
+
+```java
+interface CheckCorrect {
+    boolean isCorrect(String);
+}
+```
+
+Since Java 8 the language has some special functionalities for implementing functional interfaces. There are two mechanisms: **lambda expressions** and **method references**.
+
+```java
+class TheApplication {
+    ...
+    void startSlowThing() {
+        var myObj = new MyClass();
+        var t = new Thread(myObj::doSlowThing);
+        t.start();
+    }
+    ...
+}
+```
+
+Instead of creating a new `Runnable` object, we can pass a method reference to the `Thread` constructor. The `::` operator is used to reference a method. This is different from calling the method `myObj.doSlowThing()`, instead it creates an object that's similar to the anonymous class earlier, and a single method in that class and when it's run, calls `myObj.doSlowThing()`.
+
+Java compiler can see that we're passing a method reference to the constructor of `Thread`, and it also knows that the `Thread` class's constructor can take a `Runnable`, so it can infer that the method reference must be a `Runnable`.
+
+One subtle point here is that the compiler is doing type inference rather than type checking. So usually the compiler checks all the parameters that you pass have types that match what the method expects. Here `::` the compiler uses the expected type, and then checks that the method reference has a method that matches that type.
+
+Sometimes we need a bit more flexibility, even though we don't want to write out an entire anonymous class. Java provides another tool called lambda expressions. A lambda expression is basically just a small function that can be placed in your code when an object implementing a functional interface is expected. Like a method reference, it will get expanded to an instance of a local class, but different to a method reference, it can take parameters, and the operation can be more complex.
+
+```java
+class Cat extends Animal {
+    ...
+    void eat(String food) {
+        ...
+    }
+}
+
+var c = new Cat();
+```
+
+Suppose we want to call the `eat` method on a new thread:
+
+```java
+var t = new Thread(c::eat); // Fails: eat takes a parameter, whereas Runnable.run doesn't
+```
+
+We can now use a lambda expression:
+
+```java
+var t = new Thread(() -> c.eat("fish"));
+```
+
+In addition to the `eat` method, we can also pass `{}` to make a block of code:
+
+```java
+class Cat extends Animal {
+    String name;
+    float weight;
+
+    ...
+
+}
+
+var cats = Arrays.asList(
+        new Cat("Ginger", 4.5f),
+        new Cat("skinny", 3.2f),
+        new Cat("Blinky", 3.9f),
+        ...
+);
+
+// Without lambda expression:
+cats.sort(new Comparator<Cat>() {
+    @Override
+    public int compare(Cat c1, Cat c2) {
+        var firstUpperCase = c1.name.toUpperCase();
+        var secondUpperCase = c2.name.toUpperCase();
+        return firstUpperCase.compareTo(secondUpperCase);
+    }
+});
+
+// With lambda expression:
+cats.sort((c1, c2) -> {
+    var firstUpperCase = c1.name.toUpperCase();
+    var secondUpperCase = c2.name.toUpperCase();
+    return firstUpperCase.compareTo(secondUpperCase);
+});
+```
+
+Again, the compiler will expand the lambda into something looks like the above version.
+
+### Streams
+
+```java
+class Transaction {
+    int value;
+    String currency;
+    int year;
+
+    Transaction(String currency, int value, int year) {
+        this.value = value;
+        this.currency = currency;
+        this.year = year;
+    }
+
+    int getValue() {
+        return value;
+    }
+
+    String getCurrency() {
+        return currency;
+    }
+
+    int getYear() {
+        return year;
+    }
+
+    public String toString() {
+        return currency + ":" + value + ":" + year;
+    }
+}
+
+Transaction[] tList = {
+        new Transaction("pound", 2000, 2021),
+        new Transaction("euro", 1000, 2017),
+        new Transaction("usd", 2500, 2020),
+        new Transaction("pound", 200, 2018),
+        new Transaction("euro", 100, 2019),
+        new Transaction("usd", 500, 2021),
+        new Transaction("pound", 1500, 2021)
+};
+```
+
+Suppose we want to select transactions with values higher than 1000 and report the results grouped by the currency type.
+
+```java
+var tMap = new HashMap<String, List<Transaction>>();
+
+for (Transaction t : tList) { // 'foreach t in tList...'
+    if (t.getValue() > 1000) {
+        List<Transaction> list_for_this_currency = tMap.get(t.getCurrency());
+        if (list_for_this_currency == null) {
+            list_for_this_currency = new LinkedList<>();
+            tMap.put(t.getCurrency(), list_for_this_currency);
+        }
+        list_for_this_currency.add(t);
+    }
+}
+
+for (String currency : tMap.keySet()) {
+    System.out.println(tMap.get(currency));
+}
+```
+
+This is a straightforward implementation, but it's quite verbose and not readable. Java provides a more concise way to do this using streams.
+
+```java
+import java.util.stream.Collectors.*;
+
+var tMap =
+        tList.stream()
+                .filter((Transaction t) -> t.getValue() > 1000)
+                .collect(Collectors.groupingBy(Transaction::getCurrency));
+
+for (String currency : tMap.keySet()) {
+    System.out.println(tMap.get(currency));
+}
+```
+
+- `filter`: keeps items if and only if function returns true
+- `collect`: capture all the data from the stream and organize them
+
+This is much easier to maintain and change, if we don't want to group it by currency but by year instead, we can simply change `getCurrency` to `getYear`.
+
+Suppose now we want to add another filter to the stream:
+
+```java
+Map<Integer, List<Transaction>> tMap = tList.stream()
+    .filter((Transaction t) -> t.getValue() > 1000)
+    .filter((Transaction t) -> t.getCurrency().equals("pound"))
+    .collect(Collectors.groupingBy(Transaction::getYear));
+```
+
+Think of a stream as being a **flow** of data, or a sequence of elements. It can only be run or iterated over once. The underlying data can come from a collection like a list, or a file, or elsewhere. For example, `myList.stream()` or `Files.lines(path)`.
+
+#### Structure of a Stream Operation
+
+In general, a stream operation starts by creating a stream from a data source, collection/file/etc. Then, apply one or more intermediate operations (each returns a stream). Finally, apply one terminal operation (non-stream return type), like `collect`.
+
+Note that intermediate operations are lazy. It means that they just record an operation to be performed later, but it doesn't actually do anything until a terminal operation is called.
+
+#### Common Stream Operations
+
+| Op.      | Type         | Returns    | Description                                  |
+| -------- | ------------ | ---------- | -------------------------------------------- |
+| filter   | Intermediate | Stream<T>  | keep elements where function returns true    |
+| map      | Intermediate | Stream<R>  | transform each element according to function |
+| limit    | Intermediate | Stream<T>  | truncate to N elements                       |
+| sorted   | Intermediate | Stream<T>  | sort according to given comparator           |
+| distinct | Intermediate | Stream<T>  | remove duplicates                            |
+| foreach  | Terminal     | void       | call function on each element                |
+| count    | Terminal     | long       | count number of elements in the stream       |
+| collect  | Terminal     | collection | reduces stream to a container                |
+
+#### Mapping
+
+`map` method applies a function to each element of the stream, and transform it into some other value
+
+```java
+Arrays.asList(1, 2, 3, 4, 5).stream()
+    .map((n) -> n * 2)
+// result contains integers 2, 6, 10
+```
+
+Transformed values may have a different type:
+
+```java
+Arrays.asList(1, 2, 3, 4, 5).stream()
+    .map((n) -> Integer.toString(n))
+// result contains strings "1", "3", "5"
+```
+
+A little more complex example:
+
+```java
+List<String> words =
+        Arrays.asList("This is an example sentence".split("\\s+"))
+                .stream()
+                .map(String::length)
+                .distinct()
+                .collect(Collectors.toList());
+
+// result: [4, 2, 6, 7]
+```
+
+### Topic 10 Lab
+
+#### **Processing Transactions**
+
+For this part, you will use the class in file `Transaction.java`, which is available on the Moodle page. Write a main method that creates an array (or List) of approximately ten `Transaction` instances to use in the following parts. Implement each of the following tasks as a single chain of calls to stream methods, and using lambdas or method references where possible:
+
+1.  **return the value of the largest transaction**
+2.  **return the year in which the largest transaction occurred**
+3.  **return the year in which the largest number of transactions occurred**
+4.  **return the number of different years in which transactions took place**
+5.  **return a mapping from years to the currency of the largest transaction in that year**
+
+#### **Building CSV Files with Streams**
+
+Re-implement Q1 of Lab Sheet 8 (I/O), on writing students to CSV files, to input a Stream of `Student` instances, and output a Stream with `Character` elements (representing the CSV content), which can then be written to the file. Try to use Stream for as much of the process as possible, avoiding creating other collections or arrays.
