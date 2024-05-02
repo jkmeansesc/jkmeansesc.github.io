@@ -1477,7 +1477,7 @@ public class DLL<E> {
 }
 ```
 
-## 5. Abstract Data Types and Collections
+## Week 5: Abstract Data Types and Collections
 
 - Data types and abstract data types (ADTs)
 - Requirements, contracts, implementations of ADTs
@@ -1787,7 +1787,7 @@ public class TestPair {
 }
 ```
 
-## 6. Stacks
+## Week 6: Stacks
 
 ### Overview
 
@@ -2058,7 +2058,7 @@ public class LinkedStack<E> implements Stack<E> {
 }
 ```
 
-## 7. Queues
+## Week 7: Queues
 
 - Queue concepts
 - Queue applications
@@ -2416,7 +2416,7 @@ public interface Deque<E> extends Queue<E> {
 
 ![](https://raw.githubusercontent.com/jkmeansesc/picwen/main/img/202404301746189.png)
 
-## 8. Lists
+## Week 8: Lists
 
 - List concepts
 - List applications
@@ -3137,7 +3137,7 @@ public class TextEditor {
 }
 ```
 
-## 9. Sets
+## Week 9: Sets
 
 - Set concepts
 - Set applications
@@ -3926,7 +3926,7 @@ public class InformationRetrieval {
 }
 ```
 
-## 10. Binary Search Trees
+## Week 10: Binary Search Trees
 
 - Binary-trees and binary-search-trees
 - Searching
