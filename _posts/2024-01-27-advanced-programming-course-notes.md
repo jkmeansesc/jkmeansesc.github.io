@@ -1927,7 +1927,7 @@ Stores elements in a sequential order. The user can access the elements by using
 
 > see [List](https://docs.oracle.com/javase/8/docs/api/java/util/List.html)
 
-#### The list iterator
+#### The list Iterator
 
 Additional means of traversing list containers.
 
