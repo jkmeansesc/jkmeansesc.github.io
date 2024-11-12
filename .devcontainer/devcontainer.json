@@ -2,6 +2,5 @@
   "name": "jekyll",
   "dockerComposeFile": "docker-compose.yml",
   "service": "jekyll",
-  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
-  "features": {}
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}"
 }
