@@ -1,9 +1,8 @@
 services:
   jekyll:
-    image: ghcr.io/devcontainers/templates/jekyll:2.2.2
-    command: jekyll serve --watch --force_polling --verbose --livereload
+    image: mcr.microsoft.com/devcontainers/ruby:3.3-bullseye
+    command: sleep infinity
     ports:
       - 4000:4000 # Jekyll default server port
-      - 35729:35729 # LiveReload default port
     volumes:
       - ..:/workspace:cached
