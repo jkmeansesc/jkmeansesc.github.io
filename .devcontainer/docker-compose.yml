@@ -1,0 +1,6 @@
+services:
+  java-app:
+    image: ghcr.io/devcontainers/templates/jekyll:2.2.2
+    volumes:
+      - ../:/workspaces:cached
+    command: sleep infinity
