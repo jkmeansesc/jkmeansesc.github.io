@@ -2,5 +2,7 @@
   "name": "jekyll",
   "dockerComposeFile": "docker-compose.yml",
   "service": "jekyll",
-  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}"
+  "workspaceFolder": "/workspace",
+  "forwardPorts": [4000, 35729],
+  "extensions": ["ms-vscode.live-server", "rebornix.Ruby"]
 }
